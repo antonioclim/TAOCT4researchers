@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 2: Abstracție și Encapsulare | Computational Thinking</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/night.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <style>
+        :root {
+            --r-heading-color: #58a6ff;
+            --r-link-color: #79c0ff;
+        }
+        .reveal h1, .reveal h2 { text-transform: none; }
+        .reveal .slides section { text-align: left; }
+        
+        .hook-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-left: 4px solid #e94560;
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+        .hook-box .source {
+            font-size: 0.7em;
+            color: #888;
+            margin-top: 10px;
+            font-style: normal;
+        }
+        
+        .definition-box {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            border: 1px solid #58a6ff;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        .definition-box h4 {
+            color: #58a6ff;
+            margin: 0 0 10px 0;
+            font-size: 1em;
+        }
+        
+        .theorem-box {
+            background: linear-gradient(135deg, #1a472a 0%, #16213e 100%);
+            border: 1px solid #3fb950;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        .theorem-box h4 {
+            color: #3fb950;
+            margin: 0 0 10px 0;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #5c2a0a 0%, #16213e 100%);
+            border: 1px solid #f85149;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        .warning-box h4 {
+            color: #f85149;
+            margin: 0 0 10px 0;
+        }
+        
+        .diagram-box {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.65em;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+        
+        .two-columns { display: flex; gap: 40px; }
+        .two-columns > div { flex: 1; }
+        
+        .highlight-text { color: #ffa657; font-weight: bold; }
+        .small-text { font-size: 0.75em; color: #8b949e; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.8em;
+        }
+        th, td {
+            border: 1px solid #30363d;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #161b22;
+            color: #58a6ff;
+        }
+        tr:nth-child(even) { background: #0d1117; }
+        
+        .math-display {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+        
+        .code-evolution {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+        }
+        .code-evolution .arrow {
+            font-size: 2em;
+            color: #58a6ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- TITLE SLIDE -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #161b22 100%)">
+                <h1 style="font-size: 2em;">🔮 Săptămâna 2</h1>
+                <h2 style="color: #58a6ff; font-size: 1.5em;">ABSTRACȚIE ȘI ENCAPSULARE</h2>
+                <p style="color: #8b949e; font-size: 0.9em;">
+                    Funcții ca Contracte • Tipuri ca Propoziții • Polimorfism
+                </p>
+                <hr style="border-color: #30363d; margin: 30px 0;">
+                <p style="font-size: 0.7em; color: #8b949e;">
+                    THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS<br>
+                    Modul Intensiv • 4 ore
+                </p>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- HOOK 1: The Mars Climate Orbiter -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>🚀 De ce contează tipurile?</h2>
+                
+                <div class="hook-box">
+                    <p>
+                        Pe 23 septembrie 1999, sonda Mars Climate Orbiter a NASA s-a 
+                        dezintegrat în atmosfera marțiană. Cauza: o funcție din software-ul 
+                        de navigație returna impuls în <strong>pound-seconds</strong>, 
+                        dar funcția apelantă aștepta <strong>newton-seconds</strong>.
+                    </p>
+                    <p>
+                        Costul misiunii: <strong>$327.6 milioane</strong>.
+                    </p>
+                    <p class="source">
+                        — NASA Mars Climate Orbiter Mishap Investigation Board Report, 1999
+                    </p>
+                </div>
+                
+                <p class="fragment">
+                    Un sistem de tipuri mai expresiv ar fi prevenit această eroare 
+                    <span class="highlight-text">la compilare</span>, nu la 140 milioane km distanță.
+                </p>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- AGENDA -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>📋 Agenda</h2>
+                
+                <table>
+                    <tr>
+                        <th>Timp</th>
+                        <th>Modul</th>
+                        <th>Conținut</th>
+                    </tr>
+                    <tr>
+                        <td>0:00 - 0:45</td>
+                        <td>Teorie</td>
+                        <td>Abstracție, Encapsulare, Contracte</td>
+                    </tr>
+                    <tr>
+                        <td>0:45 - 1:30</td>
+                        <td>Python</td>
+                        <td>Protocols, Generics, Descriptors</td>
+                    </tr>
+                    <tr>
+                        <td>1:30 - 1:45</td>
+                        <td colspan="2" style="text-align: center;">☕ Pauză</td>
+                    </tr>
+                    <tr>
+                        <td>1:45 - 2:30</td>
+                        <td>C++</td>
+                        <td>Concepts, CRTP, Type Erasure</td>
+                    </tr>
+                    <tr>
+                        <td>2:30 - 3:15</td>
+                        <td>JavaScript</td>
+                        <td>TypeScript Generics, Discriminated Unions</td>
+                    </tr>
+                    <tr>
+                        <td>3:15 - 4:00</td>
+                        <td>Lab</td>
+                        <td>Framework de Simulare Polyglot</td>
+                    </tr>
+                </table>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART I: THEORETICAL FOUNDATIONS -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <section>
+                    <h1>PARTEA I</h1>
+                    <h2 style="color: #58a6ff;">Fundamentele Teoretice</h2>
+                    <p class="small-text">45 minute</p>
+                </section>
+                
+                <!-- HOOK 2: The Leaky Abstraction -->
+                <section>
+                    <h2>Legea Abstracțiilor Permeabile</h2>
+                    
+                    <div class="hook-box">
+                        <p>
+                            <em>"All non-trivial abstractions, to some degree, are leaky."</em>
+                        </p>
+                        <p class="source">
+                            — Joel Spolsky, 2002
+                        </p>
+                    </div>
+                    
+                    <div class="fragment">
+                        <p><strong>Exemple:</strong></p>
+                        <ul style="font-size: 0.85em;">
+                            <li>TCP/IP "garantează" livrare în ordine — până când network-ul cade</li>
+                            <li>SQL ascunde detaliile storage-ului — până când ai 10 milioane de rows</li>
+                            <li>Python ascunde memoria — până când ai memory leak într-un loop de 24h</li>
+                        </ul>
+                    </div>
+                    
+                    <p class="fragment highlight-text">
+                        Abstracțiile bune nu elimină complexitatea — o <em>gestionează</em>.
+                    </p>
+                </section>
+                
+                <!-- WHAT IS ABSTRACTION -->
+                <section>
+                    <h2>Ce este Abstracția?</h2>
+                    
+                    <div class="definition-box">
+                        <h4>Definiție Formală</h4>
+                        <p>
+                            <strong>Abstracția</strong> este procesul de identificare a 
+                            <em>trăsăturilor esențiale</em> ale unui concept, ignorând 
+                            detaliile irelevante pentru contextul curent.
+                        </p>
+                    </div>
+                    
+                    <div class="diagram-box fragment">
+<pre>
+                         REALITATE                    ABSTRACȚIE
+                              
+    ┌─────────────────────────────┐         ┌─────────────────────┐
+    │  • Culoare: roșu            │         │                     │
+    │  • Marcă: Toyota            │         │      VEHICUL        │
+    │  • An: 2019                 │   ──▶   │                     │
+    │  • Număr: B-123-ABC         │         │  • accelerează()    │
+    │  • Kilometraj: 45,231       │         │  • frânează()       │
+    │  • Combustibil: benzină     │         │  • virează()        │
+    │  • Interior: piele neagră   │         │                     │
+    │  • GPS: da                  │         └─────────────────────┘
+    │  • Aer condiționat: da      │
+    └─────────────────────────────┘         Ce e ESENȚIAL pentru
+              Toate detaliile               a conduce?
+</pre>
+                    </div>
+                </section>
+                
+                <!-- LEVELS OF ABSTRACTION -->
+                <section>
+                    <h2>Niveluri de Abstracție</h2>
+                    
+                    <div class="diagram-box">
+<pre>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    PIRAMIDA ABSTRACȚIEI                          │
+    ├─────────────────────────────────────────────────────────────────┤
+    │                                                                  │
+    │    Nivel 5: DOMENIU                    "Analizează vânzările"   │
+    │              │                                                   │
+    │    Nivel 4: APLICAȚIE                  pandas.read_csv().plot() │
+    │              │                                                   │
+    │    Nivel 3: LIMBAJ                     for item in list: ...    │
+    │              │                                                   │
+    │    Nivel 2: RUNTIME                    Python bytecode, GC      │
+    │              │                                                   │
+    │    Nivel 1: SISTEM                     syscalls, threads        │
+    │              │                                                   │
+    │    Nivel 0: HARDWARE                   CPU, RAM, disk           │
+    │                                                                  │
+    │    ──────────────────────────────────────────────────────────── │
+    │    Fiecare nivel ASCUNDE detaliile nivelului inferior.          │
+    │    Când abstracția "leaks", trebuie să coborâm un nivel.        │
+    └─────────────────────────────────────────────────────────────────┘
+</pre>
+                    </div>
+                </section>
+                
+                <!-- ENCAPSULATION -->
+                <section>
+                    <h2>Encapsulare: Ascunderea Implementării</h2>
+                    
+                    <div class="two-columns">
+                        <div>
+                            <h4 style="color: #f85149;">Fără Encapsulare</h4>
+                            <pre><code class="language-python" style="font-size: 0.7em;">
+# Clientul cunoaște structura internă
+account.balance = account.balance + 100
+account.transactions.append(
+    ("deposit", 100, datetime.now())
+)
+account.last_modified = datetime.now()
+
+# Ce dacă schimbăm structura?
+# Toți clienții se strică!
+                            </code></pre>
+                        </div>
+                        <div>
+                            <h4 style="color: #3fb950;">Cu Encapsulare</h4>
+                            <pre><code class="language-python" style="font-size: 0.7em;">
+# Clientul folosește interfața
+account.deposit(100)
+
+# Implementarea poate fi:
+# - in-memory dict
+# - PostgreSQL
+# - blockchain
+# - serviciu extern
+# 
+# Clientul nu trebuie să știe!
+                            </code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="fragment definition-box">
+                        <h4>Principiul</h4>
+                        <p>
+                            <strong>Encapsularea</strong> separă <em>CE</em> face un modul (interfața) 
+                            de <em>CUM</em> face (implementarea).
+                        </p>
+                    </div>
+                </section>
+                
+                <!-- FUNCTIONS AS CONTRACTS -->
+                <section>
+                    <h2>Funcții ca Contracte Matematice</h2>
+                    
+                    <div class="definition-box">
+                        <h4>Design by Contract (Bertrand Meyer, 1986)</h4>
+                        <p>O funcție este un <strong>contract</strong> între apelant și implementare:</p>
+                        <ul>
+                            <li><strong>Precondiții:</strong> Ce trebuie să fie adevărat ÎNAINTE de apel</li>
+                            <li><strong>Postcondiții:</strong> Ce garantează funcția DUPĂ execuție</li>
+                            <li><strong>Invarianți:</strong> Ce rămâne neschimbat</li>
+                        </ul>
+                    </div>
+                    
+                    <pre class="fragment"><code class="language-python" data-trim>
+def binary_search(items: list[T], target: T) -> int | None:
+    """
+    Caută target în items folosind căutare binară.
+    
+    Precondiții:
+        - items este sortat crescător
+        - toate elementele din items sunt comparabile cu target
+        
+    Postcondiții:
+        - Dacă returnează i: items[i] == target
+        - Dacă returnează None: target nu există în items
+        
+    Invariant:
+        - items nu este modificat
+        
+    Complexitate: O(log n)
+    """
+                    </code></pre>
+                </section>
+                
+                <!-- MATHEMATICAL FOUNDATION: TYPES -->
+                <section>
+                    <h2>Fundament Matematic: Tipuri ca Mulțimi</h2>
+                    
+                    <p>În teoria tipurilor, un <strong>tip</strong> poate fi văzut ca o <strong>mulțime</strong>:</p>
+                    
+                    <div class="math-display">
+                        <p>
+                            <code>int</code> ≈ ℤ (mulțimea întregilor)<br>
+                            <code>float</code> ≈ ℝ (aproximat, cu precizie finită)<br>
+                            <code>bool</code> ≈ {True, False}<br>
+                            <code>str</code> ≈ Σ* (toate șirurile peste alfabet Σ)
+                        </p>
+                    </div>
+                    
+                    <div class="fragment">
+                        <p>O <strong>funcție tipată</strong> <code>f: A → B</code> este o mapare între mulțimi:</p>
+                        <div class="math-display">
+                            <p>
+                                ∀x ∈ A: f(x) ∈ B
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="fragment theorem-box">
+                        <h4>Curry-Howard Isomorphism</h4>
+                        <p>
+                            <strong>Tipuri = Propoziții</strong>, <strong>Programe = Demonstrații</strong><br>
+                            Un program care compilează e o demonstrație că tipul său e "locuibil".
+                        </p>
+                    </div>
+                </section>
+                
+                <!-- POLYMORPHISM -->
+                <section>
+                    <h2>Polimorfism: Trei Forme</h2>
+                    
+                    <table>
+                        <tr>
+                            <th>Tip</th>
+                            <th>Descriere</th>
+                            <th>Exemplu</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Ad-hoc</strong><br>(Overloading)</td>
+                            <td>Același nume, comportament diferit per tip</td>
+                            <td><code>1 + 2</code> vs <code>"a" + "b"</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Parametric</strong><br>(Generics)</td>
+                            <td>Cod identic pentru orice tip</td>
+                            <td><code>list[T]</code>, <code>Optional[T]</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Subtype</strong><br>(Inheritance)</td>
+                            <td>Subtipul poate înlocui supertipul</td>
+                            <td><code>Cat</code> extends <code>Animal</code></td>
+                        </tr>
+                    </table>
+                    
+                    <div class="diagram-box fragment" style="font-size: 0.6em;">
+<pre>
+    Ad-hoc (compile-time dispatch)       Subtype (runtime dispatch)
+    
+    def add(a: int, b: int) → int        class Animal:
+    def add(a: str, b: str) → str            def speak(self): ...
+                                         
+    Compilatorul alege versiunea         class Dog(Animal):
+    bazat pe tipurile argumentelor           def speak(self): print("Woof")
+                                         
+                                         # La runtime se alege metoda corectă
+    Parametric (type erasure)            # bazat pe tipul REAL al obiectului
+    
+    def first[T](items: list[T]) → T
+    
+    Același cod pentru orice T
+</pre>
+                    </div>
+                </section>
+                
+                <!-- HOOK 3: Liskov -->
+                <section>
+                    <h2>Principiul Substituției Liskov</h2>
+                    
+                    <div class="hook-box">
+                        <p>
+                            <em>"If S is a subtype of T, then objects of type T may be replaced 
+                            with objects of type S without altering any of the desirable 
+                            properties of the program."</em>
+                        </p>
+                        <p class="source">
+                            — Barbara Liskov, Turing Award 2008
+                        </p>
+                    </div>
+                    
+                    <div class="fragment warning-box">
+                        <h4>Exemplu Clasic de Încălcare</h4>
+                        <pre><code class="language-python" style="font-size: 0.75em;">
+class Rectangle:
+    def set_width(self, w): self.width = w
+    def set_height(self, h): self.height = h
+    def area(self): return self.width * self.height
+
+class Square(Rectangle):  # Pătratul E-UN dreptunghi? Matematic, da!
+    def set_width(self, w): 
+        self.width = self.height = w  # Menține invariantul
+    def set_height(self, h): 
+        self.width = self.height = h
+
+# PROBLEMA:
+r = get_rectangle()  # Poate fi Square!
+r.set_width(5)
+r.set_height(10)
+assert r.area() == 50  # FAIL dacă e Square! Area = 100
+                        </code></pre>
+                    </div>
+                </section>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART II: PYTHON -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <section>
+                    <h1>PARTEA II</h1>
+                    <h2 style="color: #3572A5;">🐍 Python</h2>
+                    <p>Protocols, Generics, Descriptors</p>
+                    <p class="small-text">45 minute</p>
+                </section>
+                
+                <!-- PROTOCOLS -->
+                <section>
+                    <h2>Protocols: Structural Subtyping</h2>
+                    
+                    <p>Python e <em>duck-typed</em>: "If it walks like a duck..."</p>
+                    <p><code>Protocol</code> formalizează acest concept pentru type checkers.</p>
+                    
+                    <pre><code class="language-python" data-trim data-line-numbers="1-20">
+from typing import Protocol, runtime_checkable
+
+@runtime_checkable
+class Comparable(Protocol):
+    """Orice obiect care poate fi comparat cu < și ==."""
+    
+    def __lt__(self, other: 'Comparable') -> bool: ...
+    def __eq__(self, other: object) -> bool: ...
+
+# NU trebuie să moștenească Comparable!
+class Temperature:
+    def __init__(self, celsius: float):
+        self.celsius = celsius
+    
+    def __lt__(self, other: 'Temperature') -> bool:
+        return self.celsius < other.celsius
+    
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Temperature):
+            return self.celsius == other.celsius
+        return NotImplemented
+
+# Type checker înțelege că Temperature e Comparable
+def find_min(items: list[Comparable]) -> Comparable:
+    return min(items, key=lambda x: x)
+                    </code></pre>
+                </section>
+                
+                <!-- GENERICS -->
+                <section>
+                    <h2>Generics: Tipuri Parametrizate</h2>
+                    
+                    <pre><code class="language-python" data-trim data-line-numbers>
+from typing import TypeVar, Generic
+
+T = TypeVar('T')  # Tip generic neconstrans
+K = TypeVar('K')  # Alt tip generic
+V = TypeVar('V')
+
+class Result(Generic[T]):
+    """
+    Container pentru rezultat sau eroare.
+    Similar cu Rust's Result sau Haskell's Either.
+    """
+    def __init__(self, value: T | None, error: str | None = None):
+        self._value = value
+        self._error = error
+    
+    @classmethod
+    def ok(cls, value: T) -> 'Result[T]':
+        return cls(value, None)
+    
+    @classmethod  
+    def err(cls, message: str) -> 'Result[T]':
+        return cls(None, message)
+    
+    def unwrap(self) -> T:
+        if self._error:
+            raise ValueError(self._error)
+        return self._value  # type: ignore
+    
+    def map(self, f: Callable[[T], K]) -> 'Result[K]':
+        if self._error:
+            return Result.err(self._error)
+        return Result.ok(f(self._value))
+
+# Utilizare
+result: Result[int] = Result.ok(42)
+doubled: Result[int] = result.map(lambda x: x * 2)
+                    </code></pre>
+                </section>
+                
+                <!-- DESCRIPTORS -->
+                <section>
+                    <h2>Descriptors: Controlul Accesului</h2>
+                    
+                    <p>Descriptors sunt mecanismul din spatele <code>@property</code>.</p>
+                    
+                    <pre><code class="language-python" data-trim data-line-numbers>
+class Validated:
+    """Descriptor care validează la setare."""
+    
+    def __init__(self, validator: Callable[[Any], bool], message: str):
+        self.validator = validator
+        self.message = message
+        self.name = None  # Set by __set_name__
+    
+    def __set_name__(self, owner: type, name: str) -> None:
+        self.name = f'_validated_{name}'
+    
+    def __get__(self, obj: Any, objtype: type | None = None) -> Any:
+        if obj is None:
+            return self
+        return getattr(obj, self.name, None)
+    
+    def __set__(self, obj: Any, value: Any) -> None:
+        if not self.validator(value):
+            raise ValueError(f"{self.message}: {value}")
+        setattr(obj, self.name, value)
+
+# Utilizare
+class Experiment:
+    temperature = Validated(
+        lambda x: -273.15 <= x <= 1e6,
+        "Temperature must be physically plausible"
+    )
+    sample_size = Validated(
+        lambda x: isinstance(x, int) and x > 0,
+        "Sample size must be positive integer"
+    )
+
+exp = Experiment()
+exp.temperature = 25.0  # OK
+exp.temperature = -300  # ValueError!
+                    </code></pre>
+                </section>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART III: C++ -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <section>
+                    <h1>PARTEA III</h1>
+                    <h2 style="color: #f34b7d;">⚡ C++20</h2>
+                    <p>Concepts, CRTP, Type Erasure</p>
+                    <p class="small-text">45 minute</p>
+                </section>
+                
+                <!-- CONCEPTS -->
+                <section>
+                    <h2>C++20 Concepts</h2>
+                    
+                    <p>Concepts sunt <em>named sets of requirements</em> pe tipuri.</p>
+                    
+                    <pre><code class="language-cpp" data-trim data-line-numbers>
+#include &lt;concepts&gt;
+#include &lt;iostream&gt;
+
+// Definim un concept
+template&lt;typename T&gt;
+concept Numeric = std::integral&lt;T&gt; || std::floating_point&lt;T&gt;;
+
+template&lt;typename T&gt;
+concept Printable = requires(T a, std::ostream& os) {
+    { os << a } -> std::same_as&lt;std::ostream&&gt;;
+};
+
+template&lt;typename T&gt;
+concept Addable = requires(T a, T b) {
+    { a + b } -> std::convertible_to&lt;T&gt;;
+};
+
+// Funcție constrainsă
+template&lt;Numeric T&gt;
+T square(T x) {
+    return x * x;
+}
+
+// Eroare la compilare cu mesaj CLAR:
+// square("hello");  // error: "hello" does not satisfy Numeric
+
+// Overloading cu concepts
+template&lt;std::integral T&gt;
+void process(T x) { std::cout << "Integer: " << x << "\n"; }
+
+template&lt;std::floating_point T&gt;  
+void process(T x) { std::cout << "Float: " << x << "\n"; }
+                    </code></pre>
+                </section>
+                
+                <!-- CRTP -->
+                <section>
+                    <h2>CRTP: Polimorfism Static</h2>
+                    
+                    <p>Curiously Recurring Template Pattern — moștenirea "inversată".</p>
+                    
+                    <pre><code class="language-cpp" data-trim data-line-numbers>
+// Base class parametrizată cu clasa derivată
+template&lt;typename Derived&gt;
+class Comparable {
+public:
+    bool operator>(const Derived& other) const {
+        // Apelăm metoda din clasa derivată
+        return other < static_cast&lt;const Derived&&gt;(*this);
+    }
+    
+    bool operator<=(const Derived& other) const {
+        return !(static_cast&lt;const Derived&&gt;(*this) > other);
+    }
+    
+    bool operator>=(const Derived& other) const {
+        return !(static_cast&lt;const Derived&&gt;(*this) < other);
+    }
+};
+
+class Temperature : public Comparable&lt;Temperature&gt; {
+    double celsius;
+public:
+    Temperature(double c) : celsius(c) {}
+    
+    // Doar < trebuie implementat!
+    bool operator<(const Temperature& other) const {
+        return celsius < other.celsius;
+    }
+};
+
+// Toate comparațiile funcționează
+Temperature t1(20), t2(30);
+bool a = t1 < t2;   // true
+bool b = t1 > t2;   // false (implementat automat!)
+bool c = t1 <= t2;  // true
+                    </code></pre>
+                </section>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART IV: JAVASCRIPT -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <section>
+                    <h1>PARTEA IV</h1>
+                    <h2 style="color: #f7df1e;">🌐 TypeScript</h2>
+                    <p>Advanced Generics, Mapped Types</p>
+                    <p class="small-text">45 minute</p>
+                </section>
+                
+                <!-- TYPESCRIPT GENERICS -->
+                <section>
+                    <h2>TypeScript: Generics Avansate</h2>
+                    
+                    <pre><code class="language-typescript" data-trim data-line-numbers>
+// Generic cu constraint
+interface HasLength {
+    length: number;
+}
+
+function logLength<T extends HasLength>(item: T): T {
+    console.log(item.length);
+    return item;
+}
+
+logLength("hello");    // OK: string has length
+logLength([1, 2, 3]);  // OK: array has length
+// logLength(123);     // Error: number has no length
+
+// Conditional types
+type IsArray<T> = T extends any[] ? true : false;
+
+type A = IsArray<number[]>;  // true
+type B = IsArray<string>;    // false
+
+// Mapped types - transformă toate proprietățile
+type Readonly<T> = {
+    readonly [P in keyof T]: T[P];
+};
+
+type Optional<T> = {
+    [P in keyof T]?: T[P];
+};
+
+interface User {
+    name: string;
+    age: number;
+}
+
+type ReadonlyUser = Readonly<User>;
+// { readonly name: string; readonly age: number; }
+                    </code></pre>
+                </section>
+                
+                <!-- DISCRIMINATED UNIONS -->
+                <section>
+                    <h2>Discriminated Unions: State Machines</h2>
+                    
+                    <pre><code class="language-typescript" data-trim data-line-numbers>
+// Definim stările unei cereri HTTP
+type RequestState<T> =
+    | { status: 'idle' }
+    | { status: 'loading' }
+    | { status: 'success'; data: T }
+    | { status: 'error'; error: Error };
+
+// TypeScript înțelege tipul exact în fiecare ramură
+function renderRequest<T>(state: RequestState<T>): string {
+    switch (state.status) {
+        case 'idle':
+            return 'Click to load';
+        case 'loading':
+            return 'Loading...';
+        case 'success':
+            // TypeScript știe că state.data există aici!
+            return `Data: ${JSON.stringify(state.data)}`;
+        case 'error':
+            // TypeScript știe că state.error există aici!
+            return `Error: ${state.error.message}`;
+    }
+}
+
+// Exhaustiveness check - compilatorul verifică că toate cazurile sunt tratate
+function assertNever(x: never): never {
+    throw new Error(`Unexpected: ${x}`);
+}
+                    </code></pre>
+                </section>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- MATHEMATICAL FOUNDATIONS -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <section>
+                    <h1>📐 Fundamente Matematice</h1>
+                    <p>Algebră de Tipuri</p>
+                </section>
+                
+                <!-- ALGEBRAIC DATA TYPES -->
+                <section>
+                    <h2>Algebra Tipurilor</h2>
+                    
+                    <p>Tipurile formează o <strong>algebră</strong> cu operații:</p>
+                    
+                    <table style="font-size: 0.8em;">
+                        <tr>
+                            <th>Operație</th>
+                            <th>Algebră</th>
+                            <th>Tipuri</th>
+                            <th>Exemplu Python</th>
+                            <th>Cardinalitate</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Produs</strong></td>
+                            <td>×</td>
+                            <td>Tuple, Struct</td>
+                            <td><code>tuple[A, B]</code></td>
+                            <td>|A| × |B|</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sumă</strong></td>
+                            <td>+</td>
+                            <td>Union, Enum</td>
+                            <td><code>A | B</code></td>
+                            <td>|A| + |B|</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Exponențială</strong></td>
+                            <td>^</td>
+                            <td>Funcție</td>
+                            <td><code>Callable[[A], B]</code></td>
+                            <td>|B|<sup>|A|</sup></td>
+                        </tr>
+                    </table>
+                    
+                    <div class="fragment math-display">
+                        <p><strong>Exemplu:</strong></p>
+                        <p><code>bool</code> are cardinalitate 2</p>
+                        <p><code>tuple[bool, bool]</code> are 2 × 2 = 4 valori posibile</p>
+                        <p><code>Callable[[bool], bool]</code> are 2<sup>2</sup> = 4 funcții posibile</p>
+                    </div>
+                </section>
+                
+                <!-- CURRY-HOWARD -->
+                <section>
+                    <h2>Curry-Howard: Tipuri ca Logică</h2>
+                    
+                    <table style="font-size: 0.8em;">
+                        <tr>
+                            <th>Logică</th>
+                            <th>Tipuri</th>
+                            <th>Program</th>
+                        </tr>
+                        <tr>
+                            <td>Propoziție P</td>
+                            <td>Tip T</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>P ∧ Q (și)</td>
+                            <td>tuple[P, Q]</td>
+                            <td>Pereche</td>
+                        </tr>
+                        <tr>
+                            <td>P ∨ Q (sau)</td>
+                            <td>P | Q</td>
+                            <td>Union</td>
+                        </tr>
+                        <tr>
+                            <td>P → Q (implică)</td>
+                            <td>Callable[[P], Q]</td>
+                            <td>Funcție</td>
+                        </tr>
+                        <tr>
+                            <td>Demonstrație</td>
+                            <td>Valoare de tip T</td>
+                            <td>Program care compilează</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="fragment theorem-box">
+                        <h4>Interpretare</h4>
+                        <p>
+                            Dacă puteți scrie o funcție <code>f: A → B</code>, 
+                            ați "demonstrat" că A implică B!
+                        </p>
+                    </div>
+                </section>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- LAB -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>🔬 Laborator: Framework de Simulare</h2>
+                
+                <div class="diagram-box">
+<pre>
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    FRAMEWORK SIMULARE POLYGLOT                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│   Protocol/Interface:              Implementări concrete:               │
+│                                                                         │
+│   ┌─────────────────────┐         ┌─────────────────────┐              │
+│   │    Simulable[T]     │         │   ParticleSystem    │              │
+│   │                     │         │   (N-body physics)  │              │
+│   │  + setup() → None   │◄────────│                     │              │
+│   │  + step(dt) → None  │         └─────────────────────┘              │
+│   │  + state() → T      │                                              │
+│   │  + is_done() → bool │         ┌─────────────────────┐              │
+│   └─────────────────────┘         │    EpidemicModel    │              │
+│             ▲                     │   (SIR dynamics)    │              │
+│             │                     │                     │              │
+│             │              ◄──────│                     │              │
+│   ┌─────────────────────┐         └─────────────────────┘              │
+│   │   SimulationRunner  │                                              │
+│   │                     │         ┌─────────────────────┐              │
+│   │ Orchestrează orice  │         │   MarketSimulator   │              │
+│   │ Simulable, indiferent│◄───────│   (agent-based)     │              │
+│   │ de implementare     │         │                     │              │
+│   └─────────────────────┘         └─────────────────────┘              │
+│                                                                         │
+│   Livrabile:                                                           │
+│   ✓ Protocol Simulable cu generics                                     │
+│   ✓ 2+ implementări concrete                                           │
+│   ✓ Runner generic care funcționează cu orice Simulable                │
+│   ✓ Vizualizare stare în timp real                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+</pre>
+                </div>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- HOMEWORK -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>📝 Temă pentru Săptămâna 3</h2>
+                
+                <ol>
+                    <li class="fragment">
+                        <strong>Units Library:</strong> Implementați un sistem de tipuri
+                        care previne erori ca Mars Climate Orbiter:
+                        <pre><code class="language-python">
+meters = Meters(100)
+feet = Feet(328)
+# meters + feet  # Type error!
+total = meters + feet.to_meters()  # OK
+                        </code></pre>
+                    </li>
+                    
+                    <li class="fragment">
+                        <strong>Result Monad:</strong> Extindeți clasa <code>Result[T]</code>
+                        cu metode <code>and_then</code>, <code>or_else</code>, <code>unwrap_or</code>.
+                    </li>
+                    
+                    <li class="fragment">
+                        <strong>Type-Safe Builder:</strong> Implementați un Builder pattern
+                        unde compilatorul verifică că toate câmpurile obligatorii sunt setate.
+                    </li>
+                </ol>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- END SLIDE -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #161b22 100%)">
+                <h1>Întrebări?</h1>
+                <p style="color: #8b949e;">
+                    Săptămâna viitoare: <strong>Complexitate Algoritmică</strong>
+                </p>
+                <hr style="border-color: #30363d; margin: 30px 0;">
+                <p style="font-size: 0.7em; color: #8b949e;">
+                    📧 antonio.clim@csie.ase.ro<br>
+                    🔗 github.com/ase-csie/computational-thinking
+                </p>
+            </section>
+            
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/math/math.js"></script>
+    
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealNotes, RevealMath.KaTeX ]
+        });
+    </script>
+</body>
+</html>

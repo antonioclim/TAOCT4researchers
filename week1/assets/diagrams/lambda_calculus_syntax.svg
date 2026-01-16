@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <title>Lambda Calculus Syntax</title>
+  <desc>Diagram showing the three forms of lambda expressions: variables, abstractions, and applications.</desc>
+  
+  <defs>
+    <!-- Gradient for boxes -->
+    <linearGradient id="varGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4edda"/>
+      <stop offset="100%" style="stop-color:#28a745"/>
+    </linearGradient>
+    
+    <linearGradient id="absGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#cce5ff"/>
+      <stop offset="100%" style="stop-color:#0d6efd"/>
+    </linearGradient>
+    
+    <linearGradient id="appGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8d7da"/>
+      <stop offset="100%" style="stop-color:#dc3545"/>
+    </linearGradient>
+    
+    <!-- Tree node style -->
+    <linearGradient id="nodeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff"/>
+      <stop offset="100%" style="stop-color:#e9ecef"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="500" fill="#ffffff"/>
+  
+  <!-- Title -->
+  <text x="400" y="35" font-family="Georgia, serif" font-size="24" font-weight="bold" 
+        text-anchor="middle" fill="#212529">Lambda Calculus Syntax</text>
+  
+  <!-- Section 1: Variable -->
+  <g id="variable-section" transform="translate(50, 60)">
+    <rect x="0" y="0" width="200" height="100" rx="10" fill="url(#varGradient)" 
+          stroke="#28a745" stroke-width="2" opacity="0.3"/>
+    <rect x="0" y="0" width="200" height="30" rx="10" fill="#28a745"/>
+    <text x="100" y="22" font-family="Arial, sans-serif" font-size="14" font-weight="bold" 
+          text-anchor="middle" fill="#ffffff">VARIABLE</text>
+    
+    <text x="100" y="55" font-family="Georgia, serif" font-size="20" font-style="italic"
+          text-anchor="middle" fill="#155724">x, y, z, ...</text>
+    <text x="100" y="85" font-family="Arial, sans-serif" font-size="12" 
+          text-anchor="middle" fill="#495057">Named reference</text>
+  </g>
+  
+  <!-- Section 2: Abstraction -->
+  <g id="abstraction-section" transform="translate(300, 60)">
+    <rect x="0" y="0" width="200" height="100" rx="10" fill="url(#absGradient)" 
+          stroke="#0d6efd" stroke-width="2" opacity="0.3"/>
+    <rect x="0" y="0" width="200" height="30" rx="10" fill="#0d6efd"/>
+    <text x="100" y="22" font-family="Arial, sans-serif" font-size="14" font-weight="bold" 
+          text-anchor="middle" fill="#ffffff">ABSTRACTION</text>
+    
+    <text x="100" y="55" font-family="Georgia, serif" font-size="20" font-style="italic"
+          text-anchor="middle" fill="#0d47a1">λx.M</text>
+    <text x="100" y="85" font-family="Arial, sans-serif" font-size="12" 
+          text-anchor="middle" fill="#495057">Function definition</text>
+  </g>
+  
+  <!-- Section 3: Application -->
+  <g id="application-section" transform="translate(550, 60)">
+    <rect x="0" y="0" width="200" height="100" rx="10" fill="url(#appGradient)" 
+          stroke="#dc3545" stroke-width="2" opacity="0.3"/>
+    <rect x="0" y="0" width="200" height="30" rx="10" fill="#dc3545"/>
+    <text x="100" y="22" font-family="Arial, sans-serif" font-size="14" font-weight="bold" 
+          text-anchor="middle" fill="#ffffff">APPLICATION</text>
+    
+    <text x="100" y="55" font-family="Georgia, serif" font-size="20" font-style="italic"
+          text-anchor="middle" fill="#721c24">M N</text>
+    <text x="100" y="85" font-family="Arial, sans-serif" font-size="12" 
+          text-anchor="middle" fill="#495057">Function call</text>
+  </g>
+  
+  <!-- Grammar definition -->
+  <g id="grammar" transform="translate(50, 180)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#212529">
+      Grammar:
+    </text>
+    <text x="0" y="30" font-family="monospace" font-size="14" fill="#495057">
+      expr  ::=  var                  (Variable)
+    </text>
+    <text x="0" y="50" font-family="monospace" font-size="14" fill="#495057">
+            |  λvar.expr            (Abstraction)
+    </text>
+    <text x="0" y="70" font-family="monospace" font-size="14" fill="#495057">
+            |  expr expr            (Application)
+    </text>
+  </g>
+  
+  <!-- Example: AST for (λx.x) y -->
+  <g id="example-tree" transform="translate(400, 180)">
+    <text x="150" y="0" font-family="Arial, sans-serif" font-size="16" font-weight="bold" 
+          text-anchor="middle" fill="#212529">
+      Example: (λx.x) y
+    </text>
+    
+    <!-- Application node (root) -->
+    <circle cx="150" cy="50" r="25" fill="#f8d7da" stroke="#dc3545" stroke-width="2"/>
+    <text x="150" y="55" font-family="monospace" font-size="12" font-weight="bold"
+          text-anchor="middle" fill="#721c24">App</text>
+    
+    <!-- Lines to children -->
+    <line x1="130" y1="70" x2="80" y2="110" stroke="#495057" stroke-width="2"/>
+    <line x1="170" y1="70" x2="220" y2="110" stroke="#495057" stroke-width="2"/>
+    
+    <!-- Abstraction node (left child) -->
+    <circle cx="80" cy="130" r="25" fill="#cce5ff" stroke="#0d6efd" stroke-width="2"/>
+    <text x="80" y="127" font-family="monospace" font-size="12" font-weight="bold"
+          text-anchor="middle" fill="#0d47a1">λx</text>
+    <text x="80" y="142" font-family="monospace" font-size="10"
+          text-anchor="middle" fill="#0d47a1">Abs</text>
+    
+    <!-- Variable node (right child) -->
+    <circle cx="220" cy="130" r="25" fill="#d4edda" stroke="#28a745" stroke-width="2"/>
+    <text x="220" y="135" font-family="monospace" font-size="14" font-weight="bold"
+          text-anchor="middle" fill="#155724">y</text>
+    
+    <!-- Line to abstraction body -->
+    <line x1="80" y1="155" x2="80" y2="190" stroke="#495057" stroke-width="2"/>
+    
+    <!-- Variable node (body of abstraction) -->
+    <circle cx="80" cy="210" r="25" fill="#d4edda" stroke="#28a745" stroke-width="2"/>
+    <text x="80" y="215" font-family="monospace" font-size="14" font-weight="bold"
+          text-anchor="middle" fill="#155724">x</text>
+    
+    <!-- Labels -->
+    <text x="40" y="135" font-family="Arial, sans-serif" font-size="10" fill="#6c757d">function</text>
+    <text x="245" y="135" font-family="Arial, sans-serif" font-size="10" fill="#6c757d">argument</text>
+    <text x="105" y="215" font-family="Arial, sans-serif" font-size="10" fill="#6c757d">body</text>
+  </g>
+  
+  <!-- Beta Reduction -->
+  <g id="beta-reduction" transform="translate(50, 290)">
+    <rect x="0" y="0" width="700" height="80" rx="10" fill="#fff3cd" stroke="#ffc107" stroke-width="2"/>
+    
+    <text x="350" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="bold" 
+          text-anchor="middle" fill="#856404">β-Reduction (Beta Reduction)</text>
+    
+    <text x="350" y="50" font-family="Georgia, serif" font-size="18" font-style="italic"
+          text-anchor="middle" fill="#212529">(λx.M) N  →  M[x := N]</text>
+    
+    <text x="350" y="70" font-family="Arial, sans-serif" font-size="12" 
+          text-anchor="middle" fill="#856404">Substitute N for all free occurrences of x in M</text>
+  </g>
+  
+  <!-- Key Conventions -->
+  <g id="conventions" transform="translate(50, 390)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#212529">
+      Key Conventions:
+    </text>
+    
+    <circle cx="10" cy="25" r="4" fill="#495057"/>
+    <text x="25" y="30" font-family="Arial, sans-serif" font-size="12" fill="#495057">
+      Application is <tspan font-weight="bold">left-associative</tspan>: x y z = ((x y) z)
+    </text>
+    
+    <circle cx="10" cy="50" r="4" fill="#495057"/>
+    <text x="25" y="55" font-family="Arial, sans-serif" font-size="12" fill="#495057">
+      Abstraction extends <tspan font-weight="bold">as far right as possible</tspan>: λx.M N = λx.(M N)
+    </text>
+    
+    <circle cx="10" cy="75" r="4" fill="#495057"/>
+    <text x="25" y="80" font-family="Arial, sans-serif" font-size="12" fill="#495057">
+      <tspan font-weight="bold">Bound</tspan> variables (within λ scope) vs <tspan font-weight="bold">Free</tspan> variables (outside any λ)
+    </text>
+  </g>
+  
+  <!-- Examples -->
+  <g id="examples" transform="translate(450, 390)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#212529">
+      Classic Combinators:
+    </text>
+    
+    <text x="0" y="25" font-family="monospace" font-size="12" fill="#495057">
+      I = λx.x          <tspan font-family="Arial, sans-serif">(Identity)</tspan>
+    </text>
+    <text x="0" y="45" font-family="monospace" font-size="12" fill="#495057">
+      K = λx.λy.x       <tspan font-family="Arial, sans-serif">(Constant)</tspan>
+    </text>
+    <text x="0" y="65" font-family="monospace" font-size="12" fill="#495057">
+      S = λx.λy.λz.x z (y z)  <tspan font-family="Arial, sans-serif">(Substitution)</tspan>
+    </text>
+    <text x="0" y="85" font-family="monospace" font-size="12" fill="#495057">
+      Ω = (λx.x x)(λx.x x)  <tspan font-family="Arial, sans-serif">(Divergence)</tspan>
+    </text>
+  </g>
+</svg>
