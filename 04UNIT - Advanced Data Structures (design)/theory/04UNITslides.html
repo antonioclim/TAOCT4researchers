@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 4: Structuri de Date Avansate | Computational Thinking</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/night.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <style>
+        :root { --r-heading-color: #58a6ff; }
+        .reveal h1, .reveal h2 { text-transform: none; }
+        .reveal .slides section { text-align: left; }
+        
+        .hook-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-left: 4px solid #e94560;
+            padding: 20px 25px; margin: 20px 0;
+            border-radius: 0 8px 8px 0; font-style: italic;
+        }
+        .hook-box .source { font-size: 0.7em; color: #888; margin-top: 10px; font-style: normal; }
+        
+        .definition-box {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            border: 1px solid #58a6ff;
+            padding: 20px; margin: 15px 0; border-radius: 8px;
+        }
+        .definition-box h4 { color: #58a6ff; margin: 0 0 10px 0; }
+        
+        .theorem-box {
+            background: linear-gradient(135deg, #1a472a 0%, #16213e 100%);
+            border: 1px solid #3fb950;
+            padding: 20px; margin: 15px 0; border-radius: 8px;
+        }
+        .theorem-box h4 { color: #3fb950; margin: 0 0 10px 0; }
+        
+        .diagram-box {
+            background: #0d1117; border: 1px solid #30363d;
+            padding: 20px; border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.55em; line-height: 1.3;
+        }
+        
+        .two-columns { display: flex; gap: 30px; }
+        .two-columns > div { flex: 1; }
+        
+        .highlight-text { color: #ffa657; font-weight: bold; }
+        .small-text { font-size: 0.75em; color: #8b949e; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.7em; }
+        th, td { border: 1px solid #30363d; padding: 8px; text-align: left; }
+        th { background: #161b22; color: #58a6ff; }
+        
+        .complexity-good { color: #3fb950; }
+        .complexity-ok { color: #ffa657; }
+        .complexity-bad { color: #f85149; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- TITLE -->
+            <section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #161b22 100%)">
+                <h1 style="font-size: 2em;">🌳 Săptămâna 4</h1>
+                <h2 style="color: #58a6ff; font-size: 1.5em;">STRUCTURI DE DATE AVANSATE</h2>
+                <p style="color: #8b949e; font-size: 0.9em;">
+                    Hash Tables • Arbori • Grafuri • Bloom Filters
+                </p>
+                <hr style="border-color: #30363d; margin: 30px 0;">
+                <p style="font-size: 0.7em; color: #8b949e;">
+                    THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS<br>
+                    Versiunea 2.1 — Editura X
+                </p>
+            </section>
+            
+            <!-- HOOK 1: Bitcoin -->
+            <section>
+                <h2>🔗 Structuri care au schimbat lumea</h2>
+                
+                <div class="hook-box">
+                    <p>
+                        În 2008, Satoshi Nakamoto a publicat whitepaper-ul Bitcoin. 
+                        La bază: un <strong>Merkle tree</strong> — o structură de date inventată 
+                        în 1979 de Ralph Merkle.
+                    </p>
+                    <p>
+                        Fără Merkle trees, blockchain-ul ar fi imposibil. Cu ele, 
+                        poți verifica tranzacții în O(log n) fără a descărca întregul lanț.
+                    </p>
+                    <p class="source">
+                        — La începutul lui 2025, capitalizarea totală a criptomonedelor 
+                        depășea $2 trilioane — totul bazat pe structuri de date inventate 
+                        cu decenii în urmă.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- AGENDA -->
+            <section>
+                <h2>📋 Agenda</h2>
+                
+                <table>
+                    <tr><th>Timp</th><th>Modul</th><th>Conținut</th></tr>
+                    <tr><td>0:00-0:50</td><td>Teorie</td><td>Hash tables, arbori echilibrați, grafuri</td></tr>
+                    <tr><td>0:50-1:40</td><td>Python</td><td>collections internals, NetworkX</td></tr>
+                    <tr><td>1:40-1:55</td><td colspan="2" style="text-align:center;">☕ Pauză</td></tr>
+                    <tr><td>1:55-2:45</td><td>C++</td><td>STL containers, custom allocators</td></tr>
+                    <tr><td>2:45-3:30</td><td>JavaScript</td><td>D3.js graph visualization</td></tr>
+                    <tr><td>3:30-4:00</td><td>Lab</td><td>Bibliotecă de grafuri polyglot</td></tr>
+                </table>
+            </section>
+            
+            <!-- PART I: HASH TABLES -->
+            <section>
+                <section>
+                    <h1>PARTEA I</h1>
+                    <h2 style="color: #58a6ff;">Hash Tables</h2>
+                    <p class="small-text">De ce O(1) nu e magie</p>
+                </section>
+                
+                <!-- HASH FUNCTION -->
+                <section>
+                    <h2>Funcția Hash: Esența Structurii</h2>
+                    
+                    <div class="definition-box">
+                        <h4>Definiție</h4>
+                        <p>
+                            O <strong>funcție hash</strong> h: U → {0, 1, ..., m-1} mapează 
+                            un univers U de chei posibile la un set finit de m "bucket-uri".
+                        </p>
+                    </div>
+                    
+                    <div class="diagram-box">
+<pre>
+    Cheile din U           Hash function h           Tabelul (array)
+    ┌─────────┐                                     ┌───────────────┐
+    │  "Ana"  │ ───────────────────────────────▶   │ 0: ("Ana", A) │
+    │  "Bob"  │ ─────────▶  h(k) = k mod m  ───▶   │ 1:            │
+    │  "Eve"  │ ─────────────────────────────────▶ │ 2: ("Eve", E) │
+    │  "Dan"  │ ───────────────────────────────▶   │ 3: ("Dan", D) │
+    │  "Fay"  │ ─────────────────────────────────▶ │ 4: ("Bob", B) │
+    └─────────┘                                     │    ("Fay", F) │ ← COLIZIUNE!
+                                                    └───────────────┘
+    
+    COLIZIUNE: h("Bob") == h("Fay")
+    
+    Strategii de rezolvare:
+    ├── Chaining: liste înlănțuite în fiecare bucket
+    ├── Open addressing: probing liniar/quadratic/double hashing
+    └── Robin Hood hashing: "fură de la bogați"
+</pre>
+                    </div>
+                </section>
+                
+                <!-- LOAD FACTOR -->
+                <section>
+                    <h2>Factorul de Încărcare</h2>
+                    
+                    <div class="definition-box">
+                        <h4>Load Factor</h4>
+                        <p>α = n/m unde n = numărul de elemente, m = numărul de bucket-uri</p>
+                    </div>
+                    
+                    <table>
+                        <tr>
+                            <th>α</th>
+                            <th>Performanță Căutare</th>
+                            <th>Memorie</th>
+                            <th>Recomandare</th>
+                        </tr>
+                        <tr>
+                            <td>< 0.5</td>
+                            <td class="complexity-good">Excelentă</td>
+                            <td class="complexity-bad">Risipă</td>
+                            <td>OK pentru read-heavy</td>
+                        </tr>
+                        <tr>
+                            <td>0.5-0.75</td>
+                            <td class="complexity-good">Foarte bună</td>
+                            <td class="complexity-good">Eficientă</td>
+                            <td><strong>IDEAL</strong></td>
+                        </tr>
+                        <tr>
+                            <td>0.75-0.9</td>
+                            <td class="complexity-ok">Bună</td>
+                            <td class="complexity-good">Foarte eficientă</td>
+                            <td>OK pentru space-constrained</td>
+                        </tr>
+                        <tr>
+                            <td>> 0.9</td>
+                            <td class="complexity-bad">Degradată</td>
+                            <td class="complexity-good">Maximă</td>
+                            <td>Evitați!</td>
+                        </tr>
+                    </table>
+                    
+                    <p class="fragment small-text">
+                        Python dict: resize la α=0.67. Java HashMap: resize la α=0.75.
+                    </p>
+                </section>
+                
+                <!-- HOOK 2: Google's Engineering -->
+                <section>
+                    <h2>Hash Tables în Producție</h2>
+                    
+                    <div class="hook-box">
+                        <p>
+                            În 2017, Google a înlocuit <code>std::unordered_map</code> din întreaga 
+                            lor codebase cu o implementare custom numită <strong>Swiss Table</strong> 
+                            (absl::flat_hash_map).
+                        </p>
+                        <p>
+                            Rezultat: ~1% reducere în utilizarea globală de CPU a Google.
+                            Pentru o companie de mărimea Google, asta înseamnă milioane de dolari 
+                            economisiți anual.
+                        </p>
+                        <p class="source">
+                            — CppCon 2017: "Designing a Fast, Efficient, Cache-friendly Hash Table"
+                        </p>
+                    </div>
+                </section>
+            </section>
+            
+            <!-- PART II: TREES -->
+            <section>
+                <section>
+                    <h1>PARTEA II</h1>
+                    <h2 style="color: #58a6ff;">Arbori Echilibrați</h2>
+                    <p class="small-text">AVL, Red-Black, B-Trees</p>
+                </section>
+                
+                <!-- BST PROBLEM -->
+                <section>
+                    <h2>Problema BST-urilor Simple</h2>
+                    
+                    <div class="two-columns">
+                        <div>
+                            <h4 style="color: #3fb950;">BST Echilibrat</h4>
+                            <div class="diagram-box">
+<pre>
+        4
+       / \
+      2   6
+     / \ / \
+    1  3 5  7
+
+    Înălțime: O(log n)
+    Căutare: O(log n)
+</pre>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="color: #f85149;">BST Degenerat</h4>
+                            <div class="diagram-box">
+<pre>
+    1
+     \
+      2
+       \
+        3
+         \
+          4
+           \
+            5
+
+    Înălțime: O(n)
+    Căutare: O(n) 😱
+</pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="fragment">
+                        <strong>Soluția:</strong> Arbori auto-echilibrați care mențin 
+                        h = O(log n) după orice operație.
+                    </p>
+                </section>
+                
+                <!-- AVL TREES -->
+                <section>
+                    <h2>AVL Trees (1962)</h2>
+                    
+                    <div class="definition-box">
+                        <h4>Proprietatea AVL</h4>
+                        <p>
+                            Pentru orice nod, diferența de înălțime între subarborele stâng 
+                            și cel drept (balance factor) este ∈ {-1, 0, 1}.
+                        </p>
+                    </div>
+                    
+                    <div class="diagram-box">
+<pre>
+    ROTAȚIE SIMPLĂ DREAPTA (dezechilibru LL):
+    
+    Înainte:            După:
+        z                   y
+       /                   / \
+      y         ───▶      x   z
+     /
+    x
+    
+    ROTAȚIE DUBLĂ STÂNGA-DREAPTA (dezechilibru LR):
+    
+    Înainte:            Pas 1:              Pas 2:
+        z                   z                   x
+       /                   /                   / \
+      y         ───▶      x        ───▶      y   z
+       \                 /
+        x               y
+</pre>
+                    </div>
+                    
+                    <p class="small-text fragment">
+                        Complexitate: Insert/Delete/Search = O(log n) garantat.
+                        Overhead: factor de echilibru per nod + rotații.
+                    </p>
+                </section>
+                
+                <!-- B-TREES -->
+                <section>
+                    <h2>B-Trees: Arbori pentru Disk</h2>
+                    
+                    <div class="hook-box" style="font-size: 0.9em;">
+                        <p>
+                            Fiecare query la baza de date folosește B-Trees.
+                            PostgreSQL, MySQL, SQLite — toate indexează cu B+ Trees.
+                        </p>
+                    </div>
+                    
+                    <div class="diagram-box">
+<pre>
+    B-Tree de ordin 3 (fiecare nod are 2-3 chei, 3-4 copii):
+    
+                        ┌─────────────┐
+                        │   17 │ 35   │           ← Rădăcină
+                        └──┬──┴──┬──┴──┘
+                           │     │     │
+            ┌──────────────┘     │     └──────────────┐
+            │                    │                    │
+      ┌─────┴─────┐       ┌─────┴─────┐       ┌─────┴─────┐
+      │  5 │ 13   │       │ 22 │ 28   │       │ 42 │ 51   │
+      └───────────┘       └───────────┘       └───────────┘
+    
+    Avantaje pentru disk:
+    ├── Noduri mari (100s de chei) = mai puține I/O operations
+    ├── Înălțime mică = ~3-4 nivele pentru miliarde de înregistrări
+    └── Acces secvențial în frunze = range queries eficiente
+</pre>
+                    </div>
+                </section>
+            </section>
+            
+            <!-- PART III: GRAPHS -->
+            <section>
+                <section>
+                    <h1>PARTEA III</h1>
+                    <h2 style="color: #58a6ff;">Grafuri</h2>
+                    <p class="small-text">Reprezentare, Traversare, Shortest Path</p>
+                </section>
+                
+                <!-- GRAPH REPRESENTATIONS -->
+                <section>
+                    <h2>Reprezentări de Grafuri</h2>
+                    
+                    <div class="two-columns">
+                        <div>
+                            <h4>Matrice de Adiacență</h4>
+                            <div class="diagram-box" style="font-size: 0.55em;">
+<pre>
+Graf:                Matrice:
+  0───1                0  1  2  3
+  │\ /│              0 [0, 1, 1, 0]
+  │ X │              1 [1, 0, 1, 1]
+  │/ \│              2 [1, 1, 0, 1]
+  2───3              3 [0, 1, 1, 0]
+
+Spațiu: O(V²)
+Edge check: O(1)
+All neighbors: O(V)
+
+BUN pentru: grafuri dense
+</pre>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Liste de Adiacență</h4>
+                            <div class="diagram-box" style="font-size: 0.55em;">
+<pre>
+Graf:                Liste:
+  0───1              0: [1, 2]
+  │\ /│              1: [0, 2, 3]
+  │ X │              2: [0, 1, 3]
+  │/ \│              3: [1, 2]
+  2───3              
+
+Spațiu: O(V + E)
+Edge check: O(degree)
+All neighbors: O(degree)
+
+BUN pentru: grafuri sparse
+</pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="fragment small-text">
+                        <strong>În practică:</strong> Majoritatea grafurilor din lumea reală sunt sparse.
+                        Rețelele sociale: ~100-500 conexiuni per utilizator, nu milioane.
+                    </p>
+                </section>
+                
+                <!-- BFS vs DFS -->
+                <section>
+                    <h2>BFS vs DFS</h2>
+                    
+                    <div class="two-columns">
+                        <div>
+                            <h4>Breadth-First Search</h4>
+                            <pre><code class="language-python" style="font-size: 0.65em;">
+def bfs(graph, start):
+    visited = {start}
+    queue = deque([start])
+    
+    while queue:
+        node = queue.popleft()
+        yield node
+        
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+                            </code></pre>
+                            <p class="small-text">
+                                ✓ Shortest path (unweighted)<br>
+                                ✓ Level-order traversal<br>
+                                Memorie: O(V)
+                            </p>
+                        </div>
+                        <div>
+                            <h4>Depth-First Search</h4>
+                            <pre><code class="language-python" style="font-size: 0.65em;">
+def dfs(graph, start):
+    visited = set()
+    stack = [start]
+    
+    while stack:
+        node = stack.pop()
+        if node not in visited:
+            visited.add(node)
+            yield node
+            
+            for neighbor in graph[node]:
+                stack.append(neighbor)
+                            </code></pre>
+                            <p class="small-text">
+                                ✓ Topological sort<br>
+                                ✓ Cycle detection<br>
+                                Memorie: O(h) recursiv
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- DIJKSTRA -->
+                <section>
+                    <h2>Dijkstra's Algorithm (1956)</h2>
+                    
+                    <div class="hook-box" style="font-size: 0.9em;">
+                        <p>
+                            Edsger Dijkstra a inventat algoritmul în 20 de minute, 
+                            pe o terasă din Amsterdam, fără hârtie.
+                        </p>
+                        <p class="source">
+                            — "One of the reasons that it is so nice was that I designed it without 
+                            pencil and paper. I learned later that one of the advantages of designing 
+                            without pencil and paper is that you are almost forced to avoid all 
+                            avoidable complexities."
+                        </p>
+                    </div>
+                    
+                    <pre><code class="language-python" style="font-size: 0.7em;">
+def dijkstra(graph, start):
+    dist = {node: float('inf') for node in graph}
+    dist[start] = 0
+    pq = [(0, start)]  # (distance, node)
+    
+    while pq:
+        d, u = heappop(pq)
+        if d > dist[u]:
+            continue  # Already found a better path
+        
+        for v, weight in graph[u]:
+            if dist[u] + weight < dist[v]:
+                dist[v] = dist[u] + weight
+                heappush(pq, (dist[v], v))
+    
+    return dist
+                    </code></pre>
+                    
+                    <p class="small-text">Complexitate: O((V + E) log V) cu binary heap</p>
+                </section>
+            </section>
+            
+            <!-- PART IV: PROBABILISTIC -->
+            <section>
+                <section>
+                    <h1>PARTEA IV</h1>
+                    <h2 style="color: #58a6ff;">Structuri Probabilistice</h2>
+                    <p class="small-text">Bloom Filters, Count-Min Sketch</p>
+                </section>
+                
+                <!-- BLOOM FILTERS -->
+                <section>
+                    <h2>Bloom Filter (1970)</h2>
+                    
+                    <div class="definition-box">
+                        <h4>Ce este?</h4>
+                        <p>
+                            Un Bloom filter testează <em>membership</em> cu:
+                            <ul>
+                                <li><strong>No false negatives:</strong> Dacă zice "nu e", sigur nu e</li>
+                                <li><strong>Possible false positives:</strong> Dacă zice "poate e", verifică!</li>
+                            </ul>
+                        </p>
+                    </div>
+                    
+                    <div class="diagram-box">
+<pre>
+    Insert "cat":                      Check "dog":
+    h₁("cat")=2, h₂("cat")=5          h₁("dog")=1, h₂("dog")=5
+    
+    [0, 0, 1, 0, 0, 1, 0, 0]          [0, 0, 1, 0, 0, 1, 0, 0]
+           ↑        ↑                     ↑           ↑
+           set     set                   0 → NOT IN SET (certain!)
+    
+    Check "cat":
+    h₁("cat")=2, h₂("cat")=5
+    [0, 0, 1, 0, 0, 1, 0, 0]
+           ↑        ↑
+           1        1  → MIGHT BE IN SET (verify!)
+</pre>
+                    </div>
+                    
+                    <p class="fragment small-text">
+                        <strong>Utilizări:</strong> Cache lookup (Chrome), spam detection, 
+                        database query optimization (Cassandra, PostgreSQL).
+                    </p>
+                </section>
+                
+                <!-- BLOOM MATH -->
+                <section>
+                    <h2>Matematica Bloom Filters</h2>
+                    
+                    <div class="theorem-box">
+                        <h4>Probabilitatea de False Positive</h4>
+                        <p>
+                            Pentru n elemente, m biți, k funcții hash:
+                        </p>
+                        <div style="text-align: center; margin: 15px 0;">
+                            <strong>p ≈ (1 - e<sup>-kn/m</sup>)<sup>k</sup></strong>
+                        </div>
+                        <p>
+                            Numărul optim de funcții hash: <strong>k = (m/n) · ln(2)</strong>
+                        </p>
+                    </div>
+                    
+                    <table style="font-size: 0.7em;">
+                        <tr>
+                            <th>m/n (biți/element)</th>
+                            <th>k optim</th>
+                            <th>False positive rate</th>
+                        </tr>
+                        <tr><td>8</td><td>6</td><td>2.2%</td></tr>
+                        <tr><td>10</td><td>7</td><td>0.82%</td></tr>
+                        <tr><td>12</td><td>8</td><td>0.31%</td></tr>
+                        <tr><td>16</td><td>11</td><td>0.046%</td></tr>
+                    </table>
+                </section>
+            </section>
+            
+            <!-- LAB -->
+            <section>
+                <h2>🔬 Laborator: Graph Library</h2>
+                
+                <div class="diagram-box">
+<pre>
+┌─────────────────────────────────────────────────────────────────────────┐
+│                     POLYGLOT GRAPH LIBRARY                              │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│   Python (Core Logic):                                                  │
+│   ├── Graph class cu adjacency list                                     │
+│   ├── BFS, DFS, Dijkstra, A*                                           │
+│   ├── Cycle detection, topological sort                                │
+│   └── NetworkX integration                                             │
+│                                                                         │
+│   C++ (Performance):                                                    │
+│   ├── Template Graph<Node, Edge>                                        │
+│   ├── Priority queue optimization                                       │
+│   └── Cache-friendly adjacency list                                    │
+│                                                                         │
+│   JavaScript (Visualization):                                           │
+│   ├── D3.js force-directed layout                                       │
+│   ├── Interactive node/edge manipulation                               │
+│   └── Algorithm animation (step-by-step)                               │
+│                                                                         │
+│   Dataset: Romanian cities road network                                │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+</pre>
+                </div>
+            </section>
+            
+            <!-- END -->
+            <section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #161b22 100%)">
+                <h1>Întrebări?</h1>
+                <p style="color: #8b949e;">
+                    <strong>MIDTERM EXAM</strong> — Săptămâna viitoare!<br>
+                    Format: 2h practic, open-book, problemă nouă
+                </p>
+                <hr style="border-color: #30363d; margin: 30px 0;">
+                <p style="font-size: 0.7em; color: #8b949e;">
+                    📧 antonio.clim@csie.ase.ro
+                </p>
+            </section>
+            
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/math/math.js"></script>
+    
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            plugins: [ RevealHighlight, RevealMath.KaTeX ]
+        });
+    </script>
+</body>
+</html>
