@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420" width="750" height="420">
+  <defs>
+    <style>
+      .title { font: bold 18px sans-serif; fill: #58a6ff; }
+      .class-name { font: bold 14px monospace; fill: #ffffff; }
+      .method { font: 12px monospace; fill: #8b949e; }
+      .stereotype { font: italic 11px sans-serif; fill: #79c0ff; }
+      .arrow { stroke: #58a6ff; stroke-width: 2; fill: none; }
+      .arrow-head { fill: #58a6ff; }
+      .dashed { stroke-dasharray: 5,5; }
+      .box { fill: #161b22; stroke: #30363d; stroke-width: 2; rx: 5; }
+      .interface-box { fill: #0d1117; stroke: #58a6ff; stroke-width: 2; rx: 5; }
+      .client-box { fill: #1a472a; stroke: #3fb950; stroke-width: 2; rx: 5; }
+      .label { font: 11px sans-serif; fill: #8b949e; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="750" height="420" fill="#0d1117"/>
+  
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" class="title">Factory Pattern: Agent Creation</text>
+  
+  <!-- Client (Simulation) -->
+  <rect x="40" y="80" width="170" height="90" class="client-box"/>
+  <text x="125" y="105" text-anchor="middle" class="class-name">Simulation</text>
+  <line x1="50" y1="115" x2="200" y2="115" stroke="#3fb950" stroke-width="1"/>
+  <text x="50" y="135" class="method">- factory: AgentFactory</text>
+  <line x1="50" y1="145" x2="200" y2="145" stroke="#3fb950" stroke-width="1"/>
+  <text x="50" y="165" class="method">+ run() → Results</text>
+  
+  <!-- Factory Interface -->
+  <rect x="290" y="80" width="170" height="70" class="interface-box"/>
+  <text x="375" y="100" text-anchor="middle" class="stereotype">«Protocol»</text>
+  <text x="375" y="120" text-anchor="middle" class="class-name">AgentFactory</text>
+  <line x1="300" y1="130" x2="450" y2="130" stroke="#58a6ff" stroke-width="1"/>
+  <text x="300" y="145" class="method">+ create(id: str) → Agent</text>
+  
+  <!-- Arrow from Client to Factory Interface -->
+  <line x1="210" y1="115" x2="290" y2="115" class="arrow"/>
+  <polygon points="285,115 275,110 275,120" class="arrow-head"/>
+  <text x="245" y="105" class="label">uses</text>
+  
+  <!-- Product Interface -->
+  <rect x="540" y="80" width="170" height="70" class="interface-box"/>
+  <text x="625" y="100" text-anchor="middle" class="stereotype">«Protocol»</text>
+  <text x="625" y="120" text-anchor="middle" class="class-name">Agent</text>
+  <line x1="550" y1="130" x2="700" y2="130" stroke="#58a6ff" stroke-width="1"/>
+  <text x="550" y="145" class="method">+ act(env) → Action</text>
+  
+  <!-- Arrow from Factory to Product (creates) -->
+  <line x1="460" y1="115" x2="540" y2="115" class="arrow dashed"/>
+  <polygon points="535,115 525,110 525,120" class="arrow-head"/>
+  <text x="490" y="105" class="label">creates</text>
+  
+  <!-- Concrete Factories -->
+  <rect x="220" y="200" width="180" height="80" class="box"/>
+  <text x="310" y="225" text-anchor="middle" class="class-name">CooperativeFactory</text>
+  <line x1="230" y1="235" x2="390" y2="235" stroke="#30363d" stroke-width="1"/>
+  <text x="230" y="255" class="method">+ create(id) → Agent</text>
+  <text x="230" y="270" class="method" style="fill: #3fb950;">  → CooperativeAgent</text>
+  
+  <rect x="420" y="200" width="180" height="80" class="box"/>
+  <text x="510" y="225" text-anchor="middle" class="class-name">CompetitiveFactory</text>
+  <line x1="430" y1="235" x2="590" y2="235" stroke="#30363d" stroke-width="1"/>
+  <text x="430" y="255" class="method">+ create(id) → Agent</text>
+  <text x="430" y="270" class="method" style="fill: #f85149;">  → CompetitiveAgent</text>
+  
+  <!-- Implements arrows to Factory Interface -->
+  <line x1="310" y1="200" x2="355" y2="150" class="arrow dashed"/>
+  <polygon points="355,150 348,160 358,157" class="arrow-head"/>
+  
+  <line x1="510" y1="200" x2="395" y2="150" class="arrow dashed"/>
+  <polygon points="395,150 392,160 402,157" class="arrow-head"/>
+  
+  <!-- Concrete Products -->
+  <rect x="470" y="320" width="180" height="80" class="box"/>
+  <text x="560" y="345" text-anchor="middle" class="class-name">CooperativeAgent</text>
+  <line x1="480" y1="355" x2="640" y2="355" stroke="#30363d" stroke-width="1"/>
+  <text x="480" y="375" class="method">+ act(env) → cooperate</text>
+  <text x="480" y="390" class="method">+ strategy: tit-for-tat</text>
+  
+  <rect x="200" y="320" width="180" height="80" class="box"/>
+  <text x="290" y="345" text-anchor="middle" class="class-name">CompetitiveAgent</text>
+  <line x1="210" y1="355" x2="370" y2="355" stroke="#30363d" stroke-width="1"/>
+  <text x="210" y="375" class="method">+ act(env) → compete</text>
+  <text x="210" y="390" class="method">+ aggression: 0.8</text>
+  
+  <!-- Implements arrows to Agent Interface -->
+  <line x1="560" y1="320" x2="610" y2="150" class="arrow dashed"/>
+  <polygon points="610,150 603,160 613,157" class="arrow-head"/>
+  
+  <line x1="290" y1="320" x2="610" y2="150" class="arrow dashed"/>
+  <polygon points="610,150 603,160 613,157" class="arrow-head"/>
+  
+  <!-- Creates arrows (from factory to product) -->
+  <line x1="310" y1="280" x2="290" y2="320" class="arrow dashed" style="stroke: #d29922;"/>
+  <polygon points="290,315 283,305 293,308" style="fill: #d29922;"/>
+  
+  <line x1="510" y1="280" x2="560" y2="320" class="arrow dashed" style="stroke: #d29922;"/>
+  <polygon points="560,315 553,305 563,308" style="fill: #d29922;"/>
+  
+  <!-- Legend -->
+  <rect x="40" y="320" width="140" height="80" fill="#161b22" stroke="#30363d" rx="5"/>
+  <text x="50" y="340" class="label">Legend:</text>
+  <line x1="50" y1="355" x2="80" y2="355" class="arrow"/>
+  <text x="90" y="360" class="label">uses</text>
+  <line x1="50" y1="375" x2="80" y2="375" class="arrow dashed"/>
+  <text x="90" y="380" class="label">implements</text>
+  <line x1="50" y1="395" x2="80" y2="395" class="arrow dashed" style="stroke: #d29922;"/>
+  <text x="90" y="400" class="label" style="fill: #d29922;">creates</text>
+</svg>
