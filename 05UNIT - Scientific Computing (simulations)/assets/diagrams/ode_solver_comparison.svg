@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 550">
+  <defs>
+    <style>
+      .title { font: bold 18px sans-serif; fill: #1a1a2e; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .label { font: 12px sans-serif; fill: #333; }
+      .axis-label { font: bold 14px sans-serif; fill: #1a1a2e; }
+      .grid { stroke: #e0e0e0; stroke-width: 1; }
+      .axis { stroke: #333; stroke-width: 2; }
+      .line-euler { stroke: #e94560; stroke-width: 2.5; fill: none; }
+      .line-rk4 { stroke: #0f3460; stroke-width: 2.5; fill: none; }
+      .line-exact { stroke: #16c79a; stroke-width: 2; stroke-dasharray: 5,3; fill: none; }
+      .point-euler { fill: #e94560; }
+      .point-rk4 { fill: #0f3460; }
+      .legend-box { fill: white; stroke: #ccc; stroke-width: 1; }
+      .formula { font: italic 13px serif; fill: #0f3460; }
+      .order-label { font: bold 12px sans-serif; }
+      .annotation { font: 11px sans-serif; fill: #666; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="550" fill="#fafafa"/>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" class="title">ODE Solver Comparison: Euler vs RK4</text>
+  <text x="400" y="50" text-anchor="middle" class="subtitle">Exponential decay: dy/dt = -y, y(0) = 1</text>
+  
+  <!-- Left plot: Solution comparison -->
+  <g transform="translate(60, 80)">
+    <text x="150" y="-10" text-anchor="middle" class="axis-label">Solution y(t)</text>
+    
+    <!-- Grid -->
+    <g class="grid">
+      <line x1="0" y1="0" x2="300" y2="0"/>
+      <line x1="0" y1="60" x2="300" y2="60"/>
+      <line x1="0" y1="120" x2="300" y2="120"/>
+      <line x1="0" y1="180" x2="300" y2="180"/>
+      <line x1="0" y1="0" x2="0" y2="180"/>
+      <line x1="100" y1="0" x2="100" y2="180"/>
+      <line x1="200" y1="0" x2="200" y2="180"/>
+      <line x1="300" y1="0" x2="300" y2="180"/>
+    </g>
+    
+    <!-- Axes -->
+    <line x1="0" y1="180" x2="300" y2="180" class="axis"/>
+    <line x1="0" y1="0" x2="0" y2="180" class="axis"/>
+    
+    <!-- Axis labels -->
+    <text x="0" y="200" class="label">0</text>
+    <text x="100" y="200" class="label">1</text>
+    <text x="200" y="200" class="label">2</text>
+    <text x="300" y="200" class="label">3</text>
+    <text x="150" y="225" text-anchor="middle" class="label">Time (t)</text>
+    
+    <text x="-10" y="5" text-anchor="end" class="label">1.0</text>
+    <text x="-10" y="65" text-anchor="end" class="label">0.75</text>
+    <text x="-10" y="125" text-anchor="end" class="label">0.5</text>
+    <text x="-10" y="185" text-anchor="end" class="label">0.25</text>
+    
+    <!-- Exact solution: y = e^(-t) -->
+    <path class="line-exact" d="
+      M 0,0
+      Q 50,30 100,63
+      Q 150,100 200,126
+      Q 250,145 300,155
+    "/>
+    
+    <!-- Euler solution (with h=0.5, showing drift) -->
+    <path class="line-euler" d="
+      M 0,0
+      L 50,45
+      L 100,78
+      L 150,105
+      L 200,126
+      L 250,142
+      L 300,155
+    "/>
+    <circle cx="0" cy="0" r="4" class="point-euler"/>
+    <circle cx="50" cy="45" r="4" class="point-euler"/>
+    <circle cx="100" cy="78" r="4" class="point-euler"/>
+    <circle cx="150" cy="105" r="4" class="point-euler"/>
+    <circle cx="200" cy="126" r="4" class="point-euler"/>
+    <circle cx="250" cy="142" r="4" class="point-euler"/>
+    <circle cx="300" cy="155" r="4" class="point-euler"/>
+    
+    <!-- RK4 solution (essentially exact) -->
+    <path class="line-rk4" d="
+      M 0,0
+      L 50,32
+      L 100,63
+      L 150,88
+      L 200,108
+      L 250,123
+      L 300,136
+    "/>
+    <circle cx="0" cy="0" r="4" class="point-rk4"/>
+    <circle cx="100" cy="63" r="4" class="point-rk4"/>
+    <circle cx="200" cy="108" r="4" class="point-rk4"/>
+    <circle cx="300" cy="136" r="4" class="point-rk4"/>
+  </g>
+  
+  <!-- Right plot: Error comparison (log scale) -->
+  <g transform="translate(460, 80)">
+    <text x="150" y="-10" text-anchor="middle" class="axis-label">Global Error vs Step Size</text>
+    
+    <!-- Grid -->
+    <g class="grid">
+      <line x1="0" y1="0" x2="280" y2="0"/>
+      <line x1="0" y1="45" x2="280" y2="45"/>
+      <line x1="0" y1="90" x2="280" y2="90"/>
+      <line x1="0" y1="135" x2="280" y2="135"/>
+      <line x1="0" y1="180" x2="280" y2="180"/>
+      <line x1="0" y1="0" x2="0" y2="180"/>
+      <line x1="70" y1="0" x2="70" y2="180"/>
+      <line x1="140" y1="0" x2="140" y2="180"/>
+      <line x1="210" y1="0" x2="210" y2="180"/>
+      <line x1="280" y1="0" x2="280" y2="180"/>
+    </g>
+    
+    <!-- Axes -->
+    <line x1="0" y1="180" x2="280" y2="180" class="axis"/>
+    <line x1="0" y1="0" x2="0" y2="180" class="axis"/>
+    
+    <!-- Axis labels (log scale) -->
+    <text x="0" y="200" class="label">0.5</text>
+    <text x="70" y="200" class="label">0.25</text>
+    <text x="140" y="200" class="label">0.125</text>
+    <text x="210" y="200" class="label">0.0625</text>
+    <text x="140" y="225" text-anchor="middle" class="label">Step size (h)</text>
+    
+    <text x="-10" y="5" text-anchor="end" class="label">10⁰</text>
+    <text x="-10" y="50" text-anchor="end" class="label">10⁻¹</text>
+    <text x="-10" y="95" text-anchor="end" class="label">10⁻²</text>
+    <text x="-10" y="140" text-anchor="end" class="label">10⁻³</text>
+    <text x="-10" y="185" text-anchor="end" class="label">10⁻⁴</text>
+    
+    <!-- Euler error: O(h) - slope 1 on log-log -->
+    <path class="line-euler" d="
+      M 0,30
+      L 70,58
+      L 140,86
+      L 210,114
+      L 280,142
+    "/>
+    <circle cx="0" cy="30" r="4" class="point-euler"/>
+    <circle cx="70" cy="58" r="4" class="point-euler"/>
+    <circle cx="140" cy="86" r="4" class="point-euler"/>
+    <circle cx="210" cy="114" r="4" class="point-euler"/>
+    <circle cx="280" cy="142" r="4" class="point-euler"/>
+    
+    <!-- RK4 error: O(h⁴) - slope 4 on log-log -->
+    <path class="line-rk4" d="
+      M 0,20
+      L 70,75
+      L 140,130
+      L 210,160
+      L 280,175
+    "/>
+    <circle cx="0" cy="20" r="4" class="point-rk4"/>
+    <circle cx="70" cy="75" r="4" class="point-rk4"/>
+    <circle cx="140" cy="130" r="4" class="point-rk4"/>
+    <circle cx="210" cy="160" r="4" class="point-rk4"/>
+    <circle cx="280" cy="175" r="4" class="point-rk4"/>
+    
+    <!-- Slope annotations -->
+    <text x="60" y="25" class="order-label" fill="#e94560">slope ≈ 1</text>
+    <text x="180" y="95" class="order-label" fill="#0f3460">slope ≈ 4</text>
+  </g>
+  
+  <!-- Legend -->
+  <g transform="translate(280, 330)">
+    <rect x="0" y="0" width="240" height="90" rx="5" class="legend-box"/>
+    <line x1="15" y1="25" x2="55" y2="25" class="line-euler"/>
+    <circle cx="35" cy="25" r="4" class="point-euler"/>
+    <text x="65" y="30" class="label">Euler — O(h) global error</text>
+    
+    <line x1="15" y1="50" x2="55" y2="50" class="line-rk4"/>
+    <circle cx="35" cy="50" r="4" class="point-rk4"/>
+    <text x="65" y="55" class="label">RK4 — O(h⁴) global error</text>
+    
+    <line x1="15" y1="75" x2="55" y2="75" class="line-exact"/>
+    <text x="65" y="80" class="label">Exact solution</text>
+  </g>
+  
+  <!-- Key formulas -->
+  <g transform="translate(50, 440)">
+    <rect x="0" y="0" width="700" height="90" rx="5" fill="#f5f5f5" stroke="#ddd"/>
+    
+    <text x="20" y="25" class="formula">Euler:</text>
+    <text x="80" y="25" class="label">y_{n+1} = y_n + h · f(t_n, y_n)</text>
+    <text x="320" y="25" class="annotation">1 function evaluation per step</text>
+    
+    <text x="20" y="50" class="formula">RK4:</text>
+    <text x="80" y="50" class="label">y_{n+1} = y_n + (h/6)(k₁ + 2k₂ + 2k₃ + k₄)</text>
+    <text x="380" y="50" class="annotation">4 function evaluations per step</text>
+    
+    <text x="20" y="75" class="annotation" font-weight="bold">Key insight:</text>
+    <text x="120" y="75" class="annotation">Halving h → Euler error ×½, RK4 error ×1/16</text>
+  </g>
+</svg>

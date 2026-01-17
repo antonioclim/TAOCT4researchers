@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>05UNIT: Calcul Științific și Simulări | Computational Thinking</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/night.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <style>
+        :root { --r-heading-color: #58a6ff; }
+        .reveal h1, .reveal h2 { text-transform: none; }
+        .reveal .slides section { text-align: left; }
+        
+        .hook-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-left: 4px solid #e94560;
+            padding: 20px 25px; margin: 20px 0;
+            border-radius: 0 8px 8px 0; font-style: italic;
+        }
+        .hook-box .source { font-size: 0.7em; color: #888; margin-top: 10px; font-style: normal; }
+        
+        .definition-box {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            border: 1px solid #58a6ff;
+            padding: 20px; margin: 15px 0; border-radius: 8px;
+        }
+        .definition-box h4 { color: #58a6ff; margin: 0 0 10px 0; }
+        
+        .theorem-box {
+            background: linear-gradient(135deg, #1a472a 0%, #16213e 100%);
+            border: 1px solid #3fb950;
+            padding: 20px; margin: 15px 0; border-radius: 8px;
+        }
+        .theorem-box h4 { color: #3fb950; margin: 0 0 10px 0; }
+        
+        .diagram-box {
+            background: #0d1117; border: 1px solid #30363d;
+            padding: 20px; border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.55em; line-height: 1.3;
+        }
+        
+        .two-columns { display: flex; gap: 30px; }
+        .two-columns > div { flex: 1; }
+        
+        .highlight-text { color: #ffa657; font-weight: bold; }
+        .small-text { font-size: 0.75em; color: #8b949e; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.7em; }
+        th, td { border: 1px solid #30363d; padding: 8px; text-align: left; }
+        th { background: #161b22; color: #58a6ff; }
+        
+        .equation-box {
+            background: #0d1117;
+            border: 1px solid #58a6ff;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- TITLE -->
+            <section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #161b22 100%)">
+                <h1 style="font-size: 2em;">🎲 05UNIT</h1>
+                <h2 style="color: #58a6ff; font-size: 1.5em;">CALCUL ȘTIINȚIFIC ȘI SIMULĂRI</h2>
+                <p style="color: #8b949e; font-size: 0.9em;">
+                    Monte Carlo • ODE Solvers • Agent-Based Modeling
+                </p>
+                <hr style="border-color: #30363d; margin: 30px 0;">
+                <p style="font-size: 0.7em; color: #8b949e;">
+                    THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS<br>
+                    Versiunea 2.1 — Editura X
+                </p>
+            </section>
+            
+            <!-- HOOK 1: Manhattan Project -->
+            <section>
+                <h2>🎯 Când matematica tradițională nu mai funcționează</h2>
+                
+                <div class="hook-box">
+                    <p>
+                        În 1946, Stanislaw Ulam se recupera după o operație și juca solitaire. 
+                        Încercând să calculeze probabilitatea de a câștiga, a realizat că 
+                        matematica analitică e imposibilă — dar <strong>simularea</strong> 
+                        a mii de jocuri e trivială.
+                    </p>
+                    <p>
+                        A convins-o pe echipa de la Los Alamos să aplice ideea la simulări 
+                        nucleare. Metoda a fost numită "Monte Carlo" — după cazinoul 
+                        unde unchiul lui Ulam pierdea bani.
+                    </p>
+                    <p class="source">
+                        — Astăzi, metodele Monte Carlo sunt fundamentale în fizică, finanțe, 
+                        machine learning, și orice domeniu care implică incertitudine.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- AGENDA -->
+            <section>
+                <h2>📋 Agenda</h2>
+                
+                <table>
+                    <tr><th>Timp</th><th>Modul</th><th>Conținut</th></tr>
+                    <tr><td>0:00-0:50</td><td>Teorie</td><td>PRNG, Monte Carlo, ODE basics</td></tr>
+                    <tr><td>0:50-1:40</td><td>Python</td><td>NumPy random, SciPy integrate, Mesa ABM</td></tr>
+                    <tr><td>1:40-1:55</td><td colspan="2" style="text-align:center;">☕ Pauză</td></tr>
+                    <tr><td>1:55-2:45</td><td>C++</td><td>&lt;random&gt;, Eigen, OpenMP parallelism</td></tr>
+                    <tr><td>2:45-3:30</td><td>JavaScript</td><td>Canvas animations, Three.js 3D</td></tr>
+                    <tr><td>3:30-4:00</td><td>Lab</td><td>Platformă simulare multi-model</td></tr>
+                </table>
+            </section>
+            
+            <!-- PART I: RANDOM NUMBERS -->
+            <section>
+                <section>
+                    <h1>PARTEA I</h1>
+                    <h2 style="color: #58a6ff;">Numere Pseudo-Aleatoare</h2>
+                    <p class="small-text">Determinism care pare haos</p>
+                </section>
+                
+                <!-- PRNG CONCEPT -->
+                <section>
+                    <h2>PRNG: Pseudo-Random Number Generators</h2>
+                    
+                    <div class="hook-box" style="font-size: 0.9em;">
+                        <p>
+                            <em>"Anyone who considers arithmetical methods of producing random 
+                            digits is, of course, in a state of sin."</em>
+                        </p>
+                        <p class="source">— John von Neumann, 1951</p>
+                    </div>
+                    
+                    <div class="definition-box">
+                        <h4>Linear Congruential Generator (LCG)</h4>
+                        <div class="equation-box">
+                            X<sub>n+1</sub> = (a · X<sub>n</sub> + c) mod m
+                        </div>
+                        <p style="font-size: 0.85em;">
+                            Cu a, c, m alese corect, generează o secvență cu perioadă m.<br>
+                            <strong>ATENȚIE:</strong> LCG-urile sunt <span class="highlight-text">nesigure</span> 
+                            pentru criptografie și au corelații în dimensiuni înalte!
+                        </p>
+                    </div>
+                </section>
+                
+                <!-- MERSENNE TWISTER -->
+                <section>
+                    <h2>Mersenne Twister (MT19937)</h2>
+                    
+                    <table style="font-size: 0.75em;">
+                        <tr>
+                            <th>Proprietate</th>
+                            <th>LCG</th>
+                            <th>Mersenne Twister</th>
+                            <th>PCG</th>
+                        </tr>
+                        <tr>
+                            <td>Perioadă</td>
+                            <td>~2³¹</td>
+                            <td>2¹⁹⁹³⁷ - 1</td>
+                            <td>2¹²⁸</td>
+                        </tr>
+                        <tr>
+                            <td>Dimensiune stare</td>
+                            <td>32 biți</td>
+                            <td>2.5 KB</td>
+                            <td>128 biți</td>
+                        </tr>
+                        <tr>
+                            <td>Viteză</td>
+                            <td>★★★★★</td>
+                            <td>★★★★☆</td>
+                            <td>★★★★★</td>
+                        </tr>
+                        <tr>
+                            <td>Calitate statistică</td>
+                            <td>★★☆☆☆</td>
+                            <td>★★★★☆</td>
+                            <td>★★★★★</td>
+                        </tr>
+                        <tr>
+                            <td>Predictibilitate</td>
+                            <td>Ușor</td>
+                            <td>Cu 624 outputs</td>
+                            <td>Greu</td>
+                        </tr>
+                    </table>
+                    
+                    <p class="fragment small-text">
+                        <strong>Recomandare 2025:</strong> PCG sau xoshiro256** pentru simulări. 
+                        ChaCha20 sau AES-CTR pentru criptografie.
+                    </p>
+                </section>
+            </section>
+            
+            <!-- PART II: MONTE CARLO -->
+            <section>
+                <section>
+                    <h1>PARTEA II</h1>
+                    <h2 style="color: #58a6ff;">Metoda Monte Carlo</h2>
+                    <p class="small-text">Geometria incertitudinii</p>
+                </section>
+                
+                <!-- PI ESTIMATION -->
+                <section>
+                    <h2>Exemplu Clasic: Estimarea lui π</h2>
+                    
+                    <div class="two-columns">
+                        <div>
+                            <div class="diagram-box">
+<pre>
+    ┌────────────────────┐
+    │  ·  · ·    ·  ·   │
+    │ ·  ╭──────╮  · ·  │
+    │·  ╱· ·  · ·╲  · · │
+    │· │· ·  · · ·│ ·  ·│
+    │ ·│ · ·  · · │·  · │
+    │· │·  · ·  · │ · · │
+    │ · ╲ · · · ·╱ ·  · │
+    │ ·  ╰──────╯·   · ·│
+    │·    · ·  · ·  ·  ·│
+    └────────────────────┘
+    
+    Cerc de rază 1 în pătrat 2×2
+    
+    A_cerc / A_pătrat = π/4
+    
+    Dacă aruncăm N puncte aleator:
+    puncte_în_cerc / N ≈ π/4
+    
+    ∴ π ≈ 4 · (puncte_în_cerc / N)
+</pre>
+                            </div>
+                        </div>
+                        <div>
+                            <pre><code class="language-python" style="font-size: 0.65em;">
+import numpy as np
+
+def estimate_pi(n_samples):
+    # Puncte aleatorii în [-1, 1] × [-1, 1]
+    x = np.random.uniform(-1, 1, n_samples)
+    y = np.random.uniform(-1, 1, n_samples)
+    
+    # Distanța de la origine
+    dist = x**2 + y**2
+    
+    # Câte sunt în cerc?
+    inside = np.sum(dist <= 1)
+    
+    return 4 * inside / n_samples
+
+# Convergență: eroare ∝ 1/√n
+for n in [100, 10000, 1000000]:
+    pi_est = estimate_pi(n)
+    error = abs(pi_est - np.pi)
+    print(f"n={n:>7}: π≈{pi_est:.6f}, "
+          f"err={error:.6f}")
+                            </code></pre>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- CONVERGENCE -->
+                <section>
+                    <h2>Convergența Monte Carlo</h2>
+                    
+                    <div class="theorem-box">
+                        <h4>Teorema (Convergența Monte Carlo)</h4>
+                        <p>
+                            Fie X₁, X₂, ..., Xₙ variabile aleatoare i.i.d. cu E[X] = μ și Var(X) = σ².
+                            Estimatorul Monte Carlo <span style="text-decoration: overline;">X</span> = (1/n)ΣXᵢ satisface:
+                        </p>
+                        <div class="equation-box">
+                            E[<span style="text-decoration: overline;">X</span>] = μ, 
+                            Var(<span style="text-decoration: overline;">X</span>) = σ²/n
+                        </div>
+                        <p>
+                            Eroarea standard: <strong>SE = σ/√n</strong><br>
+                            <span class="highlight-text">Pentru a înjumătăți eroarea, ai nevoie de 4× mai multe sample-uri!</span>
+                        </p>
+                    </div>
+                </section>
+                
+                <!-- IMPORTANCE SAMPLING -->
+                <section>
+                    <h2>Variance Reduction: Importance Sampling</h2>
+                    
+                    <div class="definition-box">
+                        <h4>Ideea</h4>
+                        <p>
+                            În loc să eșantionăm uniform, eșantionăm mai mult din zonele "importante" 
+                            (unde integranda are valori mari) și compensăm prin re-ponderare.
+                        </p>
+                    </div>
+                    
+                    <pre><code class="language-python" style="font-size: 0.75em;">
+# Vrem să estimăm ∫₀¹ e^x dx (răspuns exact: e - 1 ≈ 1.718)
+
+# Monte Carlo simplu
+x_uniform = np.random.uniform(0, 1, 10000)
+estimate_simple = np.mean(np.exp(x_uniform))
+
+# Importance sampling cu p(x) ∝ x + 0.5 (mai multe sample-uri spre 1)
+# PDF normalizată: p(x) = (2x + 1) / 2 pentru x ∈ [0, 1]
+# CDF inversă: F⁻¹(u) = (-1 + √(1 + 4u)) / 2
+u = np.random.uniform(0, 1, 10000)
+x_importance = (-1 + np.sqrt(1 + 4*u)) / 2
+weights = 1 / ((2*x_importance + 1) / 2)  # 1 / p(x)
+estimate_importance = np.mean(np.exp(x_importance) * weights)
+                    </code></pre>
+                </section>
+            </section>
+            
+            <!-- PART III: ODE -->
+            <section>
+                <section>
+                    <h1>PARTEA III</h1>
+                    <h2 style="color: #58a6ff;">Ecuații Diferențiale</h2>
+                    <p class="small-text">De la Euler la Runge-Kutta</p>
+                </section>
+                
+                <!-- ODE BASICS -->
+                <section>
+                    <h2>ODE: Problema de Valori Inițiale</h2>
+                    
+                    <div class="definition-box">
+                        <h4>Formă Generală</h4>
+                        <div class="equation-box">
+                            dy/dt = f(t, y), y(t₀) = y₀
+                        </div>
+                        <p>
+                            <strong>Obiectiv:</strong> Găsește y(t) pentru t > t₀, 
+                            dată fiind starea inițială y₀ și funcția de evoluție f.
+                        </p>
+                    </div>
+                    
+                    <p><strong>Exemple din diverse domenii:</strong></p>
+                    <ul style="font-size: 0.85em;">
+                        <li><strong>Fizică:</strong> mẍ = F (legea lui Newton)</li>
+                        <li><strong>Chimie:</strong> dc/dt = -kc (reacții de ordinul I)</li>
+                        <li><strong>Biologie:</strong> dP/dt = rP(1 - P/K) (creștere logistică)</li>
+                        <li><strong>Epidemiologie:</strong> dS/dt = -βSI/N (model SIR)</li>
+                    </ul>
+                </section>
+                
+                <!-- EULER VS RK4 -->
+                <section>
+                    <h2>Euler vs Runge-Kutta</h2>
+                    
+                    <div class="two-columns">
+                        <div>
+                            <h4>Metoda Euler (ordin 1)</h4>
+                            <div class="equation-box" style="font-size: 0.9em;">
+                                y<sub>n+1</sub> = y<sub>n</sub> + h·f(t<sub>n</sub>, y<sub>n</sub>)
+                            </div>
+                            <p style="font-size: 0.8em;">
+                                ✓ Simplă<br>
+                                ✗ Eroare locală O(h²)<br>
+                                ✗ Eroare globală O(h)<br>
+                                ✗ Instabilă pentru sisteme stiff
+                            </p>
+                        </div>
+                        <div>
+                            <h4>Runge-Kutta 4 (ordin 4)</h4>
+                            <div class="equation-box" style="font-size: 0.8em;">
+                                k₁ = f(t<sub>n</sub>, y<sub>n</sub>)<br>
+                                k₂ = f(t<sub>n</sub>+h/2, y<sub>n</sub>+hk₁/2)<br>
+                                k₃ = f(t<sub>n</sub>+h/2, y<sub>n</sub>+hk₂/2)<br>
+                                k₄ = f(t<sub>n</sub>+h, y<sub>n</sub>+hk₃)<br>
+                                y<sub>n+1</sub> = y<sub>n</sub> + h(k₁+2k₂+2k₃+k₄)/6
+                            </div>
+                            <p style="font-size: 0.8em;">
+                                ✓ Eroare globală O(h⁴)<br>
+                                ✓ Excelent pentru majoritatea problemelor
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- SCIPY ODE -->
+                <section>
+                    <h2>SciPy: solve_ivp</h2>
+                    
+                    <pre><code class="language-python" data-trim data-line-numbers>
+from scipy.integrate import solve_ivp
+import numpy as np
+
+# Sistem Lotka-Volterra (prădător-pradă)
+def lotka_volterra(t, y, alpha, beta, delta, gamma):
+    prey, predator = y
+    dprey = alpha * prey - beta * prey * predator
+    dpredator = delta * prey * predator - gamma * predator
+    return [dprey, dpredator]
+
+# Parametri și condiții inițiale
+params = (1.1, 0.4, 0.1, 0.4)
+y0 = [10, 5]  # 10 iepuri, 5 vulpi
+t_span = (0, 50)
+
+# Rezolvare cu RK45 (Runge-Kutta 4/5 adaptiv)
+solution = solve_ivp(
+    lotka_volterra, 
+    t_span, 
+    y0,
+    args=params,
+    method='RK45',
+    dense_output=True,
+    max_step=0.1
+)
+
+# Evaluare la puncte arbitrare
+t_eval = np.linspace(0, 50, 500)
+y_eval = solution.sol(t_eval)
+                    </code></pre>
+                </section>
+            </section>
+            
+            <!-- PART IV: ABM -->
+            <section>
+                <section>
+                    <h1>PARTEA IV</h1>
+                    <h2 style="color: #58a6ff;">Agent-Based Modeling</h2>
+                    <p class="small-text">Emergență din reguli simple</p>
+                </section>
+                
+                <!-- ABM INTRO -->
+                <section>
+                    <h2>De ce Agent-Based?</h2>
+                    
+                    <div class="hook-box">
+                        <p>
+                            În 1986, Craig Reynolds a simulat comportamentul stol de păsări 
+                            cu doar 3 reguli simple per agent: separare, aliniere, coeziune.
+                        </p>
+                        <p>
+                            Rezultatul: comportament complex, realist, "inteligent" — 
+                            <strong>fără</strong> nicio coordonare centrală.
+                        </p>
+                        <p class="source">
+                            — "Boids" au fost folosite în filme (Batman Returns, Lion King) 
+                            și rămân un exemplu paradigmatic de emergență.
+                        </p>
+                    </div>
+                    
+                    <div class="fragment">
+                        <p><strong>ABM vs Ecuații:</strong></p>
+                        <ul style="font-size: 0.85em;">
+                            <li>Ecuațiile: comportament <em>agregat</em>, omogenitate</li>
+                            <li>ABM: agenți <em>individuali</em>, heterogenitate, interacțiuni locale</li>
+                        </ul>
+                    </div>
+                </section>
+                
+                <!-- MESA EXAMPLE -->
+                <section>
+                    <h2>Mesa: ABM în Python</h2>
+                    
+                    <pre><code class="language-python" style="font-size: 0.65em;">
+from mesa import Agent, Model
+from mesa.space import MultiGrid
+from mesa.time import RandomActivation
+
+class SchellingAgent(Agent):
+    """Agent pentru modelul de segregare Schelling."""
+    
+    def __init__(self, unique_id, model, agent_type):
+        super().__init__(unique_id, model)
+        self.type = agent_type
+    
+    def step(self):
+        neighbors = self.model.grid.get_neighbors(
+            self.pos, moore=True, include_center=False
+        )
+        similar = sum(1 for n in neighbors if n.type == self.type)
+        
+        # Dacă < 30% vecini similari, mută-te
+        if len(neighbors) > 0 and similar / len(neighbors) < 0.3:
+            self.model.grid.move_to_empty(self)
+
+class SchellingModel(Model):
+    def __init__(self, width, height, density):
+        self.grid = MultiGrid(width, height, torus=True)
+        self.schedule = RandomActivation(self)
+        
+        # Plasare agenți
+        for (cell, x, y) in self.grid.coord_iter():
+            if self.random.random() < density:
+                agent_type = 0 if self.random.random() < 0.5 else 1
+                agent = SchellingAgent(self.next_id(), self, agent_type)
+                self.grid.place_agent(agent, (x, y))
+                self.schedule.add(agent)
+    
+    def step(self):
+        self.schedule.step()
+                    </code></pre>
+                </section>
+            </section>
+            
+            <!-- LAB -->
+            <section>
+                <h2>🔬 Laborator: Platformă de Simulare</h2>
+                
+                <div class="diagram-box">
+<pre>
+┌─────────────────────────────────────────────────────────────────────────┐
+│                     SIMULATION PLATFORM                                  │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│   Model 1: SIR Epidemic (ODE)                                          │
+│   ├── Python: scipy.integrate.solve_ivp                                │
+│   ├── C++: Eigen + custom RK4                                          │
+│   └── JS: Real-time chart with Chart.js                                │
+│                                                                         │
+│   Model 2: N-Body Gravitation (Physics)                                │
+│   ├── Python: NumPy vectorized                                         │
+│   ├── C++: OpenMP parallelism                                          │
+│   └── JS: Three.js 3D visualization                                    │
+│                                                                         │
+│   Model 3: Schelling Segregation (ABM)                                 │
+│   ├── Python: Mesa framework                                           │
+│   ├── C++: Custom grid implementation                                  │
+│   └── JS: Canvas 2D animation                                          │
+│                                                                         │
+│   Unified API: Simulable[State] protocol                               │
+│   Dashboard: Compare models, export data                               │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+</pre>
+                </div>
+            </section>
+            
+            <!-- END -->
+            <section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #161b22 100%)">
+                <h1>Întrebări?</h1>
+                <p style="color: #8b949e;">
+                    Săptămâna viitoare: <strong>Vizualizare Interactivă</strong>
+                </p>
+                <hr style="border-color: #30363d; margin: 30px 0;">
+                <p style="font-size: 0.7em; color: #8b949e;">
+                    📧 antonio.clim@csie.ase.ro
+                </p>
+            </section>
+            
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/math/math.js"></script>
+    
+    <script>
+        Reveal.initialize({
+            hash: true, slideNumber: 'c/t', transition: 'slide',
+            plugins: [ RevealHighlight, RevealMath.KaTeX ]
+        });
+    </script>
+</body>
+</html>
