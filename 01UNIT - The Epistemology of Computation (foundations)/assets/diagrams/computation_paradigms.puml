@@ -1,0 +1,109 @@
+@startmindmap computation_paradigms
+<style>
+mindmapDiagram {
+  .foundational {
+    BackgroundColor #16213e
+    FontColor white
+    LineColor #58a6ff
+  }
+  .formal {
+    BackgroundColor #0f3460
+    FontColor white
+    LineColor #3fb950
+  }
+  .applied {
+    BackgroundColor #3d2914
+    FontColor white
+    LineColor #f0883e
+  }
+  .modern {
+    BackgroundColor #1a472a
+    FontColor white
+    LineColor #58a6ff
+  }
+}
+</style>
+
+title Models of Computation: Historical Perspective
+
+* Computation Theory <<foundational>>
+** 1930s: Foundational Period <<foundational>>
+*** 1936: Turing Machines
+**** Alan Turing
+**** "On Computable Numbers"
+**** Tape-based model
+**** Universal computation
+*** 1936: Lambda Calculus
+**** Alonzo Church
+**** Function abstraction
+**** Beta reduction
+**** Combinatory logic
+*** 1936: Church-Turing Thesis
+**** Equivalence proof
+**** Effective computability
+** 1940s-50s: Formalisation <<formal>>
+*** 1943: McCulloch-Pitts Neurons
+**** Neural computation
+**** Boolean logic
+*** 1956: Automata Theory
+**** Finite state machines
+**** Regular languages
+**** Chomsky hierarchy
+*** 1959: LISP
+**** John McCarthy
+**** Lambda calculus influence
+**** Symbolic computing
+** 1960s-70s: Theoretical Development <<formal>>
+*** 1965: P vs NP
+**** Complexity classes
+**** Tractability
+*** 1970: Cook-Levin Theorem
+**** NP-completeness
+**** SAT problem
+*** 1973: Robin Milner
+**** Process algebra
+**** Type theory
+** 1980s-Present: Applied Computation <<applied>>
+*** 1985: Haskell
+**** Lazy evaluation
+**** Pure functional
+*** 1990s: Proof Assistants
+**** Coq
+**** Isabelle
+*** 2000s: Quantum Computing <<modern>>
+**** Superposition
+**** Entanglement
+**** Quantum supremacy
+
+left side
+
+** Equivalent Models <<formal>>
+*** μ-Recursive Functions
+**** Gödel (1931)
+**** Primitive recursion
+**** Minimisation
+*** Post Systems
+**** Emil Post (1936)
+**** Production rules
+**** String rewriting
+*** Register Machines
+**** Shepherdson-Sturgis
+**** RAM model
+**** Counter machines
+*** Cellular Automata
+**** von Neumann (1940s)
+**** Rule 110
+**** Turing-complete
+
+** Key Results <<foundational>>
+*** Halting Problem
+**** Undecidable
+**** Diagonalisation
+*** Rice's Theorem
+**** Non-trivial properties
+**** Semantic undecidability
+*** Gödel Incompleteness
+**** Formal systems
+**** Self-reference
+
+@endmindmap
