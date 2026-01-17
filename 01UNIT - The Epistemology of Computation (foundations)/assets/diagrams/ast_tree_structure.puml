@@ -1,0 +1,98 @@
+@startuml ast_tree_structure
+!theme plain
+skinparam backgroundColor #1a1a2e
+skinparam defaultFontColor white
+skinparam classBorderColor #58a6ff
+skinparam classBackgroundColor #16213e
+skinparam arrowColor #58a6ff
+skinparam stereotypeCBackgroundColor #0f3460
+
+title Abstract Syntax Tree: Expression Hierarchy
+
+abstract class Expression {
+    +evaluate(): Value
+    +{abstract} accept(visitor: Visitor): T
+}
+
+class NumberLiteral {
+    -value: float
+    +evaluate(): Value
+    +accept(visitor): T
+}
+
+class BinaryOp {
+    -operator: str
+    -left: Expression
+    -right: Expression
+    +evaluate(): Value
+    +accept(visitor): T
+}
+
+class UnaryOp {
+    -operator: str
+    -operand: Expression
+    +evaluate(): Value
+    +accept(visitor): T
+}
+
+class Variable {
+    -name: str
+    +evaluate(): Value
+    +accept(visitor): T
+}
+
+class FunctionCall {
+    -name: str
+    -arguments: List<Expression>
+    +evaluate(): Value
+    +accept(visitor): T
+}
+
+class LetBinding {
+    -variable: str
+    -value: Expression
+    -body: Expression
+    +evaluate(): Value
+    +accept(visitor): T
+}
+
+class LambdaExpr {
+    -parameter: str
+    -body: Expression
+    +evaluate(): Value
+    +accept(visitor): T
+}
+
+class IfExpr {
+    -condition: Expression
+    -then_branch: Expression
+    -else_branch: Expression
+    +evaluate(): Value
+    +accept(visitor): T
+}
+
+Expression <|-- NumberLiteral
+Expression <|-- BinaryOp
+Expression <|-- UnaryOp
+Expression <|-- Variable
+Expression <|-- FunctionCall
+Expression <|-- LetBinding
+Expression <|-- LambdaExpr
+Expression <|-- IfExpr
+
+BinaryOp o-- "2" Expression : contains
+UnaryOp o-- "1" Expression : contains
+FunctionCall o-- "*" Expression : arguments
+LetBinding o-- "2" Expression : value, body
+LambdaExpr o-- "1" Expression : body
+IfExpr o-- "3" Expression : condition, branches
+
+note "Example: (2 + 3) * 4\n\nBinaryOp(*)\n├── BinaryOp(+)\n│   ├── Number(2)\n│   └── Number(3)\n└── Number(4)" as example
+
+note right of Expression
+  <b>Visitor Pattern</b>
+  Enables extensible
+  tree traversal operations
+end note
+
+@enduml
