@@ -1,168 +1,424 @@
-# Week 1: The Epistemology of Computation
+# 01UNIT: The Epistemology of Computation
 
-> *What does it mean to compute? From Turing machines to language interpreters.*
+## The Art of Computational Thinking for Researchers
+
+> **UNIT 01 of 7** | **Bloom Level**: Remember / Understand | **Est. Time**: 11 hours
 
 ---
 
-## 📋 Overview
+## 📊 UNIT Architecture
 
-This week establishes the theoretical foundations of computational thinking by exploring the very nature of computation itself. We begin with Alan Turing's revolutionary 1936 paper and trace the conceptual lineage through lambda calculus to modern programming language interpreters.
+The following diagram illustrates the conceptual structure and pedagogical organisation of this foundational unit:
 
-**Course:** The Art of Computational Thinking for Researchers  
-**Week:** 1 of 7  
-**Bloom Level:** Remember / Understand  
+```plantuml
+@startmindmap
+<style>
+mindmapDiagram {
+  node {
+    BackgroundColor #1a1a2e
+    FontColor white
+    LineColor #58a6ff
+  }
+  :depth(1) {
+    BackgroundColor #16213e
+  }
+  :depth(2) {
+    BackgroundColor #0f3460
+  }
+}
+</style>
+* 01UNIT: Epistemology of Computation
+** Theoretical Foundations
+*** Turing Machines
+**** Tape and Head
+**** State Transitions
+**** Halting Problem
+*** Lambda Calculus
+**** Abstraction
+**** Application
+**** Beta Reduction
+*** Church-Turing Thesis
+** Laboratory Practice
+*** Lab 01: Turing Simulator
+**** Configuration Tracking
+**** Transition Tables
+*** Lab 02: Lambda Calculus
+**** Church Numerals
+**** Combinators
+*** Lab 03: AST Interpreter
+**** Parse Trees
+**** Evaluation
+** Assessment
+*** Quiz (10 questions)
+*** Homework (3 parts)
+*** Self-evaluation
+@endmindmap
+```
 
 ---
 
 ## 🎯 Learning Objectives
 
-After completing this week, you will be able to:
+This unit establishes measurable competencies aligned with Bloom's taxonomy. Upon completion, participants shall demonstrate the following capabilities:
 
-1. **[Remember]** Define computability and enumerate the components of a Turing machine
-2. **[Understand]** Explain the relationship between Turing machines, lambda calculus and modern programming languages
-3. **[Apply]** Implement a Turing machine simulator and minimal AST interpreter in Python
-
----
-
-## 📚 Prerequisites
-
-- Basic Python knowledge (variables, functions, classes)
-- Familiarity with command-line interfaces
-- No prior knowledge of formal computation theory required
+| # | Objective | Bloom Level | Lab Coverage | Assessment |
+|---|-----------|-------------|--------------|------------|
+| 1 | Define computability and enumerate the formal components of a Turing machine (tape, head, state register, transition function) | [Remember] | Lab 01, §1-2 | Quiz Q1-4 |
+| 2 | Articulate the relationship between Turing machines, lambda calculus and modern programming language semantics | [Understand] | Lab 02, §1-3 | Quiz Q5-7, Homework P1 |
+| 3 | Implement a functional Turing machine simulator and minimal AST-based expression interpreter | [Apply] | Lab 01, Lab 03 | Homework P2-3 |
 
 ---
 
-## ⏱️ Estimated Time
+## 🔗 Prerequisites and Progression
 
-| Activity | Duration |
-|----------|----------|
-| Lecture slides | 90 minutes |
-| Reading materials | 60 minutes |
-| Lab 1: Turing Machine | 120 minutes |
-| Lab 2: Lambda Calculus | 90 minutes |
-| Lab 3: AST Interpreter | 120 minutes |
-| Homework | 180 minutes |
-| **Total** | **~11 hours** |
+The following diagram situates this unit within the broader curriculum architecture:
+
+```plantuml
+@startuml
+skinparam backgroundColor #1a1a2e
+skinparam defaultFontColor white
+skinparam ArrowColor #58a6ff
+skinparam rectangleBorderColor #58a6ff
+
+rectangle "Foundation" as foundation #16213e {
+  rectangle "01UNIT\nEpistemology of\nComputation" as u01 #0f3460
+}
+
+rectangle "Core Skills" as core #16213e {
+  rectangle "02UNIT\nAbstraction &\nEncapsulation" as u02 #0f3460
+  rectangle "03UNIT\nAlgorithmic\nComplexity" as u03 #0f3460
+  rectangle "04UNIT\nAdvanced Data\nStructures" as u04 #0f3460
+}
+
+rectangle "Application" as app #16213e {
+  rectangle "05UNIT\nScientific\nComputing" as u05 #0f3460
+  rectangle "06UNIT\nVisualisation" as u06 #0f3460
+}
+
+rectangle "Integration" as int #16213e {
+  rectangle "07UNIT\nReproducibility\n& Capstone" as u07 #0f3460
+}
+
+u01 --> u02 : "state concepts\nAST hierarchies"
+u02 --> u03 : "ADT foundations"
+u03 --> u04 : "efficiency analysis"
+u04 --> u05 : "implementation"
+u05 --> u06 : "output data"
+u06 --> u07 : "documentation"
+@enduml
+```
+
+### Prerequisite Knowledge
+
+Participants require foundational Python competency encompassing:
+
+- Variable binding and scope semantics
+- Function definition and invocation patterns
+- Class-based object construction
+- Command-line interface familiarity
+
+No prior exposure to formal computation theory is presumed; this unit constructs such foundations ab initio.
+
+### Subsequent Preparation
+
+Concepts introduced herein directly scaffold subsequent units:
+
+- **02UNIT (Abstraction & Encapsulation)**: The state-transition model of Turing machines foreshadows the State design pattern; AST hierarchies prefigure composite object structures
+- **03UNIT (Algorithmic Complexity)**: Complexity analysis of Turing machine computations establishes asymptotic reasoning
 
 ---
 
-## 📁 Contents
+## 📐 Mathematical Foundations
 
-### Theory
+### Formal Definition of a Turing Machine
 
-| File | Description |
-|------|-------------|
-| [`theory/slides.html`](theory/slides.html) | reveal.js presentation (40+ slides) |
-| [`theory/lecture_notes.md`](theory/lecture_notes.md) | Detailed lecture notes (2000+ words) |
-| [`theory/learning_objectives.md`](theory/learning_objectives.md) | Measurable objectives with assessment criteria |
+A Turing machine constitutes a 7-tuple $M = (Q, \Sigma, \Gamma, \delta, q_0, q_{accept}, q_{reject})$ where:
 
-### Laboratory
+| Symbol | Definition |
+|--------|------------|
+| $Q$ | Finite set of states |
+| $\Sigma$ | Input alphabet (excluding blank symbol) |
+| $\Gamma$ | Tape alphabet ($\Sigma \subseteq \Gamma$, includes blank $\sqcup$) |
+| $\delta$ | Transition function: $Q \times \Gamma \rightarrow Q \times \Gamma \times \{L, R\}$ |
+| $q_0$ | Initial state ($q_0 \in Q$) |
+| $q_{accept}$ | Accepting halt state |
+| $q_{reject}$ | Rejecting halt state ($q_{accept} \neq q_{reject}$) |
 
-| File | Description |
-|------|-------------|
-| [`lab/lab_1_01_turing_machine.py`](lab/lab_1_01_turing_machine.py) | Turing machine simulator |
-| [`lab/lab_1_02_lambda_calculus.py`](lab/lab_1_02_lambda_calculus.py) | Lambda calculus basics |
-| [`lab/lab_1_03_ast_interpreter.py`](lab/lab_1_03_ast_interpreter.py) | Expression interpreter |
-| [`lab/solutions/`](lab/solutions/) | Complete solutions for all labs |
+### Configuration and Computation
 
-### Exercises
+A configuration captures the instantaneous description of a computation: the tape contents, head position and current state. The configuration transition relation $\vdash$ describes single-step evolution:
 
-| File | Description |
-|------|-------------|
-| [`exercises/homework.md`](exercises/homework.md) | Main homework assignment with rubric |
-| [`exercises/practice/`](exercises/practice/) | 9 practice exercises (3 easy, 3 medium, 3 hard) |
-| [`exercises/solutions/`](exercises/solutions/) | Solutions for practice exercises |
+$$C_1 \vdash C_2 \iff \text{configuration } C_2 \text{ follows from } C_1 \text{ via one application of } \delta$$
 
-### Assessments
+A computation constitutes a sequence $C_0 \vdash C_1 \vdash \cdots \vdash C_n$ where $C_0$ represents the initial configuration and $C_n$ a halting configuration (state in $\{q_{accept}, q_{reject}\}$).
 
-| File | Description |
-|------|-------------|
-| [`assessments/quiz.md`](assessments/quiz.md) | 10-question knowledge check |
-| [`assessments/rubric.md`](assessments/rubric.md) | Grading criteria |
-| [`assessments/self_check.md`](assessments/self_check.md) | Self-assessment checklist |
+### The Church-Turing Thesis
 
-### Resources
+The Church-Turing thesis posits that any function computable by an effective procedure—any algorithm in the intuitive sense—is computable by a Turing machine. Formally:
 
-| File | Description |
-|------|-------------|
-| [`resources/cheatsheet.md`](resources/cheatsheet.md) | One-page reference (A4) |
-| [`resources/further_reading.md`](resources/further_reading.md) | 10+ annotated resources |
-| [`resources/glossary.md`](resources/glossary.md) | Week terminology |
+$$\text{Effectively computable} \equiv \text{Turing-computable}$$
 
-### Assets
+This thesis, while unprovable mathematically (it equates an informal notion with a formal one), has withstood decades of scrutiny. Every proposed alternative model of computation—lambda calculus, recursive functions, register machines, cellular automata—has proven equivalent in computational power.
 
-| Directory | Description |
-|-----------|-------------|
-| [`assets/diagrams/`](assets/diagrams/) | SVG diagrams (min. 3) |
-| [`assets/animations/`](assets/animations/) | Interactive HTML visualisations |
-| [`assets/images/`](assets/images/) | Supporting images |
+### Lambda Calculus Syntax
+
+Lambda calculus expressions follow the grammar:
+
+$$e ::= x \mid \lambda x.e \mid e_1 \, e_2$$
+
+where $x$ denotes variables, $\lambda x.e$ represents abstraction (function definition) and $e_1 \, e_2$ signifies application (function invocation).
+
+The fundamental reduction rule—beta reduction—specifies substitution semantics:
+
+$$(\lambda x.e_1) \, e_2 \rightarrow_\beta e_1[x := e_2]$$
+
+---
+
+## 📚 Learning Path
+
+The recommended progression through this unit's materials follows this structured sequence:
+
+```plantuml
+@startuml
+skinparam backgroundColor #1a1a2e
+skinparam defaultFontColor white
+skinparam activityBackgroundColor #0f3460
+skinparam activityBorderColor #58a6ff
+skinparam arrowColor #58a6ff
+
+start
+:Read lecture notes;
+note right: ~60 minutes
+:Review presentation slides;
+note right: ~90 minutes
+:Complete Lab 01: Turing Machine;
+note right: ~120 minutes
+:Complete Lab 02: Lambda Calculus;
+note right: ~90 minutes
+:Complete Lab 03: AST Interpreter;
+note right: ~120 minutes
+:Attempt practice exercises;
+note right: ~90 minutes
+:Complete homework assignment;
+note right: ~180 minutes
+:Take self-assessment quiz;
+note right: ~30 minutes
+stop
+@enduml
+```
+
+---
+
+## ⏱️ Time Allocation
+
+| Activity | Duration | Cumulative |
+|----------|----------|------------|
+| Lecture notes study | 60 min | 1h |
+| Presentation review | 90 min | 2h 30m |
+| Lab 01: Turing Machine | 120 min | 4h 30m |
+| Lab 02: Lambda Calculus | 90 min | 6h |
+| Lab 03: AST Interpreter | 120 min | 8h |
+| Practice exercises | 90 min | 9h 30m |
+| Homework completion | 180 min | 12h 30m |
+| Self-assessment | 30 min | 13h |
+
+**Total estimated time**: approximately 13 hours of engaged study.
+
+---
+
+## 📁 UNIT Structure
+
+```
+01UNIT/
+├── 📄 README.md              ← You are here
+├── 📚 theory/
+│   ├── 01UNIT_slides.html    ← 45 slides, ~90 min
+│   ├── lecture_notes.md      ← 2,500 words
+│   └── learning_objectives.md
+├── 🔬 lab/
+│   ├── lab_01_01_turing_machine.py    ← 1,170 lines
+│   ├── lab_01_02_lambda_calculus.py   ← 650 lines
+│   ├── lab_01_03_ast_interpreter.py   ← 580 lines
+│   └── solutions/
+├── ✏️ exercises/
+│   ├── homework.md
+│   └── practice/             ← 9 exercises (3×easy, 3×medium, 3×hard)
+├── 📊 assets/
+│   ├── diagrams/             ← 3 PlantUML, 5 SVG
+│   └── animations/
+│       └── 01UNIT_turing_visualiser.html
+├── 🧪 tests/                 ← pytest suite, 85%+ coverage target
+└── Makefile
+```
+
+---
+
+## 💻 Key Algorithms
+
+### Turing Machine Simulation (Pseudocode)
+
+```pseudocode
+ALGORITHM SimulateTuringMachine(M, w)
+    INPUT: Turing machine M = (Q, Σ, Γ, δ, q₀, q_accept, q_reject)
+           Input string w ∈ Σ*
+    OUTPUT: ACCEPT or REJECT
+    
+    tape ← InitialiseTape(w)
+    head ← 0
+    state ← q₀
+    
+    WHILE state ∉ {q_accept, q_reject} DO
+        symbol ← tape[head]
+        (next_state, write_symbol, direction) ← δ(state, symbol)
+        
+        tape[head] ← write_symbol
+        state ← next_state
+        
+        IF direction = L THEN
+            head ← head - 1
+        ELSE IF direction = R THEN
+            head ← head + 1
+        END IF
+    END WHILE
+    
+    IF state = q_accept THEN
+        RETURN ACCEPT
+    ELSE
+        RETURN REJECT
+    END IF
+END ALGORITHM
+```
+
+### Python Implementation
+
+```python
+from dataclasses import dataclass
+from enum import Enum, auto
+from typing import Iterator
+
+class Direction(Enum):
+    """Movement direction of the Turing machine head."""
+    LEFT = auto()
+    RIGHT = auto()
+    STAY = auto()
+
+@dataclass(frozen=True)
+class Transition:
+    """
+    Transition function output for a Turing machine.
+    
+    Represents δ(q, a) = (q', b, D) where q' is the next state,
+    b is the symbol to write, and D is the movement direction.
+    """
+    next_state: str
+    write_symbol: str
+    direction: Direction
+
+def simulate(
+    transitions: dict[tuple[str, str], Transition],
+    initial_state: str,
+    input_string: str,
+    blank: str = "□",
+    max_steps: int = 10_000
+) -> Iterator[tuple[dict[int, str], int, str]]:
+    """
+    Yield configurations during Turing machine execution.
+    
+    Complexity:
+        Time: O(max_steps) iterations maximum.
+        Space: O(|tape|) for tape representation.
+    """
+    tape = {i: c for i, c in enumerate(input_string)}
+    head, state, steps = 0, initial_state, 0
+    
+    while steps < max_steps:
+        yield dict(tape), head, state
+        
+        if state in {"accept", "reject"}:
+            return
+        
+        symbol = tape.get(head, blank)
+        key = (state, symbol)
+        
+        if key not in transitions:
+            return
+        
+        trans = transitions[key]
+        tape[head] = trans.write_symbol
+        state = trans.next_state
+        
+        match trans.direction:
+            case Direction.LEFT:
+                head -= 1
+            case Direction.RIGHT:
+                head += 1
+        
+        steps += 1
+```
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Set Up Environment
-
 ```bash
-# Create virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+# 1. Navigate to UNIT directory
+cd 01UNIT
 
-# Install dependencies
-pip install -r ../../docker/requirements.txt
-```
+# 2. Verify environment
+make check
 
-### 2. Run Labs
+# 3. Run labs with demonstration mode
+python -m lab.lab_01_01_turing_machine --demo
 
-```bash
-# Run Turing machine simulator demo
-python lab/lab_1_01_turing_machine.py --demo
+# 4. Execute test suite
+make test
 
-# Run lambda calculus demo
-python lab/lab_1_02_lambda_calculus.py --demo
-
-# Run AST interpreter demo
-python lab/lab_1_03_ast_interpreter.py --demo
-```
-
-### 3. Run Tests
-
-```bash
-# From week1 directory
-pytest tests/ -v --cov=lab
-```
-
-### 4. View Presentation
-
-```bash
-# Open in browser
-open theory/slides.html
-# Or serve locally
-python -m http.server 8000
-# Then visit http://localhost:8000/theory/slides.html
+# 5. View presentation
+open theory/01UNIT_slides.html
 ```
 
 ---
 
-## 🔗 Connections
+## ✅ Progress Checklist
 
-### Builds Upon
-- This is the first week; no prerequisites from previous weeks.
-
-### Prepares For
-- **Week 2:** State concept → State pattern; AST hierarchies → Design patterns
-- **Week 3:** Algorithm complexity analysis of Turing machine operations
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Lecture slides reviewed | ⬜ | ~90 min |
+| Lecture notes studied | ⬜ | ~60 min |
+| Lab 01 completed | ⬜ | Turing machine simulator |
+| Lab 02 completed | ⬜ | Lambda calculus basics |
+| Lab 03 completed | ⬜ | AST interpreter |
+| Easy exercises (3) | ⬜ | ~30 min |
+| Medium exercises (3) | ⬜ | ~45 min |
+| Hard exercises (3) | ⬜ | ~60 min |
+| Quiz passed (≥70%) | ⬜ | 10 questions |
+| Self-assessment done | ⬜ | Reflection |
 
 ---
 
 ## 📖 Research Applications
 
-| Domain | Application |
-|--------|-------------|
-| **Bioinformatics** | Finite state machines for DNA pattern matching |
-| **Computational Linguistics** | Parsers for natural language processing |
-| **Physics** | Cellular automata for physical simulations |
-| **Neuroscience** | Neural computation models |
+The foundational concepts presented in this unit find direct application across diverse research domains:
+
+| Domain | Application | Connection to Unit Content |
+|--------|-------------|---------------------------|
+| **Bioinformatics** | Finite automata for DNA sequence pattern matching; regular expression engines for motif discovery | State-transition models; formal language recognition |
+| **Computational Linguistics** | Parser construction for natural language processing; grammar induction | AST construction; recursive descent interpretation |
+| **Physics** | Cellular automata for physical simulation; discrete dynamical systems | Turing machine state evolution; computational universality |
+| **Neuroscience** | Computational models of neural circuits; McCulloch-Pitts neurons | Threshold logic; state machines as neural models |
+
+---
+
+## 📚 Key Concepts Summary
+
+| Concept | Definition | Significance |
+|---------|------------|--------------|
+| **Computability** | A function is computable if there exists an algorithm to calculate it | Distinguishes solvable from unsolvable problems |
+| **Turing Machine** | Abstract mathematical model comprising tape, head and finite control | Universal model of computation |
+| **Church-Turing Thesis** | Effective computability equals Turing-computability | Theoretical foundation for computer science |
+| **Lambda Calculus** | Formal system for function definition and application | Theoretical basis for functional programming |
+| **Abstract Syntax Tree** | Hierarchical representation of program structure | Enables semantic analysis and interpretation |
+| **Interpreter** | Program that directly executes source code representations | Bridges syntax and semantics |
 
 ---
 
@@ -170,7 +426,7 @@ python -m http.server 8000
 
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║                           RESTRICTIVE LICENCE                                  ║
-║                              Version 2.0.2                                     ║
+║                              Version 3.1.0                                     ║
 ║                             January 2025                                       ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
@@ -223,9 +479,14 @@ This project uses the following technologies:
 | Matplotlib | ≥3.7 | Static visualisation |
 | SciPy | ≥1.11 | Scientific computing |
 | pytest | ≥7.0 | Testing framework |
+| pytest-cov | ≥4.0 | Coverage reporting |
+| ruff | ≥0.1 | Linting and formatting |
+| mypy | ≥1.0 | Type checking |
 | Docker | 24+ | Containerisation |
 | reveal.js | 5.0 | Presentation framework |
+| PlantUML | 1.2024+ | Diagram generation |
+| D3.js | 7.8+ | Interactive visualisations |
 
 ---
 
-*THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS — Week 1*
+*THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS — 01UNIT*
