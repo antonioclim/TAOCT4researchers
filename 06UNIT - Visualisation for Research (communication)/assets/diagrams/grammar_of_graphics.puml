@@ -1,0 +1,60 @@
+@startuml grammar_of_graphics
+' Grammar of Graphics Layer Composition
+' © 2025 Antonio Clim. All rights reserved.
+
+skinparam backgroundColor transparent
+skinparam componentStyle rectangle
+skinparam defaultFontSize 11
+
+title Grammar of Graphics: Layer Composition Model
+
+package "Data Pipeline" {
+    [Raw Data\n(observations)] as data
+    [Statistical\nTransformation] as stat
+    [Faceting\n(subsetting)] as facet
+}
+
+package "Visual Encoding" {
+    [Geometric\nObjects] as geom
+    [Aesthetic\nMappings] as aes
+    [Scales\n(domain → range)] as scale
+}
+
+package "Coordinate System" {
+    [Cartesian\nCoordinates] as cart
+    [Polar\nCoordinates] as polar
+    [Geographic\nProjection] as geo
+}
+
+package "Rendering" {
+    [Theme\n(non-data ink)] as theme
+    [Final\nGraphic] as output
+}
+
+data --> stat : transform
+stat --> facet : partition
+facet --> geom : map to marks
+geom --> aes : encode channels
+aes --> scale : normalise
+scale --> cart
+scale --> polar
+scale --> geo
+cart --> theme
+polar --> theme
+geo --> theme
+theme --> output
+
+note right of aes
+  Channels:
+  - Position (x, y)
+  - Colour (hue, saturation)
+  - Size (area, length)
+  - Shape (glyph type)
+  - Opacity (alpha)
+end note
+
+note bottom of output
+  G = COORD ∘ SCALE ∘ STAT ∘ GEOM ∘ FACET ∘ DATA
+end note
+
+@enduml
