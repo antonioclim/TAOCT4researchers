@@ -1,0 +1,74 @@
+{
+  "metadata": {
+    "name": "Research Output by Department",
+    "description": "Sample dataset for bar chart and pie chart visualisations",
+    "generated": "2025-01-16",
+    "source": "Simulated data for educational purposes"
+  },
+  "categories": [
+    {
+      "label": "Computer Science",
+      "value": 89,
+      "publications": 156,
+      "citations": 2340,
+      "colour": "#0072B2"
+    },
+    {
+      "label": "Physics",
+      "value": 72,
+      "publications": 98,
+      "citations": 1890,
+      "colour": "#E69F00"
+    },
+    {
+      "label": "Biology",
+      "value": 64,
+      "publications": 112,
+      "citations": 1650,
+      "colour": "#009E73"
+    },
+    {
+      "label": "Chemistry",
+      "value": 58,
+      "publications": 87,
+      "citations": 1420,
+      "colour": "#CC79A7"
+    },
+    {
+      "label": "Mathematics",
+      "value": 45,
+      "publications": 65,
+      "citations": 980,
+      "colour": "#F0E442"
+    },
+    {
+      "label": "Engineering",
+      "value": 78,
+      "publications": 134,
+      "citations": 2100,
+      "colour": "#56B4E9"
+    }
+  ],
+  "timeseries": [
+    {"year": 2019, "total": 312, "open_access": 89},
+    {"year": 2020, "total": 345, "open_access": 124},
+    {"year": 2021, "total": 398, "open_access": 187},
+    {"year": 2022, "total": 456, "open_access": 256},
+    {"year": 2023, "total": 512, "open_access": 342},
+    {"year": 2024, "total": 589, "open_access": 421}
+  ],
+  "scatter_data": [
+    {"x": 12, "y": 45, "size": 8, "category": "A"},
+    {"x": 23, "y": 67, "size": 12, "category": "A"},
+    {"x": 34, "y": 89, "size": 6, "category": "A"},
+    {"x": 45, "y": 34, "size": 15, "category": "B"},
+    {"x": 56, "y": 56, "size": 9, "category": "B"},
+    {"x": 67, "y": 78, "size": 11, "category": "B"},
+    {"x": 78, "y": 23, "size": 7, "category": "C"},
+    {"x": 89, "y": 45, "size": 14, "category": "C"},
+    {"x": 15, "y": 89, "size": 10, "category": "C"},
+    {"x": 26, "y": 12, "size": 8, "category": "A"},
+    {"x": 37, "y": 34, "size": 13, "category": "B"},
+    {"x": 48, "y": 56, "size": 6, "category": "C"}
+  ]
+}
