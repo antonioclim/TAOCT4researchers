@@ -2,12 +2,12 @@
 """
 ═══════════════════════════════════════════════════════════════════════════════
 COMPUTATIONAL THINKING FOR RESEARCHERS
-Week 5, Lab 1: Monte Carlo Methods
+05UNIT, Lab 1: Monte Carlo Methods
 ═══════════════════════════════════════════════════════════════════════════════
 
 CONTEXT
 ───────
-Monte Carlo methods leverage random sampling to solve deterministic problems,
+Monte Carlo methods employ random sampling to solve deterministic problems,
 particularly numerical integration. Unlike deterministic quadrature rules that
 suffer exponentially in high dimensions, Monte Carlo convergence at O(1/√n)
 is dimension-independent—making these methods indispensable for complex
