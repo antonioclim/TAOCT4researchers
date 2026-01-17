@@ -1,0 +1,149 @@
+@startuml bloom_filter_architecture
+' ═══════════════════════════════════════════════════════════════════════════════
+' 04UNIT: Bloom Filter Architecture
+' Hash Function Distribution and False Positive Analysis
+' ═══════════════════════════════════════════════════════════════════════════════
+
+skinparam backgroundColor #0d1117
+skinparam defaultFontColor #c9d1d9
+skinparam defaultFontName "Segoe UI"
+skinparam shadowing false
+skinparam componentBorderColor #30363d
+skinparam componentBackgroundColor #161b22
+skinparam rectangleBorderColor #30363d
+skinparam rectangleBackgroundColor #161b22
+
+title **Bloom Filter Architecture**\nProbabilistic Membership Testing
+
+' Main structure
+rectangle "Bloom Filter Structure" as main #21262d {
+    
+    rectangle "Input Processing" as input #161b22 {
+        component "Element x\n(to insert/query)" as elem #238636
+    }
+    
+    rectangle "Hash Functions" as hashes #161b22 {
+        component "h₁(x)" as h1 #58a6ff
+        component "h₂(x)" as h2 #58a6ff
+        component "h₃(x)" as h3 #58a6ff
+        note as hash_note
+          k independent
+          hash functions
+          typically k = 3-7
+        end note
+    }
+    
+    rectangle "Bit Array (m bits)" as bitarray #161b22 {
+        rectangle "| 0 | 1 | 1 | 0 | 1 | 0 | 0 | 1 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 0 |" as bits #0d1117
+        note as bit_note
+          Position determined by hash
+          Insert: set bits to 1
+          Query: check if all bits are 1
+        end note
+    }
+    
+    elem --> h1
+    elem --> h2
+    elem --> h3
+    
+    h1 --> bits : "index 2"
+    h2 --> bits : "index 4"
+    h3 --> bits : "index 9"
+}
+
+' Operations
+rectangle "Operations" as ops #21262d {
+    
+    rectangle "INSERT(x)" as insert_op #161b22 {
+        note as insert_note
+          **Algorithm**:
+          1. Compute h₁(x), h₂(x), ..., hₖ(x)
+          2. Set bit[hᵢ(x) mod m] = 1 for all i
+          
+          **Complexity**: O(k)
+          **Never fails**: Always succeeds
+        end note
+    }
+    
+    rectangle "CONTAINS(x)" as query_op #161b22 {
+        note as query_note
+          **Algorithm**:
+          1. Compute h₁(x), h₂(x), ..., hₖ(x)
+          2. Return ALL(bit[hᵢ(x) mod m] == 1)
+          
+          **Complexity**: O(k)
+          **False negatives**: Never
+          **False positives**: Possible
+        end note
+    }
+}
+
+' False Positive Analysis
+rectangle "False Positive Analysis" as fp_analysis #21262d {
+    
+    note as fp_formula
+      **Probability of False Positive**
+      
+      After inserting n elements:
+      
+      P(bit is 0) = (1 - 1/m)^(kn) ≈ e^(-kn/m)
+      
+      P(false positive) ≈ (1 - e^(-kn/m))^k
+      
+      **Optimal k**: k_opt = (m/n) × ln(2) ≈ 0.693 × (m/n)
+      
+      At optimal k: P(fp) ≈ (0.6185)^(m/n)
+    end note
+    
+    note as sizing_note
+      **Sizing Formulae**
+      
+      For target false positive rate p:
+      
+      m = -n × ln(p) / (ln 2)²
+      
+      k = -log₂(p)
+      
+      **Example**: n=1M, p=1% → m≈9.6M bits, k≈7
+    end note
+}
+
+' Trade-offs
+rectangle "Trade-off Summary" as tradeoffs #21262d {
+    
+    note as tradeoff_table
+      |= Parameter |= Effect of Increase |
+      | m (bits) | ↓ false positive rate, ↑ memory |
+      | k (hashes) | ↓ then ↑ fp rate (optimal exists) |
+      | n (elements) | ↑ false positive rate |
+      
+      **Key Insight**: 
+      ~10 bits per element → ~1% false positive rate
+      
+      **Cannot**:
+      • Delete elements (use Counting Bloom Filter)
+      • Report false negatives
+      • Enumerate contents
+    end note
+}
+
+main -[hidden]-> ops
+ops -[hidden]-> fp_analysis
+fp_analysis -[hidden]-> tradeoffs
+
+legend bottom right
+  **Applications**:
+  • Database query optimisation (skip disk reads)
+  • Network routing (membership caching)
+  • Spell checkers (dictionary lookup)
+  • Distributed systems (set reconciliation)
+  • Web crawlers (URL deduplication)
+  
+  **Variants**:
+  • Counting Bloom Filter (supports delete)
+  • Scalable Bloom Filter (dynamic sizing)
+  • Cuckoo Filter (better space efficiency)
+endlegend
+
+footer © 2025 Antonio Clim. All rights reserved.
+@enduml

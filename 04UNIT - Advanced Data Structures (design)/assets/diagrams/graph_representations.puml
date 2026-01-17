@@ -1,0 +1,91 @@
+@startuml graph_representations
+' ═══════════════════════════════════════════════════════════════════════════════
+' 04UNIT: Graph Representations Comparison
+' Adjacency List vs Adjacency Matrix
+' ═══════════════════════════════════════════════════════════════════════════════
+
+skinparam backgroundColor #0d1117
+skinparam defaultFontColor #c9d1d9
+skinparam defaultFontName "Segoe UI"
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam rectangleBorderColor #30363d
+skinparam noteBorderColor #30363d
+skinparam noteBackgroundColor #161b22
+
+title **Graph Representations** \nAdjacency List vs Adjacency Matrix
+
+' Define the example graph
+rectangle "Example Graph G" as graph #21262d {
+    circle "A" as gA #238636
+    circle "B" as gB #58a6ff
+    circle "C" as gC #58a6ff
+    circle "D" as gD #58a6ff
+    circle "E" as gE #58a6ff
+    
+    gA --> gB : 3
+    gA --> gC : 2
+    gB --> gD : 4
+    gC --> gD : 1
+    gD --> gE : 5
+}
+
+rectangle "Adjacency List" as adjlist #161b22 {
+    rectangle "A → [(B,3), (C,2)]" as la #21262d
+    rectangle "B → [(D,4)]" as lb #21262d
+    rectangle "C → [(D,1)]" as lc #21262d
+    rectangle "D → [(E,5)]" as ld #21262d
+    rectangle "E → []" as le #21262d
+    
+    la -[hidden]-> lb
+    lb -[hidden]-> lc
+    lc -[hidden]-> ld
+    ld -[hidden]-> le
+}
+
+rectangle "Adjacency Matrix" as adjmat #161b22 {
+    note as matrix
+    |=   |= A |= B |= C |= D |= E |
+    | A  | 0 | 3 | 2 | ∞ | ∞ |
+    | B  | ∞ | 0 | ∞ | 4 | ∞ |
+    | C  | ∞ | ∞ | 0 | 1 | ∞ |
+    | D  | ∞ | ∞ | ∞ | 0 | 5 |
+    | E  | ∞ | ∞ | ∞ | ∞ | 0 |
+    end note
+}
+
+graph -[hidden]-> adjlist
+graph -[hidden]-> adjmat
+
+note bottom of adjlist
+  **Space**: O(V + E)
+  **Edge query**: O(deg(v))
+  **Add edge**: O(1)
+  **Best for**: Sparse graphs
+end note
+
+note bottom of adjmat
+  **Space**: O(V²)
+  **Edge query**: O(1)
+  **Add edge**: O(1)
+  **Best for**: Dense graphs
+end note
+
+legend bottom right
+  |= Metric |= Adjacency List |= Adjacency Matrix |
+  | Space Complexity | O(V + E) | O(V²) |
+  | Edge Existence | O(degree) | O(1) |
+  | Iterate Neighbours | O(degree) | O(V) |
+  | Add Vertex | O(1) | O(V²) |
+  | Add Edge | O(1) | O(1) |
+  | Remove Edge | O(degree) | O(1) |
+  
+  **Selection Guide**:
+  - E << V² → Adjacency List
+  - E ≈ V² → Adjacency Matrix
+  - Frequent edge queries → Matrix
+  - Memory constrained → List
+endlegend
+
+footer © 2025 Antonio Clim. All rights reserved.
+@enduml
