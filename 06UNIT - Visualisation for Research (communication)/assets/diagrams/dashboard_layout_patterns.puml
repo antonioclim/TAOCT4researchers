@@ -1,0 +1,86 @@
+@startuml dashboard_layout_patterns
+' Dashboard Layout Patterns
+' © 2025 Antonio Clim. All rights reserved.
+
+skinparam backgroundColor transparent
+skinparam rectangleBackgroundColor #16213e
+skinparam rectangleBorderColor #58a6ff
+skinparam defaultFontSize 10
+
+title Dashboard Layout Patterns: Common Configurations
+
+rectangle "Pattern 1: F-Layout (Analytical)" {
+    rectangle "KPI Cards\n(summary metrics)" as kpi1 #0f3460
+    rectangle "Main Chart\n(primary visualisation)" as main1 #0f3460
+    rectangle "Filters\n(controls)" as filter1 #0f3460
+    rectangle "Detail Table\n(drill-down)" as detail1 #0f3460
+    
+    kpi1 -[hidden]right-> filter1
+    main1 -[hidden]right-> detail1
+}
+
+note right of "Pattern 1: F-Layout (Analytical)"
+  **Pros:**
+  - Natural reading flow
+  - Key metrics prominent
+  
+  **Cons:**
+  - Detail may be overlooked
+  
+  **Use for:**
+  - Business intelligence
+  - Research monitoring
+end note
+
+rectangle "Pattern 2: Z-Layout (Overview)" {
+    rectangle "Header\n(title, navigation)" as header2 #0f3460
+    rectangle "Hero Chart\n(primary focus)" as hero2 #0f3460
+    rectangle "Supporting\nVisuals" as support2 #0f3460
+    rectangle "Call to Action\n(export, share)" as cta2 #0f3460
+    
+    header2 -[hidden]down-> hero2
+    hero2 -[hidden]down-> support2
+    support2 -[hidden]down-> cta2
+}
+
+note right of "Pattern 2: Z-Layout (Overview)"
+  **Pros:**
+  - Strong visual hierarchy
+  - Single focal point
+  
+  **Cons:**
+  - Limited detail space
+  
+  **Use for:**
+  - Executive summaries
+  - Presentations
+end note
+
+rectangle "Pattern 3: Hub-and-Spoke (Exploratory)" {
+    rectangle "Central\nControl Panel" as hub3 #0f3460
+    rectangle "View A" as a3 #0f3460
+    rectangle "View B" as b3 #0f3460
+    rectangle "View C" as c3 #0f3460
+    rectangle "View D" as d3 #0f3460
+    
+    hub3 --> a3
+    hub3 --> b3
+    hub3 --> c3
+    hub3 --> d3
+}
+
+note right of "Pattern 3: Hub-and-Spoke (Exploratory)"
+  **Pros:**
+  - Multiple perspectives
+  - User-directed exploration
+  
+  **Cons:**
+  - Cognitive load
+  - Requires training
+  
+  **Use for:**
+  - Scientific exploration
+  - Multi-dimensional data
+end note
+
+@enduml
