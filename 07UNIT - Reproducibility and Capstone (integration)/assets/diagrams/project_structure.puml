@@ -1,0 +1,75 @@
+@startuml project_structure
+!theme plain
+skinparam backgroundColor #0d1117
+skinparam defaultFontColor #e6edf3
+skinparam packageBackgroundColor #21262d
+skinparam packageBorderColor #30363d
+skinparam componentBackgroundColor #161b22
+skinparam componentBorderColor #58a6ff
+
+title Recommended Research Project Structure
+
+package "project_root/" #21262d {
+    
+    package "src/" #161b22 {
+        package "project_name/" #0d1117 {
+            component "__init__.py" as init #3fb950
+            component "core.py" as core #58a6ff
+            component "utils.py" as utils #58a6ff
+            component "config.py" as config #58a6ff
+        }
+        note bottom of "project_name/"
+            Main source code
+            with type hints and
+            docstrings throughout
+        end note
+    }
+    
+    package "tests/" #161b22 {
+        component "__init__.py" as tinit #3fb950
+        component "conftest.py" as conftest #a371f7
+        component "test_core.py" as tcore #a371f7
+        component "test_utils.py" as tutils #a371f7
+        note bottom of "tests/"
+            pytest test suite
+            with fixtures in
+            conftest.py
+        end note
+    }
+    
+    package "data/" #161b22 {
+        folder "raw/" as raw #d29922
+        folder "processed/" as processed #d29922
+        component "MANIFEST.json" as manifest #f85149
+        note bottom of "data/"
+            Version-controlled
+            data with integrity
+            checksums
+        end note
+    }
+    
+    package "docs/" #161b22 {
+        component "index.md" as docs_index #8b949e
+        component "api.md" as api #8b949e
+        component "tutorial.md" as tutorial #8b949e
+    }
+    
+    package "notebooks/" #161b22 {
+        component "01_exploration.ipynb" as nb1 #d29922
+        component "02_analysis.ipynb" as nb2 #d29922
+    }
+    
+    package ".github/workflows/" #161b22 {
+        component "ci.yml" as ci #3fb950
+        component "release.yml" as release #3fb950
+    }
+    
+    component "pyproject.toml" as pyproject #58a6ff
+    component "README.md" as readme #8b949e
+    component ".gitignore" as gitignore #8b949e
+    component "Dockerfile" as dockerfile #39c5cf
+    component "docker-compose.yml" as compose #39c5cf
+    component ".pre-commit-config.yaml" as precommit #a371f7
+}
+
+@enduml
