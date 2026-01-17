@@ -1,21 +1,21 @@
 """
 ═══════════════════════════════════════════════════════════════════════════════
 COMPUTATIONAL THINKING FOR RESEARCHERS
-Week 2: Abstraction and Encapsulation — Laboratory Package
+02UNIT: Abstraction and Encapsulation — Laboratory Package
 ═══════════════════════════════════════════════════════════════════════════════
 
-This package contains the laboratory materials for Week 2.
+This package contains the laboratory materials for 02UNIT.
 
 Modules:
-    lab_2_01_simulation_framework: OOP simulation framework with Protocols
-    lab_2_02_design_patterns: Design patterns catalogue for research software
+    lab_02_01_simulation_framework: OOP simulation framework with Protocols
+    lab_02_02_design_patterns: Design patterns catalogue for research software
 
 © 2025 Antonio Clim. All rights reserved.
 See README.md for full licence terms.
 ═══════════════════════════════════════════════════════════════════════════════
 """
 
-from .lab_2_01_simulation_framework import (
+from .lab_02_01_simulation_framework import (
     Simulable,
     SimulationRunner,
     SimulationResult,
@@ -26,7 +26,7 @@ from .lab_2_01_simulation_framework import (
     Body,
 )
 
-from .lab_2_02_design_patterns import (
+from .lab_02_02_design_patterns import (
     IntegrationStrategy,
     RectangleRule,
     TrapezoidRule,

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ═══════════════════════════════════════════════════════════════════════════════
-Week 2 Practice: Medium Exercise 1 — Strategy Pattern
+02UNIT Practice: Medium Exercise 1 — Strategy Pattern
 ═══════════════════════════════════════════════════════════════════════════════
 
 Difficulty: ⭐⭐ (Medium)

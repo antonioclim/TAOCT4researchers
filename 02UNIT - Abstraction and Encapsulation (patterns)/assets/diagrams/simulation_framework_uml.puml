@@ -1,0 +1,112 @@
+@startuml simulation_framework_uml
+!theme plain
+skinparam backgroundColor transparent
+skinparam classAttributeIconSize 0
+skinparam defaultFontName "Segoe UI"
+
+title 02UNIT: Simulation Framework Architecture
+
+package "Core Protocols" <<Rectangle>> {
+    interface Simulable<StateT> {
+        +state(): StateT
+        +step(dt: float): None
+        +is_done(): bool
+    }
+    
+    interface SimulationObserver<StateT> {
+        +on_step(state: StateT, t: float): None
+        +on_complete(final_state: StateT): None
+    }
+}
+
+package "Simulation Runner" <<Rectangle>> {
+    class SimulationRunner<StateT> {
+        -simulation: Simulable[StateT]
+        -observers: list[SimulationObserver[StateT]]
+        -dt: float
+        -max_time: float
+        --
+        +run(): Generator[StateT, None, None]
+        +add_observer(obs: SimulationObserver): None
+        +remove_observer(obs: SimulationObserver): None
+        -notify_step(state: StateT, t: float): None
+        -notify_complete(state: StateT): None
+    }
+}
+
+package "Concrete Models" <<Rectangle>> {
+    class SIRSimulation implements Simulable {
+        -S: float
+        -I: float
+        -R: float
+        -beta: float
+        -gamma: float
+        --
+        +state(): SIRState
+        +step(dt: float): None
+        +is_done(): bool
+    }
+    
+    class LotkaVolterraSimulation implements Simulable {
+        -prey: float
+        -predators: float
+        -alpha: float
+        -beta: float
+        -delta: float
+        -gamma: float
+        --
+        +state(): LVState
+        +step(dt: float): None
+        +is_done(): bool
+    }
+    
+    class NBodySimulation implements Simulable {
+        -positions: NDArray
+        -velocities: NDArray
+        -masses: NDArray
+        --
+        +state(): NBodyState
+        +step(dt: float): None
+        +is_done(): bool
+    }
+}
+
+package "Observers" <<Rectangle>> {
+    class ConsoleLogger implements SimulationObserver {
+        -log_interval: int
+        --
+        +on_step(state, t): None
+        +on_complete(state): None
+    }
+    
+    class DataCollector implements SimulationObserver {
+        -history: list[StateT]
+        -times: list[float]
+        --
+        +on_step(state, t): None
+        +on_complete(state): None
+        +get_dataframe(): DataFrame
+    }
+    
+    class RealtimeVisualiser implements SimulationObserver {
+        -figure: Figure
+        -ax: Axes
+        --
+        +on_step(state, t): None
+        +on_complete(state): None
+    }
+}
+
+SimulationRunner --> Simulable : runs
+SimulationRunner --> SimulationObserver : notifies
+
+note right of Simulable
+    Generic protocol enabling
+    arbitrary state types
+end note
+
+note bottom of SimulationRunner
+    Orchestrates simulation execution
+    and observer notifications
+end note
+@enduml

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ═══════════════════════════════════════════════════════════════════════════════
-Week 2 Practice: Easy Exercise 3 — Generic Container
+02UNIT Practice: Easy Exercise 3 — Generic Container
 ═══════════════════════════════════════════════════════════════════════════════
 
 Difficulty: ⭐ (Easy)

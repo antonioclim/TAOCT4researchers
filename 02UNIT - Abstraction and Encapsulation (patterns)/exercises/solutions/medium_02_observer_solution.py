@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ═══════════════════════════════════════════════════════════════════════════════
-Week 2 Practice: Medium Exercise 2 — Observer Pattern SOLUTION
+02UNIT Practice: Medium Exercise 2 — Observer Pattern SOLUTION
 ═══════════════════════════════════════════════════════════════════════════════
 
 © 2025 Antonio Clim. All rights reserved.

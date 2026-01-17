@@ -103,13 +103,13 @@ run-labs: lab1 lab2
 lab1:
 	@echo "$(BLUE)Running Lab 2.01: Simulation Framework$(NC)"
 	@echo "────────────────────────────────────────"
-	$(PYTHON) $(LAB_DIR)/lab_2_01_simulation_framework.py --demo
+	$(PYTHON) $(LAB_DIR)/lab_02_01_simulation_framework.py --demo
 	@echo ""
 
 lab2:
 	@echo "$(BLUE)Running Lab 2.02: Design Patterns$(NC)"
 	@echo "────────────────────────────────────────"
-	$(PYTHON) $(LAB_DIR)/lab_2_02_design_patterns.py --demo
+	$(PYTHON) $(LAB_DIR)/lab_02_02_design_patterns.py --demo
 	@echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════════

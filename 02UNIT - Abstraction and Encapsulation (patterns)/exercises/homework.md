@@ -1,4 +1,4 @@
-# Week 2 Homework: Abstraction and Encapsulation
+# 02UNIT Homework: Abstraction and Encapsulation
 
 ## 📋 Metadata
 
@@ -358,7 +358,7 @@ class YourSimulation:
 ## 📁 Repository Format
 
 ```
-homework-week2-[name]/
+homework-02UNIT-[name]/
 ├── README.md
 ├── ex1_units/
 │   ├── units.py
@@ -388,6 +388,6 @@ ruff check .
 ---
 
 *THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS*
-*Week 2 — Abstraction and Encapsulation*
+*02UNIT — Abstraction and Encapsulation*
 
 © 2025 Antonio Clim. All rights reserved.

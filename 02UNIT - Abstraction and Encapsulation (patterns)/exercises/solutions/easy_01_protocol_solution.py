@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ═══════════════════════════════════════════════════════════════════════════════
-Week 2 Practice: Easy Exercise 1 — Protocol SOLUTION
+02UNIT Practice: Easy Exercise 1 — Protocol SOLUTION
 ═══════════════════════════════════════════════════════════════════════════════
 
 © 2025 Antonio Clim. All rights reserved.

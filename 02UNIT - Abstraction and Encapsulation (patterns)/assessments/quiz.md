@@ -1,4 +1,4 @@
-# Week 2 Quiz: Abstraction and Encapsulation
+# 02UNIT Quiz: Abstraction and Encapsulation
 
 ## 📋 Metadata
 

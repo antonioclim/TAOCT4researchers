@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#58a6ff"/>
+    </marker>
+    <marker id="diamond" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto">
+      <polygon points="6 0, 12 6, 6 12, 0 6" fill="#3fb950" stroke="#3fb950"/>
+    </marker>
+    <marker id="hollow-diamond" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto">
+      <polygon points="6 0, 12 6, 6 12, 0 6" fill="#0d1117" stroke="#ffa657" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0d1117"/>
+  
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" fill="#58a6ff" font-family="Segoe UI, sans-serif" font-size="20" font-weight="bold">Composition vs Inheritance</text>
+  
+  <!-- Left side: Inheritance -->
+  <rect x="30" y="60" width="350" height="180" rx="8" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+  <text x="205" y="85" text-anchor="middle" fill="#f85149" font-family="Segoe UI, sans-serif" font-size="14" font-weight="bold">❌ Inheritance (Tight Coupling)</text>
+  
+  <!-- Base class -->
+  <rect x="150" y="100" width="110" height="40" rx="4" fill="#21262d" stroke="#8b949e"/>
+  <text x="205" y="125" text-anchor="middle" fill="#c9d1d9" font-family="monospace" font-size="12">Animal</text>
+  
+  <!-- Derived classes -->
+  <rect x="60" y="180" width="90" height="35" rx="4" fill="#21262d" stroke="#8b949e"/>
+  <text x="105" y="202" text-anchor="middle" fill="#c9d1d9" font-family="monospace" font-size="11">FlyingBird</text>
+  
+  <rect x="160" y="180" width="90" height="35" rx="4" fill="#21262d" stroke="#8b949e"/>
+  <text x="205" y="202" text-anchor="middle" fill="#c9d1d9" font-family="monospace" font-size="11">SwimmingBird</text>
+  
+  <rect x="260" y="180" width="90" height="35" rx="4" fill="#21262d" stroke="#8b949e"/>
+  <text x="305" y="202" text-anchor="middle" fill="#c9d1d9" font-family="monospace" font-size="11">??? Penguin</text>
+  
+  <!-- Inheritance arrows -->
+  <line x1="105" y1="180" x2="175" y2="145" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="205" y1="180" x2="205" y2="145" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="305" y1="180" x2="235" y2="145" stroke="#f85149" stroke-width="1.5" stroke-dasharray="5,3"/>
+  
+  <!-- Right side: Composition -->
+  <rect x="420" y="60" width="350" height="180" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="2"/>
+  <text x="595" y="85" text-anchor="middle" fill="#3fb950" font-family="Segoe UI, sans-serif" font-size="14" font-weight="bold">✓ Composition (Loose Coupling)</text>
+  
+  <!-- Main class -->
+  <rect x="540" y="100" width="110" height="40" rx="4" fill="#21262d" stroke="#8b949e"/>
+  <text x="595" y="125" text-anchor="middle" fill="#c9d1d9" font-family="monospace" font-size="12">Bird</text>
+  
+  <!-- Composed behaviours -->
+  <rect x="440" y="180" width="100" height="35" rx="4" fill="#238636" stroke="#3fb950"/>
+  <text x="490" y="202" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="11">Flyable</text>
+  
+  <rect x="550" y="180" width="100" height="35" rx="4" fill="#238636" stroke="#3fb950"/>
+  <text x="600" y="202" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="11">Swimmable</text>
+  
+  <rect x="660" y="180" width="100" height="35" rx="4" fill="#238636" stroke="#3fb950"/>
+  <text x="710" y="202" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="11">Walkable</text>
+  
+  <!-- Composition arrows (diamond) -->
+  <line x1="565" y1="140" x2="490" y2="175" stroke="#3fb950" stroke-width="1.5" marker-start="url(#diamond)"/>
+  <line x1="595" y1="140" x2="600" y2="175" stroke="#3fb950" stroke-width="1.5" marker-start="url(#diamond)"/>
+  <line x1="625" y1="140" x2="710" y2="175" stroke="#3fb950" stroke-width="1.5" marker-start="url(#diamond)"/>
+  
+  <!-- Comparison table -->
+  <rect x="50" y="270" width="700" height="200" rx="8" fill="#161b22" stroke="#30363d"/>
+  
+  <!-- Table header -->
+  <rect x="50" y="270" width="700" height="35" rx="8" fill="#21262d"/>
+  <text x="200" y="293" text-anchor="middle" fill="#58a6ff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="bold">Aspect</text>
+  <text x="400" y="293" text-anchor="middle" fill="#f85149" font-family="Segoe UI, sans-serif" font-size="13" font-weight="bold">Inheritance</text>
+  <text x="600" y="293" text-anchor="middle" fill="#3fb950" font-family="Segoe UI, sans-serif" font-size="13" font-weight="bold">Composition</text>
+  
+  <!-- Table rows -->
+  <line x1="50" y1="305" x2="750" y2="305" stroke="#30363d"/>
+  <line x1="300" y1="270" x2="300" y2="470" stroke="#30363d"/>
+  <line x1="500" y1="270" x2="500" y2="470" stroke="#30363d"/>
+  
+  <!-- Row 1 -->
+  <text x="175" y="335" text-anchor="middle" fill="#c9d1d9" font-family="Segoe UI, sans-serif" font-size="12">Coupling</text>
+  <text x="400" y="335" text-anchor="middle" fill="#f85149" font-family="Segoe UI, sans-serif" font-size="12">Tight (compile-time)</text>
+  <text x="625" y="335" text-anchor="middle" fill="#3fb950" font-family="Segoe UI, sans-serif" font-size="12">Loose (runtime)</text>
+  <line x1="50" y1="350" x2="750" y2="350" stroke="#30363d" stroke-dasharray="2,2"/>
+  
+  <!-- Row 2 -->
+  <text x="175" y="375" text-anchor="middle" fill="#c9d1d9" font-family="Segoe UI, sans-serif" font-size="12">Flexibility</text>
+  <text x="400" y="375" text-anchor="middle" fill="#f85149" font-family="Segoe UI, sans-serif" font-size="12">Static hierarchy</text>
+  <text x="625" y="375" text-anchor="middle" fill="#3fb950" font-family="Segoe UI, sans-serif" font-size="12">Dynamic behaviour</text>
+  <line x1="50" y1="390" x2="750" y2="390" stroke="#30363d" stroke-dasharray="2,2"/>
+  
+  <!-- Row 3 -->
+  <text x="175" y="415" text-anchor="middle" fill="#c9d1d9" font-family="Segoe UI, sans-serif" font-size="12">Testability</text>
+  <text x="400" y="415" text-anchor="middle" fill="#f85149" font-family="Segoe UI, sans-serif" font-size="12">Harder to mock</text>
+  <text x="625" y="415" text-anchor="middle" fill="#3fb950" font-family="Segoe UI, sans-serif" font-size="12">Easy injection</text>
+  <line x1="50" y1="430" x2="750" y2="430" stroke="#30363d" stroke-dasharray="2,2"/>
+  
+  <!-- Row 4 -->
+  <text x="175" y="455" text-anchor="middle" fill="#c9d1d9" font-family="Segoe UI, sans-serif" font-size="12">Reuse</text>
+  <text x="400" y="455" text-anchor="middle" fill="#f85149" font-family="Segoe UI, sans-serif" font-size="12">Single inheritance</text>
+  <text x="625" y="455" text-anchor="middle" fill="#3fb950" font-family="Segoe UI, sans-serif" font-size="12">Multiple components</text>
+</svg>

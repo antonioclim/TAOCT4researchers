@@ -1,4 +1,4 @@
-# Week 2 Self-Assessment: Abstraction and Encapsulation
+# 02UNIT Self-Assessment: Abstraction and Encapsulation
 
 ## 📋 Instructions
 

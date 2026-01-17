@@ -1,12 +1,12 @@
-# Week 2: Abstraction and Encapsulation
+# 02UNIT: Abstraction and Encapsulation
 
-## Lecture Notes — Comprehensive Guide
+## Lecture Notes — Theoretical Foundations
 
 ### Introduction
 
-In Week 1, we explored the foundations of computation through Turing machines and abstract syntax trees. We discovered that computation fundamentally involves state transitions governed by rules. This week, we elevate our perspective to examine how we can organise and structure these computational elements using abstraction and encapsulation—the cornerstone principles of object-oriented design.
+The preceding unit (01UNIT) established the foundations of computation through Turing machines and abstract syntax trees, revealing that computation fundamentally involves state transitions governed by deterministic rules. This unit elevates our perspective to examine how computational elements can be organised and structured through abstraction and encapsulation—the cornerstone principles of object-oriented design that enable construction of maintainable research software.
 
-For researchers, well-designed software is not merely an aesthetic concern. Poor design leads to code that is difficult to modify, impossible to test and prone to subtle bugs. Conversely, principled design enables rapid iteration on scientific hypotheses, reliable reproduction of results and collaborative development across research teams.
+For researchers, principled software design transcends aesthetic preference. Poorly structured code resists modification, defies testing, and harbours subtle defects. Conversely, well-designed systems permit rapid iteration on scientific hypotheses, reliable reproduction of experimental results, and collaborative development across distributed research teams.
 
 ---
 
@@ -309,7 +309,7 @@ Abstraction and encapsulation are fundamental to building maintainable research 
 
 The goal is not perfect design from the start—that is impossible. The goal is design that accommodates change gracefully. When requirements evolve, well-designed code bends; poorly designed code breaks.
 
-In Week 3, we will apply these principles to build a benchmarking framework for algorithmic complexity analysis. The design patterns learned this week will enable us to create a flexible system for comparing algorithm performance.
+In 03UNIT, we will apply these principles to build a benchmarking framework for algorithmic complexity analysis. The design patterns learned this week will enable us to create a flexible system for comparing algorithm performance.
 
 ---
 

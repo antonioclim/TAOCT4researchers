@@ -1,4 +1,4 @@
-# Week 2 Further Reading: Abstraction and Encapsulation
+# 02UNIT Further Reading: Abstraction and Encapsulation
 
 ## 📚 Essential Reading
 
@@ -151,7 +151,7 @@
 | Design Patterns (GoF) | Week 4 (Data Structures) |
 | Architecture Patterns | Week 7 (Reproducibility) |
 | Best Practices Paper | All weeks |
-| mypy Documentation | Week 3 (Complexity Analysis) |
+| mypy Documentation | 03UNIT (Complexity Analysis) |
 
 ---
 

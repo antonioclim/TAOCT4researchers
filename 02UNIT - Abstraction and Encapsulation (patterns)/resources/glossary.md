@@ -1,4 +1,4 @@
-# Week 2 Glossary: Abstraction and Encapsulation
+# 02UNIT Glossary: Abstraction and Encapsulation
 
 ## Core Concepts
 

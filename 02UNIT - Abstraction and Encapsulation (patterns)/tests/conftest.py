@@ -2,10 +2,10 @@
 """
 ═══════════════════════════════════════════════════════════════════════════════
 COMPUTATIONAL THINKING FOR RESEARCHERS
-Week 2: Test Configuration (conftest.py)
+02UNIT: Test Configuration (conftest.py)
 ═══════════════════════════════════════════════════════════════════════════════
 
-Shared pytest fixtures and configuration for Week 2 tests.
+Shared pytest fixtures and configuration for 02UNIT tests.
 
 © 2025 Antonio Clim. All rights reserved.
 ═══════════════════════════════════════════════════════════════════════════════

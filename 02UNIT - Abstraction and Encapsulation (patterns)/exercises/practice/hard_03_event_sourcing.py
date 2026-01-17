@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ═══════════════════════════════════════════════════════════════════════════════
-Week 2 Practice: Hard Exercise 3 — Event Sourcing Pattern
+02UNIT Practice: Hard Exercise 3 — Event Sourcing Pattern
 ═══════════════════════════════════════════════════════════════════════════════
 
 Difficulty: ⭐⭐⭐ (Hard)

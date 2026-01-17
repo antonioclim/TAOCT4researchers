@@ -1,4 +1,4 @@
-# Week 2 Cheatsheet: Abstraction and Encapsulation
+# 02UNIT Cheatsheet: Abstraction and Encapsulation
 
 > **A4 Quick Reference** — Print-friendly summary of key concepts
 
@@ -202,8 +202,8 @@ mode: Literal["read", "write"]
 
 | Week | Connection |
 |------|------------|
-| Week 1 | State → State pattern; AST → Visitor pattern |
-| Week 3 | Strategy pattern for algorithm selection in benchmarks |
+| 01UNIT | State → State pattern; AST → Visitor pattern |
+| 03UNIT | Strategy pattern for algorithm selection in benchmarks |
 | Week 4 | Factory for data structure creation |
 | Week 5 | Observer for simulation visualisation |
 | Week 6 | Decorator for plot styling |

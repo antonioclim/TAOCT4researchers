@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ═══════════════════════════════════════════════════════════════════════════════
-Week 2 Practice: Hard Exercise 2 — Type-Safe State Machine
+02UNIT Practice: Hard Exercise 2 — Type-Safe State Machine
 ═══════════════════════════════════════════════════════════════════════════════
 
 Difficulty: ⭐⭐⭐ (Hard)

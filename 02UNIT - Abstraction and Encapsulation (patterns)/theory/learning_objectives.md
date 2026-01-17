@@ -1,10 +1,10 @@
-# Week 2: Learning Objectives
+# 02UNIT: Learning Objectives
 
 ## Abstraction and Encapsulation
 
 ### Overview
 
-This document specifies the measurable learning objectives for Week 2 of "The Art of Computational Thinking for Researchers". These objectives are aligned with Bloom's Taxonomy and build upon the foundational concepts from Week 1.
+This document specifies the measurable learning objectives for 02UNIT of "The Art of Computational Thinking for Researchers". These objectives are aligned with Bloom's Taxonomy and build upon the foundational concepts from 01UNIT.
 
 ---
 
@@ -62,21 +62,21 @@ This document specifies the measurable learning objectives for Week 2 of "The Ar
 
 ## Supporting Objectives
 
-### Knowledge Prerequisites (from Week 1)
+### Knowledge Prerequisites (from 01UNIT)
 
 Learners should be able to:
 - Define state and state transitions (Turing machine concept)
 - Implement basic data structures with type hints
 - Write functions with proper documentation
 
-### Skills Developed This Week
+### Skills Developed in This Unit
 
 - Type-safe interface design with Python Protocols
 - Generic programming with TypeVar
 - Dataclass design for immutable state
 - Composition over inheritance patterns
 
-### Preparation for Week 3
+### Preparation for 03UNIT
 
 This week prepares learners for:
 - Algorithm analysis and complexity measurement

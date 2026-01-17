@@ -1,8 +1,8 @@
-# Week 2 Grading Rubric: Abstraction and Encapsulation
+# 02UNIT Grading Rubric: Abstraction and Encapsulation
 
 ## 📋 Overview
 
-This rubric provides detailed criteria for evaluating Week 2 homework submissions. Each criterion uses a 4-level scale aligned with Bloom's taxonomy expectations.
+This rubric provides detailed criteria for evaluating 02UNIT homework submissions. Each criterion uses a 4-level scale aligned with Bloom's taxonomy expectations.
 
 ---
 

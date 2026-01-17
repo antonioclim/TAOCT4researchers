@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ═══════════════════════════════════════════════════════════════════════════════
-Week 2 Practice: Easy Exercise 2 — Dataclass SOLUTION
+02UNIT Practice: Easy Exercise 2 — Dataclass SOLUTION
 ═══════════════════════════════════════════════════════════════════════════════
 
 © 2025 Antonio Clim. All rights reserved.
