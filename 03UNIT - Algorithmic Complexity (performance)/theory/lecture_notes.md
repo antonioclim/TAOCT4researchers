@@ -1,4 +1,4 @@
-# Week 3: Algorithmic Complexity — Lecture Notes
+# 03UNIT: Algorithmic Complexity — Lecture Notes
 
 > Understanding and measuring computational performance
 
@@ -6,7 +6,7 @@
 
 ## 1. Introduction
 
-The study of algorithmic complexity provides researchers with a rigorous framework for predicting and comparing the performance of computational methods. This week, we transition from understanding *what* computation is (Week 1) and *how* to structure it (Week 2) to understanding *how well* our algorithms perform as problem sizes grow.
+The study of algorithmic complexity provides researchers with a rigorous framework for predicting and comparing the performance of computational methods. This unit transitions from understanding *what* computation is (01UNIT) and *how* to structure it (02UNIT) to understanding *how well* our algorithms perform as problem sizes grow.
 
 Consider a bioinformatician analysing protein interaction networks. With 10,000 proteins, a poorly chosen algorithm could require weeks of computation where an appropriate one would complete in minutes. The difference between O(n²) and O(n log n) is not merely theoretical—it determines whether research is feasible.
 
