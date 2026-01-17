@@ -2,10 +2,10 @@
 """
 ═══════════════════════════════════════════════════════════════════════════════
 COMPUTATIONAL THINKING FOR RESEARCHERS
-Week 7: Pytest Configuration and Shared Fixtures
+07UNIT: Pytest Configuration and Shared Fixtures
 ═══════════════════════════════════════════════════════════════════════════════
 
-This module provides shared fixtures and configuration for the Week 7 test
+This module provides shared fixtures and configuration for the 07UNIT test
 suite, demonstrating best practices for reproducible testing.
 
 FIXTURES PROVIDED

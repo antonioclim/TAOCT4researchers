@@ -2,7 +2,7 @@
 """
 ═══════════════════════════════════════════════════════════════════════════════
 THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS
-Week 7, Lab: Reproducibility Toolkit
+07UNIT, Lab: Reproducibility Toolkit
 ═══════════════════════════════════════════════════════════════════════════════
 
 CONTEXT

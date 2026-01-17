@@ -1,10 +1,10 @@
 """
 ═══════════════════════════════════════════════════════════════════════════════
 COMPUTATIONAL THINKING FOR RESEARCHERS
-Week 7: Reproducibility and Capstone - Laboratory Package
+07UNIT: Reproducibility and Capstone - Laboratory Package
 ═══════════════════════════════════════════════════════════════════════════════
 
-This package contains the laboratory materials for Week 7, covering
+This package contains the laboratory materials for 07UNIT, covering
 reproducibility, testing and project scaffolding.
 
 Modules:

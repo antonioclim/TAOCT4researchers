@@ -2,7 +2,7 @@
 """
 ═══════════════════════════════════════════════════════════════════════════════
 THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS
-Week 7, Lab 2: Testing Best Practices și CI/CD
+07UNIT, Lab 2: Testing Best Practices și CI/CD
 ═══════════════════════════════════════════════════════════════════════════════
 
 CONTEXT
