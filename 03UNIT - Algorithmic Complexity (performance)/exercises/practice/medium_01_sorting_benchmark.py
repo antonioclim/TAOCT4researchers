@@ -38,6 +38,10 @@ import random
 import time
 from dataclasses import dataclass
 from typing import Callable
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -245,7 +249,7 @@ def generate_report(
 
 def _test_sorting_correctness() -> None:
     """Test that sorting algorithms produce correct results."""
-    print("Testing sorting correctness...\n")
+    logger.info("Testing sorting correctness...\n")
 
     test_cases = [
         [],
@@ -265,7 +269,7 @@ def _test_sorting_correctness() -> None:
     }
 
     for name, func in algorithms.items():
-        print(f"  {name}:")
+        logger.info(f"  {name}:")
         all_pass = True
         for tc in test_cases:
             try:
@@ -273,53 +277,54 @@ def _test_sorting_correctness() -> None:
                 result = func(data)
                 expected = sorted(tc)
                 if result != expected:
-                    print(f"    ✗ {tc} → {result} (expected {expected})")
+                    logger.info(f"    ✗ {tc} → {result} (expected {expected})")
                     all_pass = False
             except NotImplementedError:
-                print(f"    ✗ Not implemented")
+                logger.info(f"    ✗ Not implemented")
                 all_pass = False
                 break
             except Exception as e:
-                print(f"    ✗ {tc} raised {e}")
+                logger.info(f"    ✗ {tc} raised {e}")
                 all_pass = False
 
         if all_pass:
-            print(f"    ✓ All test cases passed")
+            logger.info(f"    ✓ All test cases passed")
 
 
 def _test_benchmarking() -> None:
     """Test benchmarking infrastructure."""
-    print("\nTesting benchmarking...\n")
+    logger.info("\nTesting benchmarking...\n")
 
     # Use Python's built-in sort as reference
     try:
         result = benchmark_sort(sorted, 1000, runs=3, warmup=1)
-        print(f"  ✓ benchmark_sort: mean={result.mean:.6f}s, median={result.median:.6f}s")
+        logger.info(f"  ✓ benchmark_sort: mean={result.mean:.6f}s, median={result.median:.6f}s")
     except NotImplementedError:
-        print("  ✗ benchmark_sort: Not implemented")
+        logger.info("  ✗ benchmark_sort: Not implemented")
 
 
 def _test_scaling() -> None:
     """Test scaling analysis."""
-    print("\nTesting scaling analysis...\n")
+    logger.info("\nTesting scaling analysis...\n")
 
     try:
         algorithms = {"python_sorted": sorted}
         sizes = [100, 500, 1000]
         results = run_scaling_analysis(algorithms, sizes, runs=2)
-        print(f"  ✓ run_scaling_analysis completed")
+        logger.info(f"  ✓ run_scaling_analysis completed")
 
         for name, res_list in results.items():
             exp, r2 = estimate_complexity(res_list)
-            print(f"    {name}: exponent={exp:.2f}, R²={r2:.3f}")
+            logger.info(f"    {name}: exponent={exp:.2f}, R²={r2:.3f}")
     except NotImplementedError:
-        print("  ✗ run_scaling_analysis or estimate_complexity: Not implemented")
+        logger.info("  ✗ run_scaling_analysis or estimate_complexity: Not implemented")
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     _test_sorting_correctness()
     _test_benchmarking()
     _test_scaling()
 
-    print("\n" + "=" * 60)
-    print("Implement all functions, then compare your sorts to Python's!")
+    logger.info("\n" + "=" * 60)
+    logger.info("Implement all functions, then compare your sorts to Python's!")

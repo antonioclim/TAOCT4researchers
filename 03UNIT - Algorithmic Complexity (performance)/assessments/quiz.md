@@ -1,245 +1,217 @@
-# Week 3 Quiz: Algorithmic Complexity
+# 03UNIT Quiz: Algorithmic Complexity
 
-> **Course:** The Art of Computational Thinking for Researchers  
-> **Week:** 3 of 7  
-> **Time Limit:** 20 minutes  
-> **Total Points:** 100
+## 📋 Metadata
 
----
+| Property | Value |
+|---|---|
+| **Time limit** | 30–40 minutes |
+| **Total questions** | 10 |
+| **Passing threshold** | 70% |
+| **Permitted materials** | Personal notes from 03UNIT, Python documentation |
 
 ## Instructions
 
-- Answer all 10 questions
-- Questions 1-6 are multiple choice (8 points each = 48 points)
-- Questions 7-10 are short answer (13 points each = 52 points)
-- No external resources permitted
-- Show your working for short answer questions
+Answer all questions. Multiple-choice questions have exactly one correct option. For short-answer questions, state assumptions explicitly and justify each non-trivial step. Unless stated otherwise, assume the standard RAM cost model where elementary arithmetic and indexing into an array are treated as constant-time operations.
 
 ---
 
-## Section A: Multiple Choice (48 points)
+## Multiple-Choice Questions (6)
 
-**Question 1 (8 points)**
+### Q1. Formal Big-O definition
 
-What is the time complexity of the following code?
+Let $T(n)$ and $f(n)$ be non-negative functions for all sufficiently large $n$. Which statement is logically equivalent to $T(n) = O(f(n))$?
+
+A. $\forall c > 0, \exists n_0: \forall n \geq n_0,\; T(n) \leq c\, f(n)$
+
+B. $\exists c > 0, \exists n_0: \forall n \geq n_0,\; T(n) \leq c\, f(n)$
+
+C. $\exists c > 0: \forall n \geq 1,\; T(n) \leq c\, f(n)$
+
+D. $\forall n \geq 1,\; T(n) \leq f(n)$
+
+---
+
+### Q2. Relationship between $O$ and $\Theta$
+
+Which implication holds for all functions $T(n)$ and $f(n)$ defined on the positive integers?
+
+A. $T(n) = O(f(n)) \Rightarrow T(n) = \Theta(f(n))$
+
+B. $T(n) = \Theta(f(n)) \Rightarrow T(n) = O(f(n))$
+
+C. $T(n) = O(f(n)) \Rightarrow T(n) = \Omega(f(n))$
+
+D. $T(n) = o(f(n)) \Rightarrow T(n) = \Omega(f(n))$
+
+---
+
+### Q3. Complexity of nested iteration
+
+Consider the following function, where `n` is a positive integer:
 
 ```python
-def mystery(n):
-    count = 0
-    i = n
-    while i > 0:
-        count += 1
-        i = i // 2
-    return count
-```
-
-- A) O(1)
-- B) O(log n)
-- C) O(n)
-- D) O(n log n)
-
----
-
-**Question 2 (8 points)**
-
-Which of the following correctly describes the relationship between Big-O and Big-Θ notation?
-
-- A) Big-O provides a tight bound; Big-Θ provides an upper bound
-- B) Big-O provides an upper bound; Big-Θ provides a tight bound
-- C) Both provide the same information and are interchangeable
-- D) Big-O is for time complexity; Big-Θ is for space complexity
-
----
-
-**Question 3 (8 points)**
-
-Consider an algorithm with time complexity T(n) = 3n² + 5n + 100. Which statement is TRUE?
-
-- A) T(n) = O(n) because linear terms dominate
-- B) T(n) = O(n²) and T(n) = Ω(n²), therefore T(n) = Θ(n²)
-- C) T(n) = O(n³) but not O(n²)
-- D) The constant 100 makes this O(1) for small n
-
----
-
-**Question 4 (8 points)**
-
-You measure an algorithm's running time and obtain: T(100) = 10ms, T(1000) = 100ms, T(10000) = 1000ms. What is the likely complexity?
-
-- A) O(1)
-- B) O(log n)
-- C) O(n)
-- D) O(n²)
-
----
-
-**Question 5 (8 points)**
-
-Which sorting algorithm has O(n log n) complexity in the WORST case?
-
-- A) Quicksort
-- B) Bubble sort
-- C) Merge sort
-- D) Insertion sort
-
----
-
-**Question 6 (8 points)**
-
-A dynamic array doubles its capacity when full. What is the AMORTISED time complexity of appending n elements?
-
-- A) O(n²) total, O(n) amortised per element
-- B) O(n log n) total, O(log n) amortised per element
-- C) O(n) total, O(1) amortised per element
-- D) O(2^n) total due to repeated doubling
-
----
-
-## Section B: Short Answer (52 points)
-
-**Question 7 (13 points)**
-
-Analyse the following code and determine its time complexity. Show your reasoning using the sum and product rules.
-
-```python
-def process(n):
-    # Part A
+def f(n: int) -> int:
+    s = 0
     for i in range(n):
-        for j in range(n):
-            print(i, j)
-    
-    # Part B
-    for k in range(n):
-        print(k)
-    
-    # Part C
-    m = n
-    while m > 1:
-        print(m)
-        m = m // 2
+        j = 1
+        while j < n:
+            s += i + j
+            j *= 2
+    return s
 ```
 
----
+Assuming multiplication by 2 and integer comparison are constant-time, the worst-case time complexity is:
 
-**Question 8 (13 points)**
+A. $O(n)$
 
-The recurrence relation for merge sort is: T(n) = 2T(n/2) + O(n)
+B. $O(n \log n)$
 
-Using the Master Theorem, determine the complexity of merge sort. State which case of the Master Theorem applies and show your working.
+C. $O(n^2)$
 
-*Hint: The Master Theorem states that for T(n) = aT(n/b) + O(n^d):*
-- *Case 1: If d < log_b(a), then T(n) = O(n^(log_b(a)))*
-- *Case 2: If d = log_b(a), then T(n) = O(n^d log n)*
-- *Case 3: If d > log_b(a), then T(n) = O(n^d)*
+D. $O(\log n)$
 
 ---
 
-**Question 9 (13 points)**
+### Q4. Master theorem classification
 
-Explain why measuring algorithm performance requires multiple runs and statistical analysis rather than a single timing measurement. Describe at least three sources of measurement variability that benchmarking must account for.
+Let $T(n) = 2T(n/2) + n$ with $T(1) = 1$. Using the master theorem, which asymptotic bound is correct?
 
----
+A. $T(n) = \Theta(n)$
 
-**Question 10 (13 points)**
+B. $T(n) = \Theta(n \log n)$
 
-You have measured the following timing data for an algorithm:
+C. $T(n) = \Theta(n^2)$
 
-| n | Time (ms) |
-|---|-----------|
-| 1000 | 5 |
-| 2000 | 20 |
-| 4000 | 80 |
-| 8000 | 320 |
-
-a) Estimate the complexity exponent using the log-log technique. Show your calculation.
-
-b) What complexity class does this suggest?
-
-c) Predict the approximate running time for n = 16000.
+D. $T(n) = \Theta(\log n)$
 
 ---
 
-## Answer Key
+### Q5. Measurement protocol
+
+Two alternative implementations of the same algorithm are benchmarked. Which protocol is the most defensible if the aim is to reduce bias introduced by input order and transient system state?
+
+A. Time each implementation once on a single randomly chosen input and report the faster one.
+
+B. Fix a single input, execute both implementations in a fixed alternating order and report the mean time.
+
+C. Execute a warm-up phase, randomise the order of implementations per trial and report the median with an uncertainty estimate.
+
+D. Execute both implementations in parallel threads to ensure identical system load.
+
+---
+
+### Q6. Linearising a power-law model
+
+Suppose empirical timings suggest $T(n) \approx \alpha n^k$ for constants $\alpha > 0$ and $k > 0$. Which transformation yields a linear relationship suitable for ordinary least squares regression?
+
+A. Regress $T(n)$ on $\log n$.
+
+B. Regress $\log T(n)$ on $n$.
+
+C. Regress $\log T(n)$ on $\log n$.
+
+D. Regress $T(n)$ on $n^k$ with $k$ fixed to 1.
+
+---
+
+## Short-Answer Questions (4)
+
+### Q7. Recurrence solving
+
+Solve the recurrence below and state the bound using $\Theta(\cdot)$ notation. A brief justification is required.
+
+$$
+T(n) = 3T\left(\frac{n}{2}\right) + n\log n, \quad T(1) = 1
+$$
+
+---
+
+### Q8. Amortised versus worst-case complexity
+
+Define amortised time complexity and contrast it with worst-case time complexity. Provide one concrete example from dynamic arrays or self-adjusting trees where amortised analysis changes the interpretation of algorithmic cost.
+
+---
+
+### Q9. Inferring complexity from scaling
+
+An experiment measures running time for increasing input sizes with the same implementation and the same input-generation distribution:
+
+| $n$ | 1,000 | 2,000 | 4,000 |
+|---:|---:|---:|---:|
+| $T(n)$ (s) | 0.010 | 0.040 | 0.160 |
+
+State the most plausible asymptotic class from the set $\{O(n), O(n\log n), O(n^2)\}$ and justify your selection using scaling arguments.
+
+---
+
+### Q10. Minimal fair comparison protocol
+
+Describe a minimal protocol for comparing two algorithms empirically. The answer should address at least: input selection, replication strategy, summary statistics and one threat to validity specific to high-level interpreted languages.
+
+---
+
+## Answers and Explanations
 
 <details>
-<summary>Click to reveal answers (instructor use only)</summary>
+<summary>Show answers</summary>
 
-### Section A: Multiple Choice
+### Q1
+**Correct answer: B.**
 
-**Q1: B) O(log n)**
-The variable i is halved each iteration (i = i // 2), so the loop runs log₂(n) times.
+The definition of $T(n) = O(f(n))$ requires the existence of a constant $c > 0$ and a threshold $n_0$ such that $T(n) \leq c f(n)$ for all $n \geq n_0$. Option A reverses the quantifiers on $c$, which is a strictly stronger statement and is generally false.
 
-**Q2: B) Big-O provides an upper bound; Big-Θ provides a tight bound**
-Big-O gives an asymptotic upper bound, while Big-Θ (Theta) provides both upper and lower bounds, indicating exact growth rate.
+### Q2
+**Correct answer: B.**
 
-**Q3: B) T(n) = O(n²) and T(n) = Ω(n²), therefore T(n) = Θ(n²)**
-The dominant term is 3n², which determines both the upper and lower bounds.
+$\Theta$ denotes a tight bound: $T(n) = \Theta(f(n))$ is equivalent to $T(n) = O(f(n))$ and $T(n) = \Omega(f(n))$ simultaneously. Hence $\Theta$ implies $O$. The reverse does not hold because $O$ is an upper bound only.
 
-**Q4: C) O(n)**
-The time increases proportionally with n (10× size increase → 10× time increase), indicating linear complexity.
+### Q3
+**Correct answer: B.**
 
-**Q5: C) Merge sort**
-Merge sort guarantees O(n log n) in all cases. Quicksort is O(n²) worst case; bubble and insertion sort are O(n²).
+The outer loop runs $n$ iterations. The inner loop doubles $j$ each time, so it executes $\lceil \log_2 n \rceil$ iterations. Multiplying yields $n \cdot \log n$ operations in the worst case.
 
-**Q6: C) O(n) total, O(1) amortised per element**
-While individual resizes cost O(n), they occur exponentially less frequently, giving O(1) amortised cost per operation.
+### Q4
+**Correct answer: B.**
 
-### Section B: Short Answer
+Here $a = 2$, $b = 2$ and $f(n) = n$. Since $n^{\log_b a} = n^{\log_2 2} = n$, this is the boundary case, yielding $T(n) = \Theta(n \log n)$.
 
-**Q7: O(n²)**
-- Part A: O(n) × O(n) = O(n²) (nested loops, product rule)
-- Part B: O(n) (single loop)
-- Part C: O(log n) (halving each iteration)
-- Total: O(n²) + O(n) + O(log n) = O(n²) (sum rule, dominant term)
+### Q5
+**Correct answer: C.**
 
-**Q8: T(n) = Θ(n log n)**
+Warm-up reduces artefacts from caching, dynamic compilation and allocator state. Randomising execution order reduces confounding by time-varying system state. The median is less sensitive to outliers than the mean, and an uncertainty estimate communicates measurement variability.
 
-From the recurrence T(n) = 2T(n/2) + O(n):
-- a = 2 (two subproblems)
-- b = 2 (each half size)
-- d = 1 (linear work to merge)
+### Q6
+**Correct answer: C.**
 
-Calculate log_b(a) = log₂(2) = 1
+Taking logarithms gives $\log T(n) = \log \alpha + k \log n$, which is linear in $\log n$. Ordinary least squares on $(\log n, \log T(n))$ estimates both intercept and slope.
 
-Since d = 1 = log_b(a), this is Case 2 of the Master Theorem.
+### Q7
+A suitable bound is **$T(n) = \Theta\bigl(n^{\log_2 3}\bigr)$**.
 
-Therefore: T(n) = O(n^d log n) = O(n log n)
+A convenient approach is to compare $f(n) = n\log n$ with $n^{\log_b a} = n^{\log_2 3}$. Since $\log_2 3 \approx 1.585$, one has $n\log n = O\bigl(n^{\log_2 3 - \varepsilon}\bigr)$ for some $\varepsilon > 0$. This corresponds to the first master-theorem case, hence $T(n)$ grows as $n^{\log_2 3}$.
 
-**Q9: Sources of measurement variability (any three):**
+### Q8
+Amortised complexity assigns an average cost per operation over a sequence, even when individual operations occasionally incur a higher cost. Worst-case complexity bounds the cost of a single operation in isolation.
 
-1. **JIT compilation**: First runs may include compilation overhead
-2. **Cache effects**: Cold cache vs. warm cache significantly affects timing
-3. **Garbage collection**: GC pauses introduce unpredictable delays
-4. **OS scheduling**: Other processes compete for CPU time
-5. **Branch prediction**: Initial runs train the branch predictor
-6. **Memory allocation**: Heap state varies between runs
-7. **Thermal throttling**: CPU may slow down under sustained load
+A standard example is appending to a dynamic array that doubles its capacity when full. Most appends take $\Theta(1)$ time, but a resize requires copying $\Theta(n)$ elements. Over $m$ appends starting from an empty array, the total number of element moves is $O(m)$, giving $\Theta(1)$ amortised time per append, despite $\Theta(n)$ worst-case time for a resize step.
 
-Statistical analysis (mean, median, standard deviation) provides reliable estimates despite this variability.
+### Q9
+The scaling is most consistent with **$O(n^2)$**.
 
-**Q10:**
+Doubling $n$ from 1,000 to 2,000 multiplies time by $4$ (0.010 to 0.040). Doubling again multiplies time by $4$ (0.040 to 0.160). Quadratic growth satisfies $T(2n) \approx 4T(n)$, whereas linear growth yields $T(2n) \approx 2T(n)$ and $n\log n$ yields slightly more than a factor of 2.
 
-a) Using doubling:
-- From n=1000 to n=2000: time goes 5 → 20, ratio = 4 = 2²
-- From n=2000 to n=4000: time goes 20 → 80, ratio = 4 = 2²
-- From n=4000 to n=8000: time goes 80 → 320, ratio = 4 = 2²
+### Q10
+A defensible minimal protocol specifies: (i) an input-generation distribution and a fixed random seed policy, (ii) replicated measurements across multiple independently generated instances per $n$, (iii) a warm-up phase and randomised run order to reduce temporal confounding and (iv) summary statistics that report a location estimate (often median) and an uncertainty estimate (for example, percentile interval obtained by bootstrap resampling).
 
-When n doubles, time quadruples → exponent = log₂(4) = 2
-
-Alternative log-log method:
-- log(8000/1000) = log(8) ≈ 2.08
-- log(320/5) = log(64) ≈ 4.16
-- Slope = 4.16 / 2.08 ≈ 2.0
-
-b) **O(n²)** — quadratic complexity
-
-c) For n = 16000 (double of 8000):
-- T(16000) = T(8000) × 4 = 320 × 4 = **1280 ms**
+In high-level interpreted languages, a salient threat to validity is variation induced by memory allocation and garbage collection. Measurements should therefore record whether garbage collection is enabled or controlled, and the protocol should avoid mixing allocation-heavy and allocation-light workloads in a fixed order.
 
 </details>
 
----
 
-*THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS*  
-*Week 3 — Algorithmic Complexity*  
-*© 2025 Antonio Clim. All rights reserved.*
+## References
+
+| Reference (APA 7th ed) | DOI |
+|---|---|
+| Knuth, D. E. (1976). Big Omicron and Big Omega and Big Theta. *SIGACT News, 8*(2), 18–24. | https://doi.org/10.1145/1008328.1008329 |
+| Akra, M., & Bazzi, L. (1998). On the solution of linear recurrence equations. *Computational Optimization and Applications, 10*(2), 195–210. | https://doi.org/10.1023/A:1018373005182 |
+| Dolan, E. D., & Moré, J. J. (2002). Benchmarking optimization software with performance profiles. *Mathematical Programming, 91*(2), 201–213. | https://doi.org/10.1007/s101070100263 |

@@ -1,461 +1,373 @@
-# Week 3 Homework: Algorithmic Complexity and Optimisation
+# 03UNIT Homework: Algorithmic Complexity
 
 ## 📋 Metadata
 
 | Property | Value |
-|----------|-------|
-| **Deadline** | Friday 23:59 GMT |
+|---|---|
+| **Deadline** | 31 January 2026, 23:59 GMT |
 | **Total Points** | 100 |
-| **Estimated Time** | 6-8 hours |
+| **Estimated Time** | 6–8 hours |
 | **Difficulty** | ⭐⭐⭐ (3/5) |
+| **Permitted Languages** | Python 3.12+ |
+| **Permitted Libraries** | NumPy (≥1.24), Pandas (≥2.0), Matplotlib (≥3.7), SciPy (≥1.11) |
 
 ## 🔗 Prerequisites
 
-- [ ] Completed Lab 3.1 (Benchmark Suite)
-- [ ] Completed Lab 3.2 (Complexity Analyser)
-- [ ] Read lecture notes on asymptotic notation
-- [ ] Reviewed profiling tools (cProfile, timeit)
+- [ ] Completed **Lab 03.1** (benchmark suite)
+- [ ] Completed **Lab 03.2** (complexity analyser)
+- [ ] Read the lecture notes, especially the sections on asymptotic notation, recurrence relations and empirical measurement
 
 ## 🎯 Objectives Assessed
 
-1. [Apply] Implement benchmarking framework with statistical analysis
-2. [Analyse] Estimate complexity of algorithms empirically and theoretically
-3. [Evaluate] Compare algorithm performance across different data distributions
+This homework assesses the following learning outcomes of 03UNIT:
+
+1. **[Understand]** Explain Big-O notation and complexity classes
+2. **[Apply]** Implement benchmarking infrastructure with principled statistical summaries
+3. **[Analyse]** Estimate algorithmic complexity empirically and reconcile empirical findings with theoretical analysis
+
+### Reporting Expectations
+
+Assessment in this UNIT is not limited to obtaining numerically plausible timings. The substantive criterion is whether the measurement protocol and the inferential step would survive scrutiny in a research methods section. Consequently, each part of this homework expects you to articulate, in prose, the assumptions under which your measurements are meaningful.
+
+Include a short technical note (approximately 600–900 words) either as a Markdown section at the end of your submission or in a separate `report.md` stored alongside your solution. The note should: (i) describe the execution environment (CPU architecture, operating system, Python version and library versions), (ii) state the timing protocol (warm-up policy, number of repetitions, randomisation of run order and any isolation measures) and (iii) report results as both a table of summary statistics and a log–log plot with the fitted model superimposed. Where you reject a candidate model, record the evidence (residual pattern, cross-validation error or an information criterion) rather than an intuition.
+
+When discussing limitations, concentrate on concrete threats to validity such as cache effects, dynamic frequency scaling, interpreter dispatch overhead and input-instance heterogeneity. A concise limitations paragraph that names mechanisms is preferable to generic cautionary remarks.
 
 ---
 
-## Part 1: Sorting Algorithm Analysis (25 points)
+## Context and General Requirements
 
-### Context
+Algorithm selection in research software frequently turns upon performance claims whose evidential basis is, at best, uneven. The conceptual apparatus of asymptotic analysis is indispensable, yet it rarely suffices in isolation: constant factors, implementation details and hardware effects may dominate at realistic input sizes. Conversely, empirical timing without a defensible protocol invites spurious conclusions, particularly under measurement noise, caching behaviour and runtime warm-up.
 
-Sorting algorithms exhibit vastly different performance characteristics depending on input data distribution. Understanding these nuances is crucial for selecting appropriate algorithms in research contexts.
+This homework requires the construction of a small, testable benchmarking module and an accompanying complexity estimator. The tasks are intentionally constrained in scope, but they must exhibit the engineering discipline expected in publishable research code: explicit assumptions, clear error semantics, deterministic behaviour under fixed seeds and meaningful statistical summaries.
+
+
+### Submission Constraints
+
+- **Type hints**: 100% coverage.
+- **Docstrings**: Google style for all public functions and classes.
+- **Logging**: Use the `logging` module; do not use `print`.
+- **Testing**: Provide unit tests for each required function (you may add a new test module under `tests/`).
+- **Formatting**: `ruff format` and `ruff check` must pass.
+- **Determinism**: Any randomness must be controlled via an explicit seed.
+
+### Naming Convention
+
+Implement your solution in a new file:
+
+- `exercises/solutions/homework_03_solution.py`
+
+Your tests should be placed in:
+
+- `tests/test_homework_03.py`
+
+You may reuse non-trivial components from your labs, provided you cite the relevant file and commit hash in a comment.
+
+---
+
+## Part 1: Microbenchmark Driver with Statistical Summaries (40 points)
+
+### Aim
+
+Implement a minimal microbenchmark driver that times callables under a controlled protocol and returns a structured result with well-defined summary statistics.
+
+### Formal Specification
+
+Let $f$ denote a Python callable and let $t_i$ be the measured wall-clock duration (in seconds) of the $i$-th timed repetition, measured by a high-resolution monotonic clock.
+
+Define the observed sample as $\{t_1, \dots, t_n\}$. Your driver must compute:
+
+- **Median**: $\tilde{t} = \mathrm{median}(t_1, \dots, t_n)$
+- **Median absolute deviation (MAD)**:
+
+$$
+\mathrm{MAD} = \mathrm{median}(|t_i - \tilde{t}|), \quad i = 1, \dots, n \tag{1}
+$$
+
+- **Trimmed mean** at trimming fraction $\alpha \in [0, 0.45]$:
+
+$$
+\bar{t}_{\alpha} = \frac{1}{n - 2k} \sum_{i=k+1}^{n-k} t_{(i)}, \quad k = \lfloor \alpha n \rfloor \tag{2}
+$$
+
+where $t_{(i)}$ are the order statistics.
+
+These summaries are required because timing distributions are frequently skewed. The median and MAD are less sensitive to outliers than the arithmetic mean.
 
 ### Requirements
 
-| Req | Points | Description |
-|-----|--------|-------------|
-| 1.1 | 10 | Benchmark algorithms on four data distributions |
-| 1.2 | 10 | Find and explain crossover points |
-| 1.3 | 5 | Implement and optimise hybrid sort |
+Implement the following public API.
 
-### Task 1.1: Behaviour on Different Distributions (10 points)
+1. `BenchmarkConfig` (10 points)
+   - A `@dataclass(frozen=True)` containing:
+     - `warmup: int` (default 3, must be ≥ 0)
+     - `repetitions: int` (default 25, must be ≥ 5)
+     - `trim_fraction: float` (default 0.1, must satisfy $0 \leq \alpha \leq 0.45$)
+     - `seed: int | None` (default `0`, `None` indicates no shuffling)
 
-Extend the benchmark suite from the laboratory to analyse these distributions:
+2. `BenchmarkResult` (10 points)
+   - A `@dataclass(frozen=True)` containing:
+     - `name: str`
+     - `times_s: list[float]` (raw repetition times)
+     - `median_s: float`
+     - `mad_s: float`
+     - `trimmed_mean_s: float`
+     - `n: int`
 
-- **Random uniform:** Standard random data
-- **Nearly sorted:** 10 swaps per n elements
-- **Reverse sorted:** Descending order
-- **Many duplicates:** Only k unique values (k = √n)
+3. `run_benchmark` (20 points)
+   - Signature:
 
-Create comparison tables and plots for bubble sort, insertion sort, merge sort, quicksort and Python's built-in `sorted()`.
+```python
+from collections.abc import Callable
 
-### Task 1.2: Crossover Points (10 points)
+def run_benchmark(
+    name: str,
+    fn: Callable[[], object],
+    *,
+    config: BenchmarkConfig,
+) -> BenchmarkResult:
+    ...
+```
 
-Determine empirically:
-
-1. At what input size does quicksort become faster than insertion sort?
-2. At what input size does Timsort outperform quicksort on nearly-sorted data?
-3. At what input size does the overhead of merge sort's recursion become negligible?
-
-Provide both experimental results and theoretical justification.
-
-### Task 1.3: Hybrid Sort (5 points)
-
-Implement a hybrid sorting algorithm that:
-
-- Uses insertion sort for subarrays below a threshold
-- Uses merge sort otherwise
-
-Find the optimal threshold experimentally and explain why this hybrid approach works.
+   - Behaviour:
+     - Executes `warmup` calls to `fn` which are not timed.
+     - Runs `repetitions` timed calls.
+     - Uses `time.perf_counter()` (or `perf_counter_ns()` with scaling) as the timing source.
+     - If `seed` is not `None`, shuffles the order of repetitions in a way that is deterministic under the seed. (A simple method is to time a list of identical callables in shuffled order.)
+     - Raises `ValueError` on invalid configuration.
 
 ### Test Cases
 
-```python
-# Your benchmark should handle these cases
-sizes = [100, 500, 1000, 2000, 5000, 10000]
-distributions = ['random', 'nearly_sorted', 'reverse', 'duplicates']
+Your tests must include at least the following assertions (you may extend them).
 
-# Expected: Tables and plots showing relative performance
-assert len(results) == len(sizes) * len(distributions) * num_algorithms
+```python
+from exercises.solutions.homework_03_solution import (
+    BenchmarkConfig,
+    run_benchmark,
+)
+
+
+def test_benchmark_repetitions_count() -> None:
+    cfg = BenchmarkConfig(warmup=0, repetitions=7, trim_fraction=0.0, seed=0)
+    res = run_benchmark("noop", lambda: None, config=cfg)
+    assert res.n == 7
+    assert len(res.times_s) == 7
+
+
+def test_benchmark_statistics_non_negative() -> None:
+    cfg = BenchmarkConfig(warmup=1, repetitions=10, trim_fraction=0.1, seed=0)
+    res = run_benchmark("noop", lambda: None, config=cfg)
+    assert res.median_s >= 0.0
+    assert res.mad_s >= 0.0
+    assert res.trimmed_mean_s >= 0.0
+
+
+def test_trim_fraction_validation() -> None:
+    try:
+        BenchmarkConfig(warmup=0, repetitions=10, trim_fraction=0.9, seed=0)
+        assert False, "Expected ValueError"
+    except ValueError:
+        assert True
+
+
+def test_repetitions_validation() -> None:
+    try:
+        BenchmarkConfig(warmup=0, repetitions=3, trim_fraction=0.0, seed=0)
+        assert False, "Expected ValueError"
+    except ValueError:
+        assert True
+
+
+def test_deterministic_seed_produces_same_result_shape() -> None:
+    cfg = BenchmarkConfig(warmup=0, repetitions=8, trim_fraction=0.1, seed=123)
+    r1 = run_benchmark("noop", lambda: None, config=cfg)
+    r2 = run_benchmark("noop", lambda: None, config=cfg)
+    assert r1.n == r2.n
+    assert len(r1.times_s) == len(r2.times_s)
 ```
 
-### Deliverables
-
-- `benchmark_analysis.py` — Extended benchmark code
-- `analysis_report.md` — Report with figures and conclusions
-- `hybrid_sort.py` — Implementation with tests
+### Hints
 
 <details>
 <summary>💡 Hint 1</summary>
-
-For nearly-sorted data generation:
-```python
-def generate_nearly_sorted(n: int, swaps: int = 10) -> list[int]:
-    data = list(range(n))
-    for _ in range(swaps):
-        i, j = random.randrange(n), random.randrange(n)
-        data[i], data[j] = data[j], data[i]
-    return data
-```
+To compute the MAD, sort is unnecessary: compute the median, then compute the absolute deviations and take their median.
 </details>
 
 <details>
 <summary>💡 Hint 2</summary>
+For a small homework-scale driver, timing overhead can dominate. Keep the body of the timing loop minimal and isolate the statistics calculation outside the loop.
+</details>
 
-For crossover point detection, use binary search over input sizes and compare median times.
+<details>
+<summary>💡 Hint 3</summary>
+If you shuffle repetitions, do not shuffle the measured times after the fact. Shuffle the execution order and record times as observed.
 </details>
 
 ---
 
-## Part 2: Complexity Analysis on Real Code (25 points)
+## Part 2: Empirical Complexity Estimation via Model Fitting (40 points)
 
-### Context
+### Aim
 
-Theoretical complexity analysis requires careful examination of code structure. This exercise develops your ability to analyse arbitrary code and verify your analysis empirically.
+Implement a function that estimates the most plausible asymptotic family from empirical $(n, t)$ observations, where $n$ denotes input size and $t$ denotes the median (or trimmed mean) time for that size.
+
+### Formal Specification
+
+Given observations $(n_i, t_i)$ for $i = 1, \dots, m$ with strictly increasing $n_i$ and $t_i > 0$, we consider candidate models:
+
+- $t(n) = a$ (constant)
+- $t(n) = a \log n$
+- $t(n) = a n$
+- $t(n) = a n \log n$
+- $t(n) = a n^2$
+- $t(n) = a n^3$
+
+with $a > 0$.
+
+For each candidate $g(n)$, estimate $a$ by least squares on $t_i \approx a g(n_i)$. Let $\hat{t}_i = \hat{a} g(n_i)$ and define the residual sum of squares:
+
+$$
+\mathrm{RSS} = \sum_{i=1}^{m} (t_i - \hat{t}_i)^2 \tag{3}
+$$
+
+Select the model minimising RSS, subject to a tie-breaker preferring the lower-complexity model when the RSS difference is within 1%.
 
 ### Requirements
 
-| Req | Points | Description |
-|-----|--------|-------------|
-| 2.1 | 15 | Analyse complexity of five mystery functions |
-| 2.2 | 10 | Verify analyses with empirical measurements |
+Implement the following public API.
 
-### Task 2.1: Theoretical Analysis (15 points)
+1. `ComplexityClass` (10 points)
+   - An `Enum` with members:
+     - `O1`, `OLOGN`, `ON`, `ONLOGN`, `ON2`, `ON3`
 
-Analyse the time and space complexity of each function. Provide step-by-step reasoning.
+2. `fit_complexity` (30 points)
 
 ```python
-def mystery_1(n: int) -> int:
-    """Mystery function 1."""
-    count = 0
-    i = n
-    while i > 0:
-        for j in range(i):
-            count += 1
-        i = i // 2
-    return count
+from collections.abc import Sequence
+from typing import NamedTuple
+
+class ComplexityFit(NamedTuple):
+    """Result of complexity fitting."""
+
+    cls: ComplexityClass
+    a: float
+    rss: float
 
 
-def mystery_2(data: list[int]) -> list[int]:
-    """Mystery function 2."""
-    result = []
-    for i in range(len(data)):
-        for j in range(i, len(data)):
-            if data[i] > data[j]:
-                data[i], data[j] = data[j], data[i]
-        result.append(data[i])
-    return result
-
-
-def mystery_3(n: int) -> int:
-    """Mystery function 3."""
-    if n <= 1:
-        return n
-    return mystery_3(n - 1) + mystery_3(n - 2)
-
-
-def mystery_4(matrix: list[list[int]]) -> int:
-    """Mystery function 4 (assume square matrix n×n)."""
-    n = len(matrix)
-    total = 0
-    for i in range(n):
-        for j in range(n):
-            for k in range(n):
-                total += matrix[i][k] * matrix[k][j]
-    return total
-
-
-def mystery_5(data: list[int], target: int) -> int:
-    """Mystery function 5 (assume sorted input)."""
-    lo, hi = 0, len(data) - 1
-    while lo <= hi:
-        mid = (lo + hi) // 2
-        if data[mid] == target:
-            return mid
-        elif data[mid] < target:
-            lo = mid + 1
-        else:
-            hi = mid - 1
-    return -1
+def fit_complexity(n: Sequence[int], t: Sequence[float]) -> ComplexityFit:
+    ...
 ```
 
-### Task 2.2: Empirical Verification (10 points)
-
-Use the ComplexityAnalyser from Lab 3.2 to:
-
-1. Measure execution time for each function across input sizes
-2. Estimate complexity using log-log regression
-3. Compare empirical estimates with theoretical analysis
-4. Explain any discrepancies
+   - Behaviour:
+     - Validates inputs: lengths match, length ≥ 4, all $n_i > 0$, all $t_i > 0$.
+     - Uses `math.log` for the $\log n$ term.
+     - Computes $\hat{a}$ analytically for each model by minimising RSS for a one-parameter linear model.
+     - Applies the tie-break rule stated above.
+     - Raises `ValueError` on invalid input.
 
 ### Test Cases
 
+Your tests must include at least the following assertions.
+
 ```python
-# Your analysis should produce results like:
-# mystery_1: Theoretical O(?), Empirical O(?), R² = ?
-# mystery_2: Theoretical O(?), Empirical O(?), R² = ?
-# ...
+import math
+
+from exercises.solutions.homework_03_solution import (
+    ComplexityClass,
+    fit_complexity,
+)
+
+
+def test_fit_prefers_quadratic_when_time_scales_as_n2() -> None:
+    n = [100, 200, 400, 800]
+    t = [1e-6 * (x ** 2) for x in n]
+    fit = fit_complexity(n, t)
+    assert fit.cls == ComplexityClass.ON2
+
+
+def test_fit_prefers_linear_for_linear_data() -> None:
+    n = [100, 200, 400, 800]
+    t = [2e-6 * x for x in n]
+    fit = fit_complexity(n, t)
+    assert fit.cls == ComplexityClass.ON
+
+
+def test_fit_handles_nlogn_data() -> None:
+    n = [128, 256, 512, 1024]
+    t = [1e-6 * x * math.log(x) for x in n]
+    fit = fit_complexity(n, t)
+    assert fit.cls in {ComplexityClass.ONLOGN, ComplexityClass.ON}
+
+
+def test_fit_rejects_non_positive_times() -> None:
+    try:
+        fit_complexity([1, 2, 3, 4], [0.1, 0.0, 0.3, 0.4])
+        assert False, "Expected ValueError"
+    except ValueError:
+        assert True
+
+
+def test_fit_requires_minimum_points() -> None:
+    try:
+        fit_complexity([1, 2, 3], [0.1, 0.2, 0.3])
+        assert False, "Expected ValueError"
+    except ValueError:
+        assert True
 ```
 
-### Deliverables
-
-- `complexity_analysis.py` — Code for empirical verification
-- `analysis.md` — Detailed theoretical analysis with derivations
+### Hints
 
 <details>
-<summary>💡 Hint</summary>
+<summary>💡 Hint 1</summary>
+For a model $t \approx a g$, the least-squares minimiser is $\hat{a} = \frac{\langle t, g \rangle}{\langle g, g \rangle}$ provided $\langle g, g \rangle > 0$.
+</details>
 
-For mystery_1, trace through what happens when n = 16:
-- First iteration: i = 16, inner loop runs 16 times
-- Second iteration: i = 8, inner loop runs 8 times
-- Third iteration: i = 4, inner loop runs 4 times
-- ...
-
-What's the total? How does this generalise?
+<details>
+<summary>💡 Hint 2</summary>
+The tie-breaker is a deliberate reminder that empirical curves are often ambiguous at small scales. Encode the complexity ordering explicitly and apply it deterministically.
 </details>
 
 ---
 
-## Part 3: Python Optimisation Challenge (30 points)
+## Part 3: Bonus — Theory Meets Measurement (20 points)
 
-### Context
+### Aim
 
-A common research task is computing pairwise distances between points. The naive implementation is O(n²), but significant constant-factor improvements are possible.
+Select **two** algorithms from the list below, derive their theoretical time complexity and then verify the prediction empirically using your Part 1 driver.
 
-### Requirements
+Choose two of:
 
-| Req | Points | Description |
-|-----|--------|-------------|
-| 3.1 | 10 | Implement three versions (naive, NumPy, Numba) |
-| 3.2 | 10 | Benchmark and analyse speedup |
-| 3.3 | 10 | Profile and explain performance differences |
-
-### Task 3.1: Three Implementations (10 points)
-
-Implement pairwise Euclidean distance calculation:
-
-```python
-def distance_matrix_naive(points: list[list[float]]) -> list[list[float]]:
-    """Pure Python implementation."""
-    ...
-
-def distance_matrix_numpy(points: np.ndarray) -> np.ndarray:
-    """NumPy vectorised implementation."""
-    ...
-
-def distance_matrix_numba(points: np.ndarray) -> np.ndarray:
-    """Numba JIT-compiled implementation."""
-    ...
-```
-
-All implementations must produce identical results (within floating-point tolerance).
-
-### Task 3.2: Benchmark Analysis (10 points)
-
-1. Benchmark all three implementations for n = 100, 500, 1000, 2000, 5000
-2. Calculate speedup of NumPy and Numba relative to naive
-3. Plot speedup vs input size
-4. Estimate when Numba's JIT compilation overhead is amortised
-
-### Task 3.3: Profiling Deep Dive (10 points)
-
-Use cProfile and line_profiler to:
-
-1. Identify the exact bottleneck in the naive implementation
-2. Explain why NumPy is faster (what overhead does it eliminate?)
-3. Explain why Numba is faster still (what does JIT compilation enable?)
-
-### Test Cases
-
-```python
-import numpy as np
-
-points = np.random.rand(100, 2)
-naive_result = distance_matrix_naive(points.tolist())
-numpy_result = distance_matrix_numpy(points)
-numba_result = distance_matrix_numba(points)
-
-# All results should match within tolerance
-assert np.allclose(naive_result, numpy_result, rtol=1e-10)
-assert np.allclose(numpy_result, numba_result, rtol=1e-10)
-```
-
-### Deliverables
-
-- `distance_implementations.py` — Three implementations
-- `benchmark_results.csv` — Raw benchmark data
-- `optimisation_report.md` — Analysis and profiling results
-
-<details>
-<summary>💡 Hint 1: NumPy Broadcasting</summary>
-
-```python
-def distance_matrix_numpy(points: np.ndarray) -> np.ndarray:
-    diff = points[:, np.newaxis, :] - points[np.newaxis, :, :]
-    return np.sqrt(np.sum(diff ** 2, axis=-1))
-```
-</details>
-
-<details>
-<summary>💡 Hint 2: Numba Parallel</summary>
-
-```python
-from numba import jit, prange
-
-@jit(nopython=True, parallel=True)
-def distance_matrix_numba(points: np.ndarray) -> np.ndarray:
-    n = len(points)
-    result = np.zeros((n, n))
-    for i in prange(n):
-        for j in range(n):
-            diff = points[i] - points[j]
-            result[i, j] = np.sqrt(np.sum(diff ** 2))
-    return result
-```
-</details>
-
----
-
-## Part 4: Practical Problem — Article Search System (20 points)
-
-### Context
-
-You are designing a search system for a research article database with 10 million records. Each article has a title, abstract and list of keywords.
+- Naïve matrix multiplication (triple nested loops)
+- Polynomial evaluation by Horner's method
+- Computing all pairwise Euclidean distances for $n$ points in $\mathbb{R}^d$ (with fixed $d$)
+- Sorting a list of $n$ numbers and then performing binary search for $k$ queries (with $k$ fixed)
 
 ### Requirements
 
-| Req | Points | Description |
-|-----|--------|-------------|
-| 4.1 | 8 | Design data structures with complexity analysis |
-| 4.2 | 7 | Implement prototype with benchmarks |
-| 4.3 | 5 | Document scaling considerations |
+1. **Theoretical analysis** (10 points)
+   - Provide a short derivation in Markdown (place it at the end of `exercises/solutions/homework_03_solution.py` as a module-level string or in a separate `exercises/solutions/homework_03_bonus.md`).
+   - The derivation must state the cost model and justify each step (loop bounds, recurrence, dominating term).
 
-### Task 4.1: System Design (8 points)
+2. **Empirical confirmation** (10 points)
+   - Measure runtimes for at least four input sizes per algorithm.
+   - Use the median or trimmed mean from Part 1.
+   - Run `fit_complexity` from Part 2 on the resulting series and report the selected class.
 
-Design data structures and algorithms for:
+### Evaluation Criteria
 
-1. **Keyword search:** Find all articles containing a specific keyword
-2. **Prefix search:** Find all articles with keywords starting with a prefix
-3. **Similarity search:** Find articles most similar to a query article
-
-For each operation, specify:
-- Data structure used
-- Expected time complexity
-- Expected space complexity
-- Trade-offs made
-
-### Task 4.2: Prototype Implementation (7 points)
-
-Implement a working prototype that:
-
-1. Supports all three search types
-2. Uses appropriate data structures (hash tables, tries, etc.)
-3. Includes benchmarks demonstrating scalability
-
-Test with a synthetic dataset of 100,000 articles.
-
-### Task 4.3: Scaling Analysis (5 points)
-
-Document:
-
-1. How would your design scale to 10 million articles?
-2. What would be the memory requirements?
-3. What optimisations would be needed for production?
-4. How would distributed computing change your approach?
-
-### Test Cases
-
-```python
-# Example usage
-search_system = ArticleSearchSystem()
-search_system.add_article("Article 1", "Abstract...", ["machine learning", "neural networks"])
-search_system.add_article("Article 2", "Abstract...", ["deep learning", "computer vision"])
-
-# Keyword search
-results = search_system.search_keyword("machine learning")
-assert "Article 1" in results
-
-# Prefix search
-results = search_system.search_prefix("mach")
-assert "Article 1" in results
-
-# Similarity search
-similar = search_system.find_similar("Article 1", k=5)
-```
-
-### Deliverables
-
-- `search_system.py` — Implementation
-- `design_document.md` — Design rationale and complexity analysis
-- `scaling_analysis.md` — Scaling considerations
-
-<details>
-<summary>💡 Hint</summary>
-
-Consider using:
-- Inverted index (hash table) for keyword search: O(1) lookup
-- Trie for prefix search: O(m) where m is prefix length
-- TF-IDF with cosine similarity for similarity search
-</details>
+Credit is awarded for coherence between the theoretical argument, the experimental protocol and the interpretation of results. Discrepancies are not penalised if they are explained plausibly (for example, cache effects or constant factors dominating the measured range).
 
 ---
 
 ## ✅ Submission Checklist
 
-### Code Quality
-- [ ] All tests pass (`pytest`)
-- [ ] Code formatted with ruff (`ruff format`)
-- [ ] Type hints complete (`mypy --strict`)
-- [ ] Docstrings present (Google style)
-- [ ] No print statements (use logging)
-
-### Documentation
-- [ ] All Markdown reports complete
-- [ ] Figures included and referenced
-- [ ] Analysis clearly explained
-- [ ] British English used throughout
-
-### Repository Structure
-```
-week3_homework/
-├── part1/
-│   ├── benchmark_analysis.py
-│   ├── analysis_report.md
-│   └── hybrid_sort.py
-├── part2/
-│   ├── complexity_analysis.py
-│   └── analysis.md
-├── part3/
-│   ├── distance_implementations.py
-│   ├── benchmark_results.csv
-│   └── optimisation_report.md
-├── part4/
-│   ├── search_system.py
-│   ├── design_document.md
-│   └── scaling_analysis.md
-├── tests/
-│   └── test_all.py
-└── README.md
-```
-
----
-
-## Grading Rubric
-
-| Component | Points | Criteria |
-|-----------|--------|----------|
-| Part 1 | 25 | Correct benchmarks, valid crossover analysis, working hybrid sort |
-| Part 2 | 25 | Accurate theoretical analysis, matching empirical results |
-| Part 3 | 30 | All implementations correct, meaningful speedup analysis, insightful profiling |
-| Part 4 | 20 | Sound design, working prototype, realistic scaling analysis |
-| **Total** | **100** | |
-
-### Deductions
-- Late submission: -10% per day (maximum 3 days)
-- Missing type hints: -5%
-- Missing docstrings: -5%
-- American English spelling: -2%
-- Print statements instead of logging: -2%
+- [ ] `exercises/solutions/homework_03_solution.py` added
+- [ ] `tests/test_homework_03.py` added
+- [ ] All tests pass: `make test`
+- [ ] Lint and format clean: `make lint` and `make format`
+- [ ] Type checking passes: `make type`
+- [ ] No `print` usage
+- [ ] Deterministic behaviour under fixed seeds
 
 ---
 

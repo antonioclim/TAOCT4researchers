@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 ═══════════════════════════════════════════════════════════════════════════════
 COMPUTATIONAL THINKING FOR RESEARCHERS
@@ -234,13 +238,13 @@ def verify_formula(func_name: str, n_values: list[int]) -> list[tuple[int, int, 
 
 def _test_implementations() -> None:
     """Test all implementations."""
-    print("Testing loop analysis...\n")
+    logger.info("Testing loop analysis...\n")
 
     # Test Exercise 2
-    print("Exercise 2: Your complexity answers")
+    logger.info("Exercise 2: Your complexity answers")
     answers = get_complexity_answers()
     for func, complexity in answers.items():
-        print(f"  {func}: {complexity}")
+        logger.info(f"  {func}: {complexity}")
 
     # Correct answers for reference
     correct = {
@@ -252,32 +256,33 @@ def _test_implementations() -> None:
         "func_f": "O(n^3)",
     }
 
-    print("\n  Correct answers:")
+    logger.info("\n  Correct answers:")
     for func, complexity in correct.items():
-        print(f"    {func}: {complexity}")
+        logger.info(f"    {func}: {complexity}")
 
     # Test Exercise 3 & 4
-    print("\nExercise 3 & 4: Formula verification")
+    logger.info("\nExercise 3 & 4: Formula verification")
     test_values = [5, 10, 20]
 
     for func_name in ["func_a", "func_b", "func_c", "func_d", "func_e", "func_f"]:
-        print(f"\n  {func_name}:")
+        logger.info(f"\n  {func_name}:")
         results = verify_formula(func_name, test_values)
         all_match = True
         for n, actual, formula in results:
             match = "✓" if actual == formula else "✗"
             if actual != formula:
                 all_match = False
-            print(f"    n={n:2d}: actual={actual:5d}, formula={formula:5d} {match}")
+            logger.info(f"    n={n:2d}: actual={actual:5d}, formula={formula:5d} {match}")
 
         if all_match:
-            print(f"    All formulas correct!")
+            logger.info(f"    All formulas correct!")
         else:
-            print(f"    Some formulas need fixing")
+            logger.info(f"    Some formulas need fixing")
 
-    print("\n" + "=" * 60)
-    print("Implement count_operations_formula to verify your analysis!")
+    logger.info("\n" + "=" * 60)
+    logger.info("Implement count_operations_formula to verify your analysis!")
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     _test_implementations()

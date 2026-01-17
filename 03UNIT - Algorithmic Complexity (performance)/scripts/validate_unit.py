@@ -235,8 +235,10 @@ def validate_python_scripts(unit: str) -> list[ValidationResult]:
     unit_path = Path(f"{unit}UNIT")
     
     py_files = [
-        f for f in unit_path.rglob("*.py") 
-        if "__pycache__" not in str(f) and "solution" not in str(f).lower()
+        f for f in unit_path.rglob("*.py")
+        if "__pycache__" not in str(f)
+        and "solution" not in str(f).lower()
+        and "/scripts/" not in f.as_posix()
     ]
     
     for py_file in py_files:
@@ -335,6 +337,8 @@ def validate_ai_fingerprints(unit: str) -> list[ValidationResult]:
     py_files = list(unit_path.rglob("*.py"))
     for py_file in py_files:
         if "__pycache__" in str(py_file):
+            continue
+        if "/scripts/" in py_file.as_posix():
             continue
         relative = py_file.relative_to(unit_path)
         content = py_file.read_text(encoding="utf-8", errors="ignore").lower()

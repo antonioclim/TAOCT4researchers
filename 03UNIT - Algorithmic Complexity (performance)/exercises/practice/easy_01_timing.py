@@ -35,6 +35,10 @@ See README.md for full licence terms.
 
 import time
 from typing import Any, Callable
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -187,49 +191,50 @@ class Timer:
 
 def _test_implementations() -> None:
     """Test all implementations."""
-    print("Testing timing implementations...\n")
+    logger.info("Testing timing implementations...\n")
 
     # Test function
     def slow_sum(n: int) -> int:
         return sum(range(n))
 
     # Test Exercise 1
-    print("Exercise 1: Basic timing")
+    logger.info("Exercise 1: Basic timing")
     try:
         elapsed = time_function(slow_sum, 100000)
-        print(f"  ✓ time_function: {elapsed:.6f}s")
+        logger.info(f"  ✓ time_function: {elapsed:.6f}s")
     except NotImplementedError:
-        print("  ✗ time_function: Not implemented")
+        logger.info("  ✗ time_function: Not implemented")
 
     # Test Exercise 2
-    print("\nExercise 2: Multiple runs")
+    logger.info("\nExercise 2: Multiple runs")
     try:
         stats = time_function_multiple(slow_sum, 100000, runs=5)
-        print(f"  ✓ Mean: {stats['mean']:.6f}s, Min: {stats['min']:.6f}s, Max: {stats['max']:.6f}s")
+        logger.info(f"  ✓ Mean: {stats['mean']:.6f}s, Min: {stats['min']:.6f}s, Max: {stats['max']:.6f}s")
     except NotImplementedError:
-        print("  ✗ time_function_multiple: Not implemented")
+        logger.info("  ✗ time_function_multiple: Not implemented")
 
     # Test Exercise 3
-    print("\nExercise 3: Timing with warmup")
+    logger.info("\nExercise 3: Timing with warmup")
     try:
         stats = time_function_with_warmup(slow_sum, 100000, warmup_runs=2, measured_runs=5)
-        print(f"  ✓ Mean: {stats['mean']:.6f}s (after warmup)")
+        logger.info(f"  ✓ Mean: {stats['mean']:.6f}s (after warmup)")
     except NotImplementedError:
-        print("  ✗ time_function_with_warmup: Not implemented")
+        logger.info("  ✗ time_function_with_warmup: Not implemented")
 
     # Test Exercise 4
-    print("\nExercise 4: Timer context manager")
+    logger.info("\nExercise 4: Timer context manager")
     try:
         with Timer() as t:
             _ = slow_sum(100000)
-        print(f"  ✓ Timer elapsed: {t.elapsed:.6f}s")
+        logger.info(f"  ✓ Timer elapsed: {t.elapsed:.6f}s")
     except NotImplementedError:
-        print("  ✗ Timer: Not implemented")
+        logger.info("  ✗ Timer: Not implemented")
 
-    print("\n" + "=" * 60)
-    print("Complete the exercises by replacing 'raise NotImplementedError'")
-    print("with your implementation.")
+    logger.info("\n" + "=" * 60)
+    logger.info("Complete the exercises by replacing 'raise NotImplementedError'")
+    logger.info("with your implementation.")
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     _test_implementations()

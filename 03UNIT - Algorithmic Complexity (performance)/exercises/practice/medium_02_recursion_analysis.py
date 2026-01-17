@@ -246,7 +246,10 @@ def count_recursive_calls(func: Any, *args: Any, **kwargs: Any) -> tuple[Any, in
         
     Example:
         >>> result, calls = count_recursive_calls(fibonacci_naive, 10)
-        >>> print(f"fib(10) = {result}, calls = {calls}")
+        >>> result
+55
+>>> calls
+177
     """
     # TODO: Implement this function
     # Hint: One approach is to use a closure with a mutable counter

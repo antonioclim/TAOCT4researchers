@@ -35,6 +35,10 @@ See README.md for full licence terms.
 
 import time
 from typing import Any
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -215,55 +219,56 @@ def compare_append_vs_insert() -> dict[str, dict[str, float]]:
 
 def _test_implementations() -> None:
     """Test all implementations."""
-    print("Testing list operation benchmarks...\n")
+    logger.info("Testing list operation benchmarks...\n")
 
     # Test Exercise 1
-    print("Exercise 1: Complexity predictions")
+    logger.info("Exercise 1: Complexity predictions")
     predictions = get_complexity_predictions()
-    print("  Your predictions:")
+    logger.info("  Your predictions:")
     for op, complexity in predictions.items():
-        print(f"    {op}: {complexity}")
+        logger.info(f"    {op}: {complexity}")
 
     # Test Exercise 2
-    print("\nExercise 2: Benchmarks")
+    logger.info("\nExercise 2: Benchmarks")
     try:
         t_append = benchmark_append(10000)
-        print(f"  ✓ benchmark_append(10000): {t_append:.6f}s")
+        logger.info(f"  ✓ benchmark_append(10000): {t_append:.6f}s")
     except NotImplementedError:
-        print("  ✗ benchmark_append: Not implemented")
+        logger.info("  ✗ benchmark_append: Not implemented")
 
     try:
         t_insert = benchmark_insert_front(5000)
-        print(f"  ✓ benchmark_insert_front(5000): {t_insert:.6f}s")
+        logger.info(f"  ✓ benchmark_insert_front(5000): {t_insert:.6f}s")
     except NotImplementedError:
-        print("  ✗ benchmark_insert_front: Not implemented")
+        logger.info("  ✗ benchmark_insert_front: Not implemented")
 
     # Test Exercise 3
-    print("\nExercise 3: Complexity analysis")
+    logger.info("\nExercise 3: Complexity analysis")
     try:
         # Test with known quadratic data
         sizes = [100, 200, 400, 800]
         times = [0.01, 0.04, 0.16, 0.64]
         exp, cls = analyse_complexity(sizes, times)
-        print(f"  ✓ Test case (quadratic): exponent={exp:.2f}, class={cls}")
+        logger.info(f"  ✓ Test case (quadratic): exponent={exp:.2f}, class={cls}")
     except NotImplementedError:
-        print("  ✗ analyse_complexity: Not implemented")
+        logger.info("  ✗ analyse_complexity: Not implemented")
 
     # Test Exercise 4
-    print("\nExercise 4: Compare append vs insert")
+    logger.info("\nExercise 4: Compare append vs insert")
     try:
         results = compare_append_vs_insert()
-        print("  ✓ Comparison results:")
+        logger.info("  ✓ Comparison results:")
         for op, data in results.items():
-            print(f"    {op}:")
+            logger.info(f"    {op}:")
             for size, t in data.items():
-                print(f"      n={size}: {t:.6f}s")
+                logger.info(f"      n={size}: {t:.6f}s")
     except NotImplementedError:
-        print("  ✗ compare_append_vs_insert: Not implemented")
+        logger.info("  ✗ compare_append_vs_insert: Not implemented")
 
-    print("\n" + "=" * 60)
-    print("After implementing, observe how insert_front scales much worse!")
+    logger.info("\n" + "=" * 60)
+    logger.info("After implementing, observe how insert_front scales much worse!")
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     _test_implementations()
