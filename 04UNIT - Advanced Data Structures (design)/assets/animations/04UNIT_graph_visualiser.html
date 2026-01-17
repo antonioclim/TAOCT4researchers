@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>04UNIT: Interactive Graph Visualiser — Force-Directed Layout</title>
+    
+    <!-- D3.js v7 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════
+           RESPONSIVE BREAKPOINTS
+           ═══════════════════════════════════════════════════════════════════════ */
+        :root {
+            --mobile: 480px;
+            --tablet: 768px;
+            --desktop: 1024px;
+            --wide: 1440px;
+            
+            /* Dark Theme Palette */
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border-color: #30363d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-orange: #f0883e;
+            --accent-purple: #a371f7;
+            --accent-red: #f85149;
+            --accent-cyan: #39c5cf;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           BASE STYLES
+           ═══════════════════════════════════════════════════════════════════════ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           RESPONSIVE CONTAINER
+           ═══════════════════════════════════════════════════════════════════════ */
+        .container {
+            width: 100%;
+            max-width: var(--wide);
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                padding: 2rem;
+            }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════════════════════════════ */
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: clamp(0.875rem, 2vw, 1rem);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           MAIN LAYOUT
+           ═══════════════════════════════════════════════════════════════════════ */
+        .main-layout {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: 1fr;
+        }
+        
+        @media (min-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           CONTROL PANEL
+           ═══════════════════════════════════════════════════════════════════════ */
+        .control-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+        
+        .panel-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .panel-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .panel-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-blue);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           FORM CONTROLS
+           ═══════════════════════════════════════════════════════════════════════ */
+        .control-group {
+            margin-bottom: 1rem;
+        }
+        
+        .control-group label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.375rem;
+        }
+        
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            appearance: none;
+            cursor: pointer;
+        }
+        
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+        
+        .control-group input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        
+        .range-value {
+            display: inline-block;
+            min-width: 3rem;
+            text-align: right;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.875rem;
+            color: var(--accent-green);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           BUTTONS
+           ═══════════════════════════════════════════════════════════════════════ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn:hover {
+            background: var(--bg-secondary);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+        
+        .btn-primary {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background: #4c9aed;
+            border-color: #4c9aed;
+            color: #fff;
+        }
+        
+        .btn-danger {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+        
+        .btn-danger:hover {
+            background: var(--accent-red);
+            color: #fff;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           GRAPH CANVAS
+           ═══════════════════════════════════════════════════════════════════════ */
+        .graph-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 400px;
+            position: relative;
+        }
+        
+        @media (min-width: 768px) {
+            .graph-container {
+                min-height: 500px;
+            }
+        }
+        
+        #graph-svg {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            #graph-svg {
+                min-height: 500px;
+            }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           NODE STYLES
+           ═══════════════════════════════════════════════════════════════════════ */
+        .node {
+            cursor: grab;
+        }
+        
+        .node:active {
+            cursor: grabbing;
+        }
+        
+        .node circle {
+            stroke: var(--bg-primary);
+            stroke-width: 2px;
+            transition: r 0.2s;
+        }
+        
+        .node:hover circle {
+            stroke: var(--accent-cyan);
+            stroke-width: 3px;
+        }
+        
+        .node text {
+            fill: var(--text-primary);
+            font-size: 12px;
+            font-weight: 500;
+            pointer-events: none;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           EDGE STYLES
+           ═══════════════════════════════════════════════════════════════════════ */
+        .link {
+            stroke: var(--border-color);
+            stroke-opacity: 0.6;
+            fill: none;
+        }
+        
+        .link-label {
+            fill: var(--text-secondary);
+            font-size: 10px;
+            text-anchor: middle;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           INFO PANEL
+           ═══════════════════════════════════════════════════════════════════════ */
+        .info-panel {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            background: rgba(22, 27, 34, 0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.8125rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            backdrop-filter: blur(8px);
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+        
+        .info-label {
+            color: var(--text-secondary);
+        }
+        
+        .info-value {
+            color: var(--accent-green);
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           PRESET GRAPHS
+           ═══════════════════════════════════════════════════════════════════════ */
+        .preset-btn {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+        }
+        
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           TOOLTIP
+           ═══════════════════════════════════════════════════════════════════════ */
+        .tooltip {
+            position: absolute;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8125rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 100;
+            max-width: 200px;
+        }
+        
+        .tooltip.visible {
+            opacity: 1;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════════════════════════════ */
+        footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌐 Interactive Graph Visualiser</h1>
+            <p class="subtitle">04UNIT: Advanced Data Structures — Force-Directed Layout with D3.js</p>
+        </header>
+        
+        <div class="main-layout">
+            <!-- Control Panel -->
+            <aside class="control-panel">
+                <div class="panel-section">
+                    <h3 class="panel-title">Preset Graphs</h3>
+                    <div class="preset-grid">
+                        <button class="btn preset-btn" onclick="loadPreset('tree')">Binary Tree</button>
+                        <button class="btn preset-btn" onclick="loadPreset('complete')">Complete K₅</button>
+                        <button class="btn preset-btn" onclick="loadPreset('bipartite')">Bipartite</button>
+                        <button class="btn preset-btn" onclick="loadPreset('social')">Social Net</button>
+                        <button class="btn preset-btn" onclick="loadPreset('dag')">DAG</button>
+                        <button class="btn preset-btn" onclick="loadPreset('random')">Random</button>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3 class="panel-title">Force Parameters</h3>
+                    
+                    <div class="control-group">
+                        <label>Charge Strength: <span class="range-value" id="charge-value">-300</span></label>
+                        <input type="range" id="charge-slider" min="-1000" max="-50" value="-300" 
+                               oninput="updateForce('charge', this.value)">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Link Distance: <span class="range-value" id="distance-value">100</span></label>
+                        <input type="range" id="distance-slider" min="30" max="250" value="100"
+                               oninput="updateForce('distance', this.value)">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Collision Radius: <span class="range-value" id="collision-value">30</span></label>
+                        <input type="range" id="collision-slider" min="10" max="80" value="30"
+                               oninput="updateForce('collision', this.value)">
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3 class="panel-title">Actions</h3>
+                    <button class="btn" onclick="addRandomNode()">➕ Add Node</button>
+                    <button class="btn" onclick="addRandomEdge()">🔗 Add Edge</button>
+                    <button class="btn btn-primary" onclick="runBFS()">▶️ Run BFS</button>
+                    <button class="btn btn-primary" onclick="runDFS()">▶️ Run DFS</button>
+                    <button class="btn btn-danger" onclick="resetGraph()">🗑️ Reset</button>
+                </div>
+                
+                <div class="panel-section">
+                    <h3 class="panel-title">Legend</h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8125rem;">
+                        <div><span style="color: var(--accent-blue);">●</span> Default Node</div>
+                        <div><span style="color: var(--accent-green);">●</span> Visited (BFS/DFS)</div>
+                        <div><span style="color: var(--accent-orange);">●</span> Current</div>
+                        <div><span style="color: var(--accent-purple);">●</span> In Queue/Stack</div>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- Graph Canvas -->
+            <main class="graph-container">
+                <svg id="graph-svg"></svg>
+                <div class="info-panel">
+                    <div class="info-item">
+                        <span class="info-label">Nodes:</span>
+                        <span class="info-value" id="node-count">0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Edges:</span>
+                        <span class="info-value" id="edge-count">0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Density:</span>
+                        <span class="info-value" id="density">0.00</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Algorithm:</span>
+                        <span class="info-value" id="algo-status">Idle</span>
+                    </div>
+                </div>
+                <div class="tooltip" id="tooltip"></div>
+            </main>
+        </div>
+        
+        <footer>
+            © 2025 Antonio Clim. All rights reserved. | 04UNIT: Advanced Data Structures
+        </footer>
+    </div>
+
+    <script>
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // GRAPH VISUALISER — CORE IMPLEMENTATION
+    // ═══════════════════════════════════════════════════════════════════════════════
+    
+    // State
+    let nodes = [];
+    let links = [];
+    let simulation;
+    let svg, linkGroup, nodeGroup;
+    let width, height;
+    let nodeIdCounter = 0;
+    
+    // Colour palette
+    const colours = {
+        default: '#58a6ff',
+        visited: '#3fb950',
+        current: '#f0883e',
+        queued: '#a371f7',
+        edge: '#30363d'
+    };
+    
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // INITIALISATION
+    // ═══════════════════════════════════════════════════════════════════════════════
+    
+    function init() {
+        const container = document.querySelector('.graph-container');
+        width = container.clientWidth;
+        height = container.clientHeight || 500;
+        
+        svg = d3.select('#graph-svg')
+            .attr('width', width)
+            .attr('height', height)
+            .call(d3.zoom().on('zoom', (event) => {
+                svg.select('g').attr('transform', event.transform);
+            }))
+            .append('g');
+        
+        // Define arrow marker for directed edges
+        svg.append('defs').append('marker')
+            .attr('id', 'arrow')
+            .attr('viewBox', '0 -5 10 10')
+            .attr('refX', 20)
+            .attr('refY', 0)
+            .attr('markerWidth', 6)
+            .attr('markerHeight', 6)
+            .attr('orient', 'auto')
+            .append('path')
+            .attr('d', 'M0,-5L10,0L0,5')
+            .attr('fill', colours.edge);
+        
+        linkGroup = svg.append('g').attr('class', 'links');
+        nodeGroup = svg.append('g').attr('class', 'nodes');
+        
+        simulation = d3.forceSimulation()
+            .force('link', d3.forceLink().id(d => d.id).distance(100))
+            .force('charge', d3.forceManyBody().strength(-300))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('collision', d3.forceCollide().radius(30))
+            .on('tick', ticked);
+        
+        // Load initial graph
+        loadPreset('social');
+        
+        // Handle resize
+        window.addEventListener('resize', () => {
+            width = container.clientWidth;
+            height = container.clientHeight || 500;
+            svg.attr('width', width).attr('height', height);
+            simulation.force('center', d3.forceCenter(width / 2, height / 2));
+            simulation.alpha(0.3).restart();
+        });
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // GRAPH RENDERING
+    // ═══════════════════════════════════════════════════════════════════════════════
+    
+    function render() {
+        // Update links
+        const link = linkGroup.selectAll('.link')
+            .data(links, d => `${d.source.id || d.source}-${d.target.id || d.target}`);
+        
+        link.exit().remove();
+        
+        const linkEnter = link.enter().append('line')
+            .attr('class', 'link')
+            .attr('stroke', colours.edge)
+            .attr('stroke-width', 2)
+            .attr('marker-end', 'url(#arrow)');
+        
+        // Update nodes
+        const node = nodeGroup.selectAll('.node')
+            .data(nodes, d => d.id);
+        
+        node.exit().remove();
+        
+        const nodeEnter = node.enter().append('g')
+            .attr('class', 'node')
+            .call(drag(simulation));
+        
+        nodeEnter.append('circle')
+            .attr('r', 20)
+            .attr('fill', colours.default);
+        
+        nodeEnter.append('text')
+            .text(d => d.label);
+        
+        // Add hover events
+        nodeEnter
+            .on('mouseover', showTooltip)
+            .on('mouseout', hideTooltip);
+        
+        // Update simulation
+        simulation.nodes(nodes);
+        simulation.force('link').links(links);
+        simulation.alpha(1).restart();
+        
+        updateStats();
+    }
+    
+    function ticked() {
+        linkGroup.selectAll('.link')
+            .attr('x1', d => d.source.x)
+            .attr('y1', d => d.source.y)
+            .attr('x2', d => d.target.x)
+            .attr('y2', d => d.target.y);
+        
+        nodeGroup.selectAll('.node')
+            .attr('transform', d => `translate(${d.x}, ${d.y})`);
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // DRAG BEHAVIOUR
+    // ═══════════════════════════════════════════════════════════════════════════════
+    
+    function drag(simulation) {
+        return d3.drag()
+            .on('start', (event, d) => {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            })
+            .on('drag', (event, d) => {
+                d.fx = event.x;
+                d.fy = event.y;
+            })
+            .on('end', (event, d) => {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            });
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // PRESET GRAPHS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    
+    function loadPreset(type) {
+        nodes = [];
+        links = [];
+        nodeIdCounter = 0;
+        
+        switch (type) {
+            case 'tree':
+                // Binary tree
+                for (let i = 0; i < 15; i++) {
+                    nodes.push({ id: i, label: String.fromCharCode(65 + i) });
+                }
+                for (let i = 0; i < 7; i++) {
+                    if (2*i + 1 < 15) links.push({ source: i, target: 2*i + 1 });
+                    if (2*i + 2 < 15) links.push({ source: i, target: 2*i + 2 });
+                }
+                break;
+                
+            case 'complete':
+                // Complete graph K5
+                for (let i = 0; i < 5; i++) {
+                    nodes.push({ id: i, label: String.fromCharCode(65 + i) });
+                }
+                for (let i = 0; i < 5; i++) {
+                    for (let j = i + 1; j < 5; j++) {
+                        links.push({ source: i, target: j });
+                    }
+                }
+                break;
+                
+            case 'bipartite':
+                // Bipartite graph
+                for (let i = 0; i < 4; i++) {
+                    nodes.push({ id: i, label: `L${i+1}` });
+                }
+                for (let i = 0; i < 4; i++) {
+                    nodes.push({ id: i + 4, label: `R${i+1}` });
+                }
+                links = [
+                    {source: 0, target: 4}, {source: 0, target: 5},
+                    {source: 1, target: 5}, {source: 1, target: 6},
+                    {source: 2, target: 6}, {source: 2, target: 7},
+                    {source: 3, target: 4}, {source: 3, target: 7}
+                ];
+                break;
+                
+            case 'social':
+                // Social network example
+                const names = ['Alice', 'Bob', 'Carol', 'Dan', 'Eve', 'Frank', 'Grace', 'Henry'];
+                names.forEach((name, i) => {
+                    nodes.push({ id: i, label: name.charAt(0) });
+                });
+                links = [
+                    {source: 0, target: 1}, {source: 0, target: 2}, {source: 0, target: 3},
+                    {source: 1, target: 2}, {source: 1, target: 4},
+                    {source: 2, target: 3}, {source: 2, target: 5},
+                    {source: 3, target: 6},
+                    {source: 4, target: 5}, {source: 4, target: 7},
+                    {source: 5, target: 6}, {source: 5, target: 7},
+                    {source: 6, target: 7}
+                ];
+                break;
+                
+            case 'dag':
+                // Directed Acyclic Graph (task dependencies)
+                for (let i = 0; i < 8; i++) {
+                    nodes.push({ id: i, label: `T${i+1}` });
+                }
+                links = [
+                    {source: 0, target: 2}, {source: 0, target: 3},
+                    {source: 1, target: 3}, {source: 1, target: 4},
+                    {source: 2, target: 5}, {source: 3, target: 5},
+                    {source: 3, target: 6}, {source: 4, target: 6},
+                    {source: 5, target: 7}, {source: 6, target: 7}
+                ];
+                break;
+                
+            case 'random':
+                // Random graph
+                const n = 10;
+                for (let i = 0; i < n; i++) {
+                    nodes.push({ id: i, label: String.fromCharCode(65 + i) });
+                }
+                for (let i = 0; i < n; i++) {
+                    for (let j = i + 1; j < n; j++) {
+                        if (Math.random() < 0.3) {
+                            links.push({ source: i, target: j });
+                        }
+                    }
+                }
+                break;
+        }
+        
+        nodeIdCounter = nodes.length;
+        render();
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // GRAPH MODIFICATION
+    // ═══════════════════════════════════════════════════════════════════════════════
+    
+    function addRandomNode() {
+        const label = String.fromCharCode(65 + (nodeIdCounter % 26));
+        nodes.push({
+            id: nodeIdCounter,
+            label: label,
+            x: width / 2 + (Math.random() - 0.5) * 100,
+            y: height / 2 + (Math.random() - 0.5) * 100
+        });
+        nodeIdCounter++;
+        render();
+    }
+    
+    function addRandomEdge() {
+        if (nodes.length < 2) return;
+        
+        const sourceIdx = Math.floor(Math.random() * nodes.length);
+        let targetIdx;
+        do {
+            targetIdx = Math.floor(Math.random() * nodes.length);
+        } while (targetIdx === sourceIdx);
+        
+        // Check if edge already exists
+        const exists = links.some(l => 
+            (l.source.id === nodes[sourceIdx].id && l.target.id === nodes[targetIdx].id) ||
+            (l.source.id === nodes[targetIdx].id && l.target.id === nodes[sourceIdx].id)
+        );
+        
+        if (!exists) {
+            links.push({ source: nodes[sourceIdx].id, target: nodes[targetIdx].id });
+            render();
+        }
+    }
+    
+    function resetGraph() {
+        nodes = [];
+        links = [];
+        nodeIdCounter = 0;
+        render();
+        document.getElementById('algo-status').textContent = 'Idle';
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // FORCE UPDATES
+    // ═══════════════════════════════════════════════════════════════════════════════
+    
+    function updateForce(type, value) {
+        document.getElementById(`${type}-value`).textContent = value;
+        
+        switch (type) {
+            case 'charge':
+                simulation.force('charge').strength(+value);
+                break;
+            case 'distance':
+                simulation.force('link').distance(+value);
+                break;
+            case 'collision':
+                simulation.force('collision').radius(+value);
+                break;
+        }
+        
+        simulation.alpha(0.5).restart();
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // TRAVERSAL ALGORITHMS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    
+    async function runBFS() {
+        if (nodes.length === 0) return;
+        
+        resetNodeColours();
+        const statusEl = document.getElementById('algo-status');
+        statusEl.textContent = 'BFS Running...';
+        
+        const visited = new Set();
+        const queue = [nodes[0].id];
+        visited.add(nodes[0].id);
+        colourNode(nodes[0].id, colours.queued);
+        
+        while (queue.length > 0) {
+            await sleep(500);
+            
+            const currentId = queue.shift();
+            colourNode(currentId, colours.current);
+            await sleep(300);
+            colourNode(currentId, colours.visited);
+            
+            // Get neighbours
+            const neighbours = links
+                .filter(l => l.source.id === currentId || l.target.id === currentId)
+                .map(l => l.source.id === currentId ? l.target.id : l.source.id)
+                .filter(id => !visited.has(id));
+            
+            for (const neighbourId of neighbours) {
+                visited.add(neighbourId);
+                queue.push(neighbourId);
+                colourNode(neighbourId, colours.queued);
+            }
+        }
+        
+        statusEl.textContent = 'BFS Complete';
+    }
+    
+    async function runDFS() {
+        if (nodes.length === 0) return;
+        
+        resetNodeColours();
+        const statusEl = document.getElementById('algo-status');
+        statusEl.textContent = 'DFS Running...';
+        
+        const visited = new Set();
+        const stack = [nodes[0].id];
+        
+        while (stack.length > 0) {
+            await sleep(500);
+            
+            const currentId = stack.pop();
+            
+            if (visited.has(currentId)) continue;
+            visited.add(currentId);
+            
+            colourNode(currentId, colours.current);
+            await sleep(300);
+            colourNode(currentId, colours.visited);
+            
+            // Get neighbours (reverse order for correct DFS)
+            const neighbours = links
+                .filter(l => l.source.id === currentId || l.target.id === currentId)
+                .map(l => l.source.id === currentId ? l.target.id : l.source.id)
+                .filter(id => !visited.has(id))
+                .reverse();
+            
+            for (const neighbourId of neighbours) {
+                stack.push(neighbourId);
+                if (!visited.has(neighbourId)) {
+                    colourNode(neighbourId, colours.queued);
+                }
+            }
+        }
+        
+        statusEl.textContent = 'DFS Complete';
+    }
+    
+    function colourNode(id, colour) {
+        nodeGroup.selectAll('.node')
+            .filter(d => d.id === id)
+            .select('circle')
+            .transition()
+            .duration(200)
+            .attr('fill', colour);
+    }
+    
+    function resetNodeColours() {
+        nodeGroup.selectAll('.node circle')
+            .transition()
+            .duration(200)
+            .attr('fill', colours.default);
+    }
+    
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // STATISTICS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    
+    function updateStats() {
+        const n = nodes.length;
+        const e = links.length;
+        const maxEdges = n * (n - 1) / 2;
+        const density = maxEdges > 0 ? (e / maxEdges).toFixed(3) : '0.000';
+        
+        document.getElementById('node-count').textContent = n;
+        document.getElementById('edge-count').textContent = e;
+        document.getElementById('density').textContent = density;
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // TOOLTIP
+    // ═══════════════════════════════════════════════════════════════════════════════
+    
+    function showTooltip(event, d) {
+        const tooltip = document.getElementById('tooltip');
+        const degree = links.filter(l => l.source.id === d.id || l.target.id === d.id).length;
+        
+        tooltip.innerHTML = `<strong>Node ${d.label}</strong><br>Degree: ${degree}`;
+        tooltip.style.left = `${event.pageX + 10}px`;
+        tooltip.style.top = `${event.pageY - 10}px`;
+        tooltip.classList.add('visible');
+    }
+    
+    function hideTooltip() {
+        document.getElementById('tooltip').classList.remove('visible');
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // INITIALISE ON LOAD
+    // ═══════════════════════════════════════════════════════════════════════════════
+    
+    document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
