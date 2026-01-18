@@ -1,0 +1,53 @@
+<svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .title { font: bold 16px sans-serif; fill: #1e40af; }
+    .label { font: 12px sans-serif; fill: #334155; }
+    .thread { rx: 4; ry: 4; }
+    .running { fill: #22c55e; }
+    .waiting { fill: #fca5a5; }
+    .io { fill: #93c5fd; }
+    .box { fill: #f8fafc; stroke: #e2e8f0; stroke-width: 1; }
+  </style>
+  
+  <!-- CPU-bound section -->
+  <rect x="10" y="30" width="330" height="200" class="box" rx="8"/>
+  <text x="175" y="55" class="title" text-anchor="middle">CPU-Bound (GIL Blocks)</text>
+  
+  <text x="30" y="90" class="label">Thread 1</text>
+  <rect x="90" y="75" width="80" height="20" class="thread running"/>
+  <rect x="170" y="75" width="80" height="20" class="thread waiting"/>
+  <rect x="250" y="75" width="60" height="20" class="thread running"/>
+  
+  <text x="30" y="130" class="label">Thread 2</text>
+  <rect x="90" y="115" width="80" height="20" class="thread waiting"/>
+  <rect x="170" y="115" width="80" height="20" class="thread running"/>
+  <rect x="250" y="115" width="60" height="20" class="thread waiting"/>
+  
+  <text x="175" y="170" class="label" text-anchor="middle">Only ONE thread runs at a time</text>
+  <text x="175" y="190" class="label" text-anchor="middle" fill="#dc2626">→ No speedup!</text>
+  
+  <!-- I/O-bound section -->
+  <rect x="360" y="30" width="330" height="200" class="box" rx="8"/>
+  <text x="525" y="55" class="title" text-anchor="middle">I/O-Bound (GIL Releases)</text>
+  
+  <text x="380" y="90" class="label">Thread 1</text>
+  <rect x="440" y="75" width="40" height="20" class="thread running"/>
+  <rect x="480" y="75" width="80" height="20" class="thread io"/>
+  <rect x="560" y="75" width="40" height="20" class="thread running"/>
+  
+  <text x="380" y="130" class="label">Thread 2</text>
+  <rect x="440" y="115" width="30" height="20" class="thread waiting"/>
+  <rect x="470" y="115" width="50" height="20" class="thread running"/>
+  <rect x="520" y="115" width="80" height="20" class="thread io"/>
+  
+  <text x="525" y="170" class="label" text-anchor="middle">GIL released during I/O wait</text>
+  <text x="525" y="190" class="label" text-anchor="middle" fill="#16a34a">→ Real parallelism!</text>
+  
+  <!-- Legend -->
+  <rect x="200" y="225" width="15" height="12" class="thread running"/>
+  <text x="220" y="235" class="label">Running</text>
+  <rect x="290" y="225" width="15" height="12" class="thread waiting"/>
+  <text x="310" y="235" class="label">Waiting</text>
+  <rect x="380" y="225" width="15" height="12" class="thread io"/>
+  <text x="400" y="235" class="label">I/O Wait</text>
+</svg>

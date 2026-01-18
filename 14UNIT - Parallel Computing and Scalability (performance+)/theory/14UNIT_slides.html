@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14UNIT: Parallel Computing and Scalability</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --accent: #3b82f6;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .slide {
+            width: 100%;
+            height: 100%;
+            padding: 3rem 5rem;
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--bg);
+        }
+        
+        .slide.active {
+            display: flex;
+        }
+        
+        .slide-header {
+            margin-bottom: 2rem;
+        }
+        
+        .slide-number {
+            font-size: 0.875rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+        
+        ul, ol {
+            margin-left: 1.5rem;
+            font-size: 1.25rem;
+        }
+        
+        li {
+            margin: 0.75rem 0;
+        }
+        
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            background: var(--surface);
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-size: 1rem;
+            border-left: 4px solid var(--accent);
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .formula {
+            background: var(--surface);
+            padding: 1.5rem 2rem;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            text-align: center;
+            margin: 1rem 0;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+        }
+        
+        .box {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .box.info {
+            border-left: 4px solid var(--accent);
+        }
+        
+        .box.warning {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .box.success {
+            border-left: 4px solid var(--success);
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--surface);
+        }
+        
+        .comparison-table th {
+            background: var(--surface);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .comparison-table tr:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+        
+        .diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .diagram svg {
+            max-width: 100%;
+            max-height: 400px;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .nav-btn {
+            background: var(--surface);
+            border: none;
+            color: var(--text);
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        
+        .nav-btn:hover {
+            background: var(--accent);
+        }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+        
+        .title-slide .slide-content {
+            text-align: center;
+        }
+        
+        .title-slide h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .title-slide .subtitle {
+            font-size: 1.5rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+        
+        .emoji {
+            font-size: 3rem;
+            margin: 1rem;
+        }
+        
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .stat-card .label {
+            color: var(--muted);
+            margin-top: 0.5rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide.active .animate {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .animate:nth-child(1) { animation-delay: 0.1s; }
+        .animate:nth-child(2) { animation-delay: 0.2s; }
+        .animate:nth-child(3) { animation-delay: 0.3s; }
+        .animate:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progress"></div>
+    
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide active" data-slide="1">
+            <div class="slide-content">
+                <div class="emoji">⚡🐍🚀</div>
+                <h1>Parallel Computing and Scalability</h1>
+                <p class="subtitle">14UNIT — Computational Thinking for Researchers</p>
+                <p style="color: var(--muted); margin-top: 2rem;">
+                    Utilising Multiple Cores for Scientific Computing
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div class="slide" data-slide="2">
+            <div class="slide-header">
+                <div class="slide-number">2 / 18</div>
+                <h2>Learning Objectives</h2>
+            </div>
+            <div class="slide-content">
+                <ul style="font-size: 1.4rem;">
+                    <li class="animate"><strong>LO1:</strong> Distinguish parallelism from concurrency and explain GIL implications</li>
+                    <li class="animate"><strong>LO2:</strong> Implement multiprocessing patterns for CPU-bound tasks</li>
+                    <li class="animate"><strong>LO3:</strong> Apply threading appropriately for I/O-bound operations</li>
+                    <li class="animate"><strong>LO4:</strong> Use concurrent.futures for portable parallel execution</li>
+                    <li class="animate"><strong>LO5:</strong> Build scalable pipelines with Dask</li>
+                    <li class="animate"><strong>LO6:</strong> Profile and optimise parallel code systematically</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 3: Why Parallelism? -->
+        <div class="slide" data-slide="3">
+            <div class="slide-header">
+                <div class="slide-number">3 / 18</div>
+                <h2>Why Parallelism Matters</h2>
+            </div>
+            <div class="slide-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="value">~3 GHz</div>
+                        <div class="label">Clock Speed (plateaued)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">4-64+</div>
+                        <div class="label">Cores per CPU</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">10×+</div>
+                        <div class="label">Potential Speedup</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">∞</div>
+                        <div class="label">Data Growth</div>
+                    </div>
+                </div>
+                <div class="box info" style="margin-top: 2rem;">
+                    <h3 style="margin-top: 0;">The Free Lunch Is Over</h3>
+                    <p>CPU clock speeds stopped increasing around 2005. Performance gains now come from adding more cores, not faster cores. Programs must be parallel to benefit.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Parallelism vs Concurrency -->
+        <div class="slide" data-slide="4">
+            <div class="slide-header">
+                <div class="slide-number">4 / 18</div>
+                <h2>Parallelism vs Concurrency</h2>
+            </div>
+            <div class="slide-content">
+                <div class="two-col">
+                    <div class="box">
+                        <h3 style="margin-top: 0;">⚡ Parallelism</h3>
+                        <p><em>Doing multiple things at the same time</em></p>
+                        <ul>
+                            <li>Requires multiple CPU cores</li>
+                            <li>True simultaneous execution</li>
+                            <li>Goal: speed up computation</li>
+                            <li>Example: 8 workers calculating π</li>
+                        </ul>
+                    </div>
+                    <div class="box">
+                        <h3 style="margin-top: 0;">🔄 Concurrency</h3>
+                        <p><em>Managing multiple things at once</em></p>
+                        <ul>
+                            <li>Works on single core</li>
+                            <li>Interleaved execution</li>
+                            <li>Goal: handle I/O efficiently</li>
+                            <li>Example: web server handling 1000 requests</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="formula" style="margin-top: 2rem;">
+                    Parallelism ⊂ Concurrency<br>
+                    <span style="font-size: 1rem; font-style: normal; color: var(--muted);">
+                        All parallelism is concurrent, but not all concurrency is parallel
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: The GIL -->
+        <div class="slide" data-slide="5">
+            <div class="slide-header">
+                <div class="slide-number">5 / 18</div>
+                <h2>Python's Global Interpreter Lock (GIL)</h2>
+            </div>
+            <div class="slide-content">
+                <div class="box warning">
+                    <h3 style="margin-top: 0;">⚠️ The GIL Constraint</h3>
+                    <p>Only <strong>one thread</strong> can execute Python bytecode at a time, even on multi-core systems.</p>
+                </div>
+                <div class="two-col" style="margin-top: 2rem;">
+                    <div>
+                        <h3>Why It Exists</h3>
+                        <ul>
+                            <li>Simplifies memory management</li>
+                            <li>Protects internal data structures</li>
+                            <li>Makes C extensions easier</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Workarounds</h3>
+                        <ul>
+                            <li><code>multiprocessing</code> — separate interpreters</li>
+                            <li><code>threading</code> — for I/O (GIL releases)</li>
+                            <li>C extensions (NumPy, etc.)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Amdahl's Law -->
+        <div class="slide" data-slide="6">
+            <div class="slide-header">
+                <div class="slide-number">6 / 18</div>
+                <h2>Amdahl's Law</h2>
+            </div>
+            <div class="slide-content">
+                <div class="formula">
+                    S(n) = 1 / ((1 - P) + P/n)
+                </div>
+                <p style="text-align: center; margin: 1rem 0;">
+                    Where <em>P</em> = parallelisable fraction, <em>n</em> = number of processors
+                </p>
+                <div class="two-col" style="margin-top: 2rem;">
+                    <div>
+                        <h3>Example: P = 0.9 (90% parallel)</h3>
+                        <table class="comparison-table">
+                            <tr><th>Processors</th><th>Speedup</th></tr>
+                            <tr><td>2</td><td>1.82×</td></tr>
+                            <tr><td>4</td><td>3.08×</td></tr>
+                            <tr><td>8</td><td>4.71×</td></tr>
+                            <tr><td>∞</td><td>10× (max)</td></tr>
+                        </table>
+                    </div>
+                    <div class="box info">
+                        <h3 style="margin-top: 0;">Key Insight</h3>
+                        <p>The <strong>serial portion</strong> limits maximum speedup. With 10% serial code, you can never exceed 10× speedup, regardless of processor count.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Multiprocessing Pool -->
+        <div class="slide" data-slide="7">
+            <div class="slide-header">
+                <div class="slide-number">7 / 18</div>
+                <h2>multiprocessing.Pool</h2>
+            </div>
+            <div class="slide-content">
+                <pre><code>from multiprocessing import Pool
+
+def process_item(x):
+    return x ** 2
+
+# Create pool and map function over data
+with Pool(processes=4) as pool:
+    results = pool.map(process_item, range(1000))
+
+# Results: [0, 1, 4, 9, 16, ...]</code></pre>
+                <div class="two-col" style="margin-top: 2rem;">
+                    <div class="box">
+                        <h3 style="margin-top: 0;">Pool Methods</h3>
+                        <ul>
+                            <li><code>map(func, items)</code> — ordered results</li>
+                            <li><code>starmap(func, args)</code> — multiple arguments</li>
+                            <li><code>apply_async(func, args)</code> — non-blocking</li>
+                            <li><code>imap(func, items)</code> — lazy iteration</li>
+                        </ul>
+                    </div>
+                    <div class="box success">
+                        <h3 style="margin-top: 0;">✓ Best For</h3>
+                        <ul>
+                            <li>CPU-intensive computations</li>
+                            <li>Embarrassingly parallel problems</li>
+                            <li>When order matters</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Monte Carlo Example -->
+        <div class="slide" data-slide="8">
+            <div class="slide-header">
+                <div class="slide-number">8 / 18</div>
+                <h2>Example: Parallel Monte Carlo π</h2>
+            </div>
+            <div class="slide-content">
+                <pre><code>import random
+from multiprocessing import Pool
+
+def estimate_pi_chunk(args):
+    n_points, seed = args
+    rng = random.Random(seed)
+    inside = sum(
+        1 for _ in range(n_points)
+        if rng.random()**2 + rng.random()**2 <= 1
+    )
+    return inside
+
+def parallel_pi(n_points, n_workers=4):
+    chunk_size = n_points // n_workers
+    args = [(chunk_size, i*12345) for i in range(n_workers)]
+    
+    with Pool(n_workers) as pool:
+        counts = pool.map(estimate_pi_chunk, args)
+    
+    return 4 * sum(counts) / n_points</code></pre>
+                <div class="box info" style="margin-top: 1rem;">
+                    <strong>Key Pattern:</strong> Each worker gets unique seed → independent samples → combine results
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Threading for I/O -->
+        <div class="slide" data-slide="9">
+            <div class="slide-header">
+                <div class="slide-number">9 / 18</div>
+                <h2>Threading for I/O Operations</h2>
+            </div>
+            <div class="slide-content">
+                <pre><code>from concurrent.futures import ThreadPoolExecutor
+import requests
+
+urls = ['https://api.example.com/data1', 
+        'https://api.example.com/data2', ...]
+
+def fetch_url(url):
+    return requests.get(url).json()
+
+# GIL releases during network I/O → true concurrency
+with ThreadPoolExecutor(max_workers=10) as executor:
+    results = list(executor.map(fetch_url, urls))</code></pre>
+                <div class="two-col" style="margin-top: 1.5rem;">
+                    <div class="box success">
+                        <h3 style="margin-top: 0;">✓ Use Threading For</h3>
+                        <ul>
+                            <li>Network requests</li>
+                            <li>File I/O</li>
+                            <li>Database queries</li>
+                        </ul>
+                    </div>
+                    <div class="box warning">
+                        <h3 style="margin-top: 0;">✗ Don't Use For</h3>
+                        <ul>
+                            <li>CPU-bound computation</li>
+                            <li>NumPy operations</li>
+                            <li>Data processing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: concurrent.futures -->
+        <div class="slide" data-slide="10">
+            <div class="slide-header">
+                <div class="slide-number">10 / 18</div>
+                <h2>concurrent.futures: Unified API</h2>
+            </div>
+            <div class="slide-content">
+                <pre><code>from concurrent.futures import ProcessPoolExecutor, as_completed
+
+with ProcessPoolExecutor(max_workers=4) as executor:
+    # Submit tasks
+    futures = {executor.submit(process, item): item 
+               for item in data}
+    
+    # Process results as they complete
+    for future in as_completed(futures):
+        item = futures[future]
+        try:
+            result = future.result(timeout=60)
+        except TimeoutError:
+            print(f"{item} timed out")
+        except Exception as e:
+            print(f"{item} raised {e}")</code></pre>
+                <div class="box info" style="margin-top: 1rem;">
+                    <strong>Advantage:</strong> Same API for threads (<code>ThreadPoolExecutor</code>) and processes (<code>ProcessPoolExecutor</code>). Easy to switch based on workload type.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Synchronisation -->
+        <div class="slide" data-slide="11">
+            <div class="slide-header">
+                <div class="slide-number">11 / 18</div>
+                <h2>Synchronisation: Avoiding Race Conditions</h2>
+            </div>
+            <div class="slide-content">
+                <div class="two-col">
+                    <div>
+                        <h3 style="color: var(--danger);">❌ Unsafe</h3>
+                        <pre><code>counter = Value('i', 0)
+
+def increment():
+    for _ in range(100000):
+        counter.value += 1
+        # ^ Read-modify-write
+        # Not atomic!</code></pre>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--success);">✓ Safe</h3>
+                        <pre><code>counter = Value('i', 0)
+lock = Lock()
+
+def increment():
+    for _ in range(100000):
+        with lock:
+            counter.value += 1
+            # Protected!</code></pre>
+                    </div>
+                </div>
+                <div class="box warning" style="margin-top: 2rem;">
+                    <h3 style="margin-top: 0;">Race Condition</h3>
+                    <p>When program behaviour depends on timing of concurrent operations. Result: lost updates, corrupted data, non-deterministic bugs.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Dask Overview -->
+        <div class="slide" data-slide="12">
+            <div class="slide-header">
+                <div class="slide-number">12 / 18</div>
+                <h2>Dask: Scalable Computing</h2>
+            </div>
+            <div class="slide-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="value">📊</div>
+                        <div class="label">Familiar APIs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">💾</div>
+                        <div class="label">Out-of-Core</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">🔀</div>
+                        <div class="label">Lazy Execution</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">🖥️</div>
+                        <div class="label">Distributed</div>
+                    </div>
+                </div>
+                <pre style="margin-top: 2rem;"><code>import dask.dataframe as dd
+
+# Read 100GB CSV (chunked automatically)
+ddf = dd.read_csv('huge_data_*.csv')
+
+# Familiar pandas operations (lazy)
+result = ddf.groupby('category').amount.mean()
+
+# Execute when ready
+final = result.compute()</code></pre>
+            </div>
+        </div>
+
+        <!-- Slide 13: Dask Delayed -->
+        <div class="slide" data-slide="13">
+            <div class="slide-header">
+                <div class="slide-number">13 / 18</div>
+                <h2>Dask Delayed: Custom Parallelism</h2>
+            </div>
+            <div class="slide-content">
+                <pre><code>from dask import delayed, compute
+
+@delayed
+def load_data(filename):
+    return pd.read_csv(filename)
+
+@delayed
+def process(df):
+    return df.groupby('col').sum()
+
+@delayed
+def combine(results):
+    return pd.concat(results)
+
+# Build task graph (no execution yet)
+data = [load_data(f) for f in files]
+processed = [process(d) for d in data]
+final = combine(processed)
+
+# Execute in parallel
+result = final.compute()</code></pre>
+                <div class="box success" style="margin-top: 1rem;">
+                    <strong>Task Graph:</strong> Dask builds a DAG of operations, optimises it, then executes in parallel.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Profiling -->
+        <div class="slide" data-slide="14">
+            <div class="slide-header">
+                <div class="slide-number">14 / 18</div>
+                <h2>Profiling: Find the Bottleneck First</h2>
+            </div>
+            <div class="slide-content">
+                <pre><code>import cProfile
+import pstats
+
+# Profile your code
+cProfile.run('main()', 'output.prof')
+
+# Analyse results
+stats = pstats.Stats('output.prof')
+stats.sort_stats('cumulative')
+stats.print_stats(10)  # Top 10 functions</code></pre>
+                <div class="box warning" style="margin-top: 2rem;">
+                    <h3 style="margin-top: 0;">⚠️ Golden Rule</h3>
+                    <p><strong>Never optimise without profiling first!</strong></p>
+                    <p>You will waste time optimising the wrong code. Profile → Identify hotspot → Optimise → Measure → Repeat</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Decision Flowchart -->
+        <div class="slide" data-slide="15">
+            <div class="slide-header">
+                <div class="slide-number">15 / 18</div>
+                <h2>Decision: Which Approach?</h2>
+            </div>
+            <div class="slide-content">
+                <table class="comparison-table" style="font-size: 1.1rem;">
+                    <tr>
+                        <th>Workload</th>
+                        <th>Approach</th>
+                        <th>Why</th>
+                    </tr>
+                    <tr>
+                        <td>CPU-bound, fits in memory</td>
+                        <td><code>multiprocessing.Pool</code></td>
+                        <td>Bypasses GIL, simple API</td>
+                    </tr>
+                    <tr>
+                        <td>CPU-bound, larger than memory</td>
+                        <td><code>Dask</code></td>
+                        <td>Chunked processing</td>
+                    </tr>
+                    <tr>
+                        <td>I/O-bound (network, disk)</td>
+                        <td><code>ThreadPoolExecutor</code></td>
+                        <td>GIL releases during I/O</td>
+                    </tr>
+                    <tr>
+                        <td>Mixed / unsure</td>
+                        <td><code>concurrent.futures</code></td>
+                        <td>Easy to switch executors</td>
+                    </tr>
+                    <tr>
+                        <td>Shared state needed</td>
+                        <td><code>Value/Array + Lock</code></td>
+                        <td>Thread-safe primitives</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 16: Common Pitfalls -->
+        <div class="slide" data-slide="16">
+            <div class="slide-header">
+                <div class="slide-number">16 / 18</div>
+                <h2>Common Pitfalls</h2>
+            </div>
+            <div class="slide-content">
+                <div class="two-col">
+                    <div>
+                        <div class="box" style="border-left: 4px solid var(--danger);">
+                            <h3 style="margin-top: 0;">❌ Pickling Errors</h3>
+                            <p>Lambdas and closures can't be pickled. Use module-level functions.</p>
+                        </div>
+                        <div class="box" style="border-left: 4px solid var(--danger);">
+                            <h3 style="margin-top: 0;">❌ Too Many Workers</h3>
+                            <p>More workers than cores = context switch overhead. Match CPU count.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="box" style="border-left: 4px solid var(--danger);">
+                            <h3 style="margin-top: 0;">❌ Small Tasks</h3>
+                            <p>Process startup overhead > computation time. Batch small items.</p>
+                        </div>
+                        <div class="box" style="border-left: 4px solid var(--danger);">
+                            <h3 style="margin-top: 0;">❌ Shared State</h3>
+                            <p>Prefer returning values over modifying shared state. Less bugs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Recommended Approaches -->
+        <div class="slide" data-slide="17">
+            <div class="slide-header">
+                <div class="slide-number">17 / 18</div>
+                <h2>Recommended Approaches</h2>
+            </div>
+            <div class="slide-content">
+                <ol style="font-size: 1.3rem;">
+                    <li class="animate"><strong>Profile first</strong> — Know where time is spent before parallelising</li>
+                    <li class="animate"><strong>Start simple</strong> — Try Pool.map before complex solutions</li>
+                    <li class="animate"><strong>Match workers to cores</strong> — cpu_count() is usually optimal</li>
+                    <li class="animate"><strong>Minimise data transfer</strong> — Pickling large objects is expensive</li>
+                    <li class="animate"><strong>Avoid shared state</strong> — Prefer returning results to modifying globals</li>
+                    <li class="animate"><strong>Handle errors</strong> — Workers can fail; use try/except</li>
+                    <li class="animate"><strong>Measure speedup</strong> — Verify parallelisation actually helps</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Slide 18: Summary -->
+        <div class="slide" data-slide="18">
+            <div class="slide-header">
+                <div class="slide-number">18 / 18</div>
+                <h2>Key Takeaways</h2>
+            </div>
+            <div class="slide-content">
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="value">GIL</div>
+                        <div class="label">Threading limits CPU work</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">Pool</div>
+                        <div class="label">Multiprocessing for CPU</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">Thread</div>
+                        <div class="label">Threading for I/O</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">Dask</div>
+                        <div class="label">Scale beyond memory</div>
+                    </div>
+                </div>
+                <div class="box success">
+                    <h3 style="margin-top: 0;">🎯 Remember</h3>
+                    <ul>
+                        <li>Amdahl's Law sets theoretical limits — serial code matters!</li>
+                        <li>Choose the right tool: processes for CPU, threads for I/O</li>
+                        <li>Profile before optimising — measure, don't guess</li>
+                        <li>Parallel code introduces complexity — only parallelise when beneficial</li>
+                    </ul>
+                </div>
+                <p style="text-align: center; margin-top: 2rem; color: var(--muted);">
+                    Now proceed to the labs for hands-on practice! 🚀
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = document.querySelectorAll('.slide').length;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(s => s.classList.remove('active'));
+            
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides[currentSlide - 1].classList.add('active');
+            
+            // Update progress bar
+            const progress = (currentSlide / totalSlides) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(1);
+    </script>
+</body>
+</html>

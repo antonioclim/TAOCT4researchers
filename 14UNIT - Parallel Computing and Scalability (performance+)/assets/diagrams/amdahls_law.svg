@@ -1,0 +1,64 @@
+<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .title { font: bold 18px sans-serif; fill: #1e40af; }
+    .axis { stroke: #64748b; stroke-width: 2; }
+    .grid { stroke: #e2e8f0; stroke-width: 1; }
+    .line { fill: none; stroke-width: 2; }
+    .l50 { stroke: #ef4444; }
+    .l75 { stroke: #f59e0b; }
+    .l90 { stroke: #22c55e; }
+    .l95 { stroke: #3b82f6; }
+    .label { font: 12px sans-serif; fill: #334155; }
+    .legend { font: 11px sans-serif; fill: #334155; }
+  </style>
+  
+  <text x="300" y="30" class="title" text-anchor="middle">Amdahl's Law: Speedup vs Processors</text>
+  
+  <!-- Axes -->
+  <line x1="80" y1="350" x2="550" y2="350" class="axis"/>
+  <line x1="80" y1="350" x2="80" y2="50" class="axis"/>
+  
+  <!-- Grid -->
+  <line x1="80" y1="290" x2="550" y2="290" class="grid"/>
+  <line x1="80" y1="230" x2="550" y2="230" class="grid"/>
+  <line x1="80" y1="170" x2="550" y2="170" class="grid"/>
+  <line x1="80" y1="110" x2="550" y2="110" class="grid"/>
+  
+  <!-- Y-axis labels -->
+  <text x="70" y="354" class="label" text-anchor="end">1×</text>
+  <text x="70" y="294" class="label" text-anchor="end">5×</text>
+  <text x="70" y="234" class="label" text-anchor="end">10×</text>
+  <text x="70" y="174" class="label" text-anchor="end">15×</text>
+  <text x="70" y="114" class="label" text-anchor="end">20×</text>
+  
+  <!-- X-axis labels -->
+  <text x="80" y="370" class="label" text-anchor="middle">1</text>
+  <text x="200" y="370" class="label" text-anchor="middle">4</text>
+  <text x="320" y="370" class="label" text-anchor="middle">8</text>
+  <text x="440" y="370" class="label" text-anchor="middle">16</text>
+  <text x="550" y="370" class="label" text-anchor="middle">32</text>
+  
+  <!-- Axis titles -->
+  <text x="315" y="395" class="label" text-anchor="middle">Number of Processors</text>
+  <text x="25" y="200" class="label" text-anchor="middle" transform="rotate(-90,25,200)">Speedup</text>
+  
+  <!-- Lines (approximated curves) -->
+  <!-- P=50%: max 2x -->
+  <path d="M80,350 L200,314 L320,302 L440,296 L550,293" class="line l50"/>
+  <!-- P=75%: max 4x -->
+  <path d="M80,350 L200,278 L320,254 L440,242 L550,236" class="line l75"/>
+  <!-- P=90%: max 10x -->
+  <path d="M80,350 L200,218 L320,170 L440,146 L550,134" class="line l90"/>
+  <!-- P=95%: max 20x -->
+  <path d="M80,350 L200,158 L320,98 L440,74 L550,62" class="line l95"/>
+  
+  <!-- Legend -->
+  <line x1="420" y1="50" x2="450" y2="50" class="line l50"/>
+  <text x="455" y="54" class="legend">P=50% (max 2×)</text>
+  <line x1="420" y1="70" x2="450" y2="70" class="line l75"/>
+  <text x="455" y="74" class="legend">P=75% (max 4×)</text>
+  <line x1="420" y1="90" x2="450" y2="90" class="line l90"/>
+  <text x="455" y="94" class="legend">P=90% (max 10×)</text>
+  <line x1="420" y1="110" x2="450" y2="110" class="line l95"/>
+  <text x="455" y="114" class="legend">P=95% (max 20×)</text>
+</svg>

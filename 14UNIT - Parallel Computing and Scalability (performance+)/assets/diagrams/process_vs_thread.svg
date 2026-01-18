@@ -1,0 +1,52 @@
+<svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .title { font: bold 16px sans-serif; fill: #1e40af; }
+    .label { font: 12px sans-serif; fill: #334155; }
+    .box { stroke-width: 2; rx: 8; ry: 8; }
+    .process { fill: #dbeafe; stroke: #3b82f6; }
+    .thread { fill: #dcfce7; stroke: #22c55e; }
+    .memory { fill: #fef3c7; stroke: #f59e0b; }
+    .small { font: 10px sans-serif; fill: #64748b; }
+  </style>
+  
+  <!-- Processes -->
+  <text x="175" y="25" class="title" text-anchor="middle">Processes</text>
+  
+  <rect x="30" y="40" width="130" height="120" class="box process"/>
+  <text x="95" y="60" class="label" text-anchor="middle">Process 1</text>
+  <rect x="45" y="70" width="100" height="30" class="box memory"/>
+  <text x="95" y="90" class="small" text-anchor="middle">Memory Space</text>
+  <rect x="45" y="110" width="100" height="30" class="box" style="fill:#e0e7ff;stroke:#6366f1"/>
+  <text x="95" y="130" class="small" text-anchor="middle">GIL</text>
+  
+  <rect x="190" y="40" width="130" height="120" class="box process"/>
+  <text x="255" y="60" class="label" text-anchor="middle">Process 2</text>
+  <rect x="205" y="70" width="100" height="30" class="box memory"/>
+  <text x="255" y="90" class="small" text-anchor="middle">Memory Space</text>
+  <rect x="205" y="110" width="100" height="30" class="box" style="fill:#e0e7ff;stroke:#6366f1"/>
+  <text x="255" y="130" class="small" text-anchor="middle">GIL</text>
+  
+  <text x="175" y="185" class="label" text-anchor="middle">✓ Separate memory, separate GIL</text>
+  <text x="175" y="205" class="label" text-anchor="middle">✓ True parallelism for CPU</text>
+  <text x="175" y="225" class="label" text-anchor="middle">✗ Higher overhead, IPC needed</text>
+  
+  <!-- Threads -->
+  <text x="525" y="25" class="title" text-anchor="middle">Threads</text>
+  
+  <rect x="380" y="40" width="290" height="120" class="box process"/>
+  <text x="525" y="60" class="label" text-anchor="middle">Single Process</text>
+  
+  <rect x="395" y="70" width="260" height="30" class="box memory"/>
+  <text x="525" y="90" class="small" text-anchor="middle">Shared Memory Space</text>
+  
+  <rect x="400" y="110" width="70" height="30" class="box thread"/>
+  <text x="435" y="130" class="small" text-anchor="middle">Thread 1</text>
+  <rect x="490" y="110" width="70" height="30" class="box thread"/>
+  <text x="525" y="130" class="small" text-anchor="middle">Thread 2</text>
+  <rect x="580" y="110" width="70" height="30" class="box thread"/>
+  <text x="615" y="130" class="small" text-anchor="middle">Thread 3</text>
+  
+  <text x="525" y="185" class="label" text-anchor="middle">✓ Shared memory, low overhead</text>
+  <text x="525" y="205" class="label" text-anchor="middle">✓ Good for I/O-bound tasks</text>
+  <text x="525" y="225" class="label" text-anchor="middle">✗ Single GIL limits CPU parallelism</text>
+</svg>

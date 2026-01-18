@@ -1,0 +1,89 @@
+@startuml process_vs_thread
+!theme plain
+
+skinparam backgroundColor transparent
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 12
+skinparam shadowing false
+
+skinparam rectangle {
+    BackgroundColor #1e293b
+    BorderColor #3b82f6
+    FontColor #f8fafc
+    RoundCorner 8
+}
+
+skinparam note {
+    BackgroundColor #334155
+    BorderColor #58a6ff
+    FontColor #f8fafc
+}
+
+title Process vs Thread Memory Architecture
+
+rectangle "**Process A**\n//Separate Interpreter//" as PA #1e293b {
+    rectangle "GIL A" as GA #ef4444
+    rectangle "Heap A" as HA #22c55e
+    rectangle "Stack A1\n(Thread 1)" as SA1 #3b82f6
+    rectangle "Stack A2\n(Thread 2)" as SA2 #3b82f6
+}
+
+rectangle "**Process B**\n//Separate Interpreter//" as PB #1e293b {
+    rectangle "GIL B" as GB #ef4444
+    rectangle "Heap B" as HB #22c55e
+    rectangle "Stack B1\n(Thread 1)" as SB1 #3b82f6
+    rectangle "Stack B2\n(Thread 2)" as SB2 #3b82f6
+}
+
+rectangle "**Operating System**" as OS #475569 {
+    rectangle "Kernel\nScheduler" as KS #8b5cf6
+    rectangle "Shared Memory\nSegments" as SM #f59e0b
+    rectangle "IPC\nQueues/Pipes" as IPC #f59e0b
+}
+
+' Relationships within processes
+GA -[hidden]down-> HA
+HA -[hidden]down-> SA1
+SA1 -[hidden]right-> SA2
+
+GB -[hidden]down-> HB
+HB -[hidden]down-> SB1
+SB1 -[hidden]right-> SB2
+
+' Process to OS relationships
+PA .down.> KS : scheduled
+PB .down.> KS : scheduled
+
+' IPC relationships
+PA .down.> IPC : communicate
+PB .down.> IPC : communicate
+PA .down.> SM : optional\nshared
+PB .down.> SM : optional\nshared
+
+note right of GA
+  **GIL (Global Interpreter Lock)**
+  Only ONE thread executes
+  Python bytecode at a time
+  within each process
+end note
+
+note right of SM
+  **Inter-Process Communication**
+  - multiprocessing.Queue
+  - multiprocessing.Pipe
+  - Shared Value/Array
+  - Manager objects
+end note
+
+legend right
+  |= Colour |= Meaning |
+  | <#ef4444> | GIL (serialises threads) |
+  | <#22c55e> | Heap (shared within process) |
+  | <#3b82f6> | Thread stacks (private) |
+  | <#f59e0b> | OS IPC mechanisms |
+  | <#8b5cf6> | Kernel scheduler |
+endlegend
+
+footer 14UNIT — Parallel Computing and Scalability
+
+@enduml

@@ -1,0 +1,41 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .title { font: bold 18px sans-serif; fill: #1e40af; }
+    .label { font: 14px sans-serif; fill: #334155; }
+    .task { rx: 4; ry: 4; }
+    .t1 { fill: #3b82f6; }
+    .t2 { fill: #10b981; }
+    .t3 { fill: #f59e0b; }
+  </style>
+  
+  <!-- Concurrency -->
+  <text x="200" y="30" class="title" text-anchor="middle">Concurrency (1 Core)</text>
+  <text x="50" y="80" class="label">Time →</text>
+  <rect x="80" y="60" width="60" height="30" class="task t1"/>
+  <rect x="140" y="60" width="40" height="30" class="task t2"/>
+  <rect x="180" y="60" width="50" height="30" class="task t1"/>
+  <rect x="230" y="60" width="30" height="30" class="task t3"/>
+  <rect x="260" y="60" width="40" height="30" class="task t2"/>
+  <rect x="300" y="60" width="40" height="30" class="task t1"/>
+  <text x="200" y="120" class="label" text-anchor="middle">Tasks interleave on single core</text>
+  
+  <!-- Parallelism -->
+  <text x="600" y="30" class="title" text-anchor="middle">Parallelism (4 Cores)</text>
+  <text x="450" y="80" class="label">Core 1</text>
+  <text x="450" y="110" class="label">Core 2</text>
+  <text x="450" y="140" class="label">Core 3</text>
+  <text x="450" y="170" class="label">Core 4</text>
+  <rect x="500" y="60" width="100" height="25" class="task t1"/>
+  <rect x="500" y="90" width="100" height="25" class="task t1"/>
+  <rect x="500" y="120" width="100" height="25" class="task t1"/>
+  <rect x="500" y="150" width="100" height="25" class="task t1"/>
+  <text x="600" y="200" class="label" text-anchor="middle">Tasks execute simultaneously</text>
+  
+  <!-- Legend -->
+  <rect x="300" y="250" width="20" height="15" class="task t1"/>
+  <text x="325" y="262" class="label">Task A</text>
+  <rect x="400" y="250" width="20" height="15" class="task t2"/>
+  <text x="425" y="262" class="label">Task B</text>
+  <rect x="500" y="250" width="20" height="15" class="task t3"/>
+  <text x="525" y="262" class="label">Task C</text>
+</svg>

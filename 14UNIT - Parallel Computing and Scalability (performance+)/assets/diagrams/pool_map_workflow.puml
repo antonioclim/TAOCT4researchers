@@ -1,0 +1,142 @@
+@startuml pool_map_workflow
+!theme plain
+
+skinparam backgroundColor transparent
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 11
+skinparam shadowing false
+
+skinparam participant {
+    BackgroundColor #1e293b
+    BorderColor #3b82f6
+    FontColor #f8fafc
+}
+
+skinparam sequence {
+    ArrowColor #58a6ff
+    LifeLineBorderColor #475569
+    LifeLineBackgroundColor #1e293b
+    BoxBackgroundColor #0f172a
+    BoxBorderColor #334155
+}
+
+title Pool.map() Work Distribution Workflow
+
+box "Main Process" #0f172a
+    participant "Main\nThread" as Main
+    participant "Pool\nManager" as Pool
+end box
+
+box "Worker Processes" #0f172a
+    participant "Worker 1" as W1
+    participant "Worker 2" as W2
+    participant "Worker N" as WN
+end box
+
+== Initialisation ==
+
+Main -> Pool : Pool(processes=N)
+activate Pool #3b82f6
+Pool -> W1 : spawn
+activate W1 #22c55e
+Pool -> W2 : spawn
+activate W2 #22c55e
+Pool -> WN : spawn
+activate WN #22c55e
+
+note over Pool
+  Workers initialised
+  with picklable function
+end note
+
+== Work Distribution (pool.map) ==
+
+Main -> Pool : map(func, [x₀, x₁, ..., xₘ])
+activate Main #8b5cf6
+
+Pool -> Pool : chunk iterable
+note right
+  Default: chunksize = len(items) / (N * 4)
+  Each chunk sent as single task
+end note
+
+Pool ->> W1 : chunk [x₀, x₁, x₂]
+Pool ->> W2 : chunk [x₃, x₄, x₅]
+Pool ->> WN : chunk [xₘ₋₂, xₘ₋₁, xₘ]
+
+note over W1, WN
+  **Parallel Execution**
+  Each worker processes chunk independently
+  GIL only affects threads within each worker
+end note
+
+W1 -> W1 : func(x₀), func(x₁), func(x₂)
+W2 -> W2 : func(x₃), func(x₄), func(x₅)
+WN -> WN : func(xₘ₋₂), func(xₘ₋₁), func(xₘ)
+
+W1 -->> Pool : [r₀, r₁, r₂]
+W2 -->> Pool : [r₃, r₄, r₅]
+WN -->> Pool : [rₘ₋₂, rₘ₋₁, rₘ]
+
+Pool -> Pool : reassemble results\n(preserve order)
+
+Pool --> Main : [r₀, r₁, ..., rₘ]
+deactivate Main
+
+== Dynamic Load Balancing (imap_unordered) ==
+
+Main -> Pool : imap_unordered(func, items)
+activate Main #f59e0b
+
+Pool ->> W1 : x₀
+W1 -> W1 : func(x₀)
+W1 -->> Pool : r₀
+
+Pool ->> W2 : x₁
+Pool ->> W1 : x₂
+note right of Pool
+  Fast worker gets
+  more tasks
+end note
+
+W2 -> W2 : func(x₁)
+W1 -> W1 : func(x₂)
+
+W1 -->> Pool : r₂
+W2 -->> Pool : r₁
+
+Pool --> Main : yields r₀, r₂, r₁, ...\n(completion order)
+deactivate Main
+
+== Cleanup ==
+
+Main -> Pool : pool.close()
+Pool -> W1 : terminate
+Pool -> W2 : terminate
+Pool -> WN : terminate
+
+deactivate W1
+deactivate W2
+deactivate WN
+
+Main -> Pool : pool.join()
+deactivate Pool
+
+note over Main
+  All workers terminated
+  Resources released
+end note
+
+legend right
+  |= Method |= Order |= Blocking |
+  | map() | Preserved | Yes |
+  | map_async() | Preserved | No |
+  | imap() | Preserved | Iterator |
+  | imap_unordered() | Completion | Iterator |
+  | starmap() | Preserved | Yes |
+  | apply_async() | N/A | No |
+endlegend
+
+footer 14UNIT — Parallel Computing and Scalability
+
+@enduml

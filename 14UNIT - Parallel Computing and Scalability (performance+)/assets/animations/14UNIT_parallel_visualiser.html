@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14UNIT: Parallel Computing Visualiser</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --border: #334155;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --accent: #3b82f6;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+        
+        .tab {
+            background: var(--surface);
+            border: none;
+            color: var(--muted);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .tab:hover {
+            color: var(--text);
+            background: var(--border);
+        }
+        
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .panel {
+            display: none;
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        
+        .panel.active {
+            display: block;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        label {
+            color: var(--muted);
+            font-size: 0.875rem;
+        }
+        
+        input[type="range"] {
+            width: 200px;
+            accent-color: var(--accent);
+        }
+        
+        input[type="number"] {
+            width: 100px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+        
+        button {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        
+        button:hover {
+            background: #2563eb;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .visualisation {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            min-height: 300px;
+        }
+        
+        .worker-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.5rem 0;
+        }
+        
+        .worker-label {
+            width: 80px;
+            color: var(--muted);
+            font-size: 0.875rem;
+        }
+        
+        .worker-bar {
+            flex: 1;
+            height: 30px;
+            background: var(--surface);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .worker-progress {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.1s;
+        }
+        
+        .worker-0 .worker-progress { background: var(--accent); }
+        .worker-1 .worker-progress { background: var(--success); }
+        .worker-2 .worker-progress { background: var(--warning); }
+        .worker-3 .worker-progress { background: var(--purple); }
+        .worker-4 .worker-progress { background: var(--danger); }
+        .worker-5 .worker-progress { background: #06b6d4; }
+        .worker-6 .worker-progress { background: #f472b6; }
+        .worker-7 .worker-progress { background: #a3e635; }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .stat-card {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            color: var(--muted);
+            font-size: 0.875rem;
+        }
+        
+        .formula-display {
+            background: var(--bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.25rem;
+            margin: 1rem 0;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 1rem;
+        }
+        
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        .info-box {
+            background: var(--bg);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .monte-carlo-canvas {
+            background: white;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Parallel Computing Visualiser</h1>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showPanel('amdahl')">Amdahl's Law</button>
+            <button class="tab" onclick="showPanel('monte-carlo')">Monte Carlo π</button>
+            <button class="tab" onclick="showPanel('workers')">Worker Simulation</button>
+        </div>
+        
+        <!-- Amdahl's Law Panel -->
+        <div class="panel active" id="amdahl-panel">
+            <h2>Amdahl's Law Calculator</h2>
+            <p style="color: var(--muted); margin-bottom: 1.5rem;">
+                Explore how the parallelisable fraction limits maximum speedup.
+            </p>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>Parallelisable Fraction (P): <span id="p-value">90%</span></label>
+                    <input type="range" id="p-slider" min="0" max="100" value="90" 
+                           oninput="updateAmdahl()">
+                </div>
+                <div class="control-group">
+                    <label>Max Processors</label>
+                    <input type="number" id="max-proc" value="16" min="1" max="128"
+                           onchange="updateAmdahl()">
+                </div>
+            </div>
+            
+            <div class="formula-display">
+                S(n) = 1 / ((1 - P) + P/n) = <span id="formula-result">...</span>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="speedup-2">-</div>
+                    <div class="stat-label">Speedup (2 cores)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="speedup-4">-</div>
+                    <div class="stat-label">Speedup (4 cores)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="speedup-8">-</div>
+                    <div class="stat-label">Speedup (8 cores)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="speedup-max">-</div>
+                    <div class="stat-label">Maximum Speedup (∞)</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="amdahl-chart"></canvas>
+            </div>
+            
+            <div class="info-box">
+                <strong>Key Insight:</strong> With <span id="serial-pct">10%</span> serial code, 
+                you can never exceed <span id="max-speedup-text">10×</span> speedup, 
+                regardless of how many processors you add.
+            </div>
+        </div>
+        
+        <!-- Monte Carlo Panel -->
+        <div class="panel" id="monte-carlo-panel">
+            <h2>Monte Carlo π Estimation</h2>
+            <p style="color: var(--muted); margin-bottom: 1.5rem;">
+                Visualise the dartboard method for estimating π.
+            </p>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>Points per Batch</label>
+                    <input type="number" id="mc-points" value="1000" min="100" max="10000">
+                </div>
+                <button onclick="runMonteCarlo()">Run Simulation</button>
+                <button onclick="resetMonteCarlo()">Reset</button>
+            </div>
+            
+            <div style="display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                <canvas id="mc-canvas" class="monte-carlo-canvas" width="400" height="400"></canvas>
+                <div style="flex: 1; min-width: 200px;">
+                    <div class="stats" style="grid-template-columns: 1fr 1fr;">
+                        <div class="stat-card">
+                            <div class="stat-value" id="mc-total">0</div>
+                            <div class="stat-label">Total Points</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="mc-inside">0</div>
+                            <div class="stat-label">Inside Circle</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="mc-pi">-</div>
+                            <div class="stat-label">π Estimate</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="mc-error">-</div>
+                            <div class="stat-label">Error</div>
+                        </div>
+                    </div>
+                    <div class="info-box" style="margin-top: 1rem;">
+                        <strong>Method:</strong> Generate random points in [0,1]². 
+                        Count points where x² + y² ≤ 1 (inside quarter-circle).
+                        π ≈ 4 × (inside / total)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Worker Simulation Panel -->
+        <div class="panel" id="workers-panel">
+            <h2>Worker Pool Simulation</h2>
+            <p style="color: var(--muted); margin-bottom: 1.5rem;">
+                Watch how tasks are distributed across parallel workers.
+            </p>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>Number of Workers</label>
+                    <input type="number" id="num-workers" value="4" min="1" max="8">
+                </div>
+                <div class="control-group">
+                    <label>Number of Tasks</label>
+                    <input type="number" id="num-tasks" value="20" min="1" max="100">
+                </div>
+                <div class="control-group">
+                    <label>Task Duration (ms)</label>
+                    <input type="number" id="task-duration" value="500" min="100" max="2000">
+                </div>
+                <button id="start-btn" onclick="startWorkerSim()">Start Simulation</button>
+            </div>
+            
+            <div class="visualisation" id="worker-viz">
+                <!-- Workers will be rendered here -->
+            </div>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="tasks-completed">0</div>
+                    <div class="stat-label">Tasks Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="elapsed-time">0.0s</div>
+                    <div class="stat-label">Elapsed Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="sequential-time">-</div>
+                    <div class="stat-label">Sequential Would Take</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="actual-speedup">-</div>
+                    <div class="stat-label">Actual Speedup</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Tab switching
+        function showPanel(name) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(name + '-panel').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // ==================== Amdahl's Law ====================
+        let amdahlChart = null;
+        
+        function calculateSpeedup(P, n) {
+            return 1 / ((1 - P) + P / n);
+        }
+        
+        function updateAmdahl() {
+            const P = parseInt(document.getElementById('p-slider').value) / 100;
+            const maxProc = parseInt(document.getElementById('max-proc').value);
+            
+            document.getElementById('p-value').textContent = (P * 100).toFixed(0) + '%';
+            
+            // Calculate speedups
+            const s2 = calculateSpeedup(P, 2);
+            const s4 = calculateSpeedup(P, 4);
+            const s8 = calculateSpeedup(P, 8);
+            const sMax = 1 / (1 - P);
+            
+            document.getElementById('speedup-2').textContent = s2.toFixed(2) + '×';
+            document.getElementById('speedup-4').textContent = s4.toFixed(2) + '×';
+            document.getElementById('speedup-8').textContent = s8.toFixed(2) + '×';
+            document.getElementById('speedup-max').textContent = sMax.toFixed(1) + '×';
+            
+            document.getElementById('formula-result').textContent = 
+                `S(${maxProc}) = ${calculateSpeedup(P, maxProc).toFixed(2)}×`;
+            
+            document.getElementById('serial-pct').textContent = ((1 - P) * 100).toFixed(0) + '%';
+            document.getElementById('max-speedup-text').textContent = sMax.toFixed(1) + '×';
+            
+            // Update chart
+            const labels = [];
+            const data = [];
+            for (let n = 1; n <= maxProc; n++) {
+                labels.push(n);
+                data.push(calculateSpeedup(P, n));
+            }
+            
+            if (amdahlChart) {
+                amdahlChart.data.labels = labels;
+                amdahlChart.data.datasets[0].data = data;
+                amdahlChart.data.datasets[1].data = labels.map(() => sMax);
+                amdahlChart.update();
+            } else {
+                const ctx = document.getElementById('amdahl-chart').getContext('2d');
+                amdahlChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Actual Speedup',
+                            data: data,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }, {
+                            label: 'Maximum (Amdahl Limit)',
+                            data: labels.map(() => sMax),
+                            borderColor: '#ef4444',
+                            borderDash: [5, 5],
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: { display: true, text: 'Number of Processors', color: '#94a3b8' },
+                                ticks: { color: '#94a3b8' },
+                                grid: { color: '#334155' }
+                            },
+                            y: {
+                                title: { display: true, text: 'Speedup', color: '#94a3b8' },
+                                ticks: { color: '#94a3b8' },
+                                grid: { color: '#334155' },
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            legend: { labels: { color: '#f8fafc' } }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // ==================== Monte Carlo ====================
+        let mcTotal = 0;
+        let mcInside = 0;
+        const mcCtx = document.getElementById('mc-canvas').getContext('2d');
+        
+        function resetMonteCarlo() {
+            mcTotal = 0;
+            mcInside = 0;
+            mcCtx.clearRect(0, 0, 400, 400);
+            
+            // Draw quarter circle
+            mcCtx.fillStyle = '#f0f9ff';
+            mcCtx.fillRect(0, 0, 400, 400);
+            mcCtx.fillStyle = '#dbeafe';
+            mcCtx.beginPath();
+            mcCtx.arc(0, 0, 400, 0, Math.PI / 2);
+            mcCtx.fill();
+            
+            updateMCStats();
+        }
+        
+        function runMonteCarlo() {
+            const points = parseInt(document.getElementById('mc-points').value);
+            
+            for (let i = 0; i < points; i++) {
+                const x = Math.random();
+                const y = Math.random();
+                const inside = x * x + y * y <= 1;
+                
+                mcTotal++;
+                if (inside) mcInside++;
+                
+                // Draw point
+                mcCtx.fillStyle = inside ? '#22c55e' : '#ef4444';
+                mcCtx.beginPath();
+                mcCtx.arc(x * 400, y * 400, 2, 0, Math.PI * 2);
+                mcCtx.fill();
+            }
+            
+            updateMCStats();
+        }
+        
+        function updateMCStats() {
+            document.getElementById('mc-total').textContent = mcTotal.toLocaleString();
+            document.getElementById('mc-inside').textContent = mcInside.toLocaleString();
+            
+            if (mcTotal > 0) {
+                const piEst = 4 * mcInside / mcTotal;
+                const error = Math.abs(piEst - Math.PI);
+                document.getElementById('mc-pi').textContent = piEst.toFixed(6);
+                document.getElementById('mc-error').textContent = error.toFixed(6);
+            }
+        }
+        
+        // ==================== Worker Simulation ====================
+        let workerSim = null;
+        
+        function startWorkerSim() {
+            const numWorkers = parseInt(document.getElementById('num-workers').value);
+            const numTasks = parseInt(document.getElementById('num-tasks').value);
+            const taskDuration = parseInt(document.getElementById('task-duration').value);
+            
+            // Disable button
+            document.getElementById('start-btn').disabled = true;
+            
+            // Calculate sequential time
+            const seqTime = (numTasks * taskDuration / 1000).toFixed(1) + 's';
+            document.getElementById('sequential-time').textContent = seqTime;
+            
+            // Create worker visualization
+            const viz = document.getElementById('worker-viz');
+            viz.innerHTML = '';
+            
+            const workers = [];
+            for (let i = 0; i < numWorkers; i++) {
+                const row = document.createElement('div');
+                row.className = `worker-row worker-${i}`;
+                row.innerHTML = `
+                    <span class="worker-label">Worker ${i}</span>
+                    <div class="worker-bar">
+                        <div class="worker-progress" style="width: 0%"></div>
+                    </div>
+                `;
+                viz.appendChild(row);
+                workers.push({
+                    element: row.querySelector('.worker-progress'),
+                    busy: false,
+                    progress: 0
+                });
+            }
+            
+            // Run simulation
+            let completed = 0;
+            let taskQueue = numTasks;
+            const startTime = Date.now();
+            
+            function assignTask(worker) {
+                if (taskQueue <= 0) return;
+                taskQueue--;
+                worker.busy = true;
+                worker.progress = 0;
+            }
+            
+            // Initial assignment
+            workers.forEach(w => assignTask(w));
+            
+            const interval = setInterval(() => {
+                const elapsed = (Date.now() - startTime) / 1000;
+                document.getElementById('elapsed-time').textContent = elapsed.toFixed(1) + 's';
+                
+                workers.forEach(worker => {
+                    if (worker.busy) {
+                        worker.progress += 100 / (taskDuration / 50);
+                        worker.element.style.width = Math.min(worker.progress, 100) + '%';
+                        
+                        if (worker.progress >= 100) {
+                            completed++;
+                            document.getElementById('tasks-completed').textContent = completed;
+                            worker.busy = false;
+                            worker.progress = 0;
+                            worker.element.style.width = '0%';
+                            assignTask(worker);
+                        }
+                    }
+                });
+                
+                if (completed >= numTasks) {
+                    clearInterval(interval);
+                    const actualTime = (Date.now() - startTime) / 1000;
+                    const speedup = (numTasks * taskDuration / 1000) / actualTime;
+                    document.getElementById('actual-speedup').textContent = speedup.toFixed(2) + '×';
+                    document.getElementById('start-btn').disabled = false;
+                }
+            }, 50);
+        }
+        
+        // Initialize
+        updateAmdahl();
+        resetMonteCarlo();
+    </script>
+</body>
+</html>
