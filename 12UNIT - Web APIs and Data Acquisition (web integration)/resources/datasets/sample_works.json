@@ -1,0 +1,366 @@
+{
+  "metadata": {
+    "title": "Sample Research Works Dataset",
+    "description": "Synthetic bibliographic dataset for API development exercises",
+    "version": "1.0.0",
+    "created": "2024-01-15T00:00:00Z",
+    "record_count": 20,
+    "fields": [
+      "id",
+      "doi",
+      "title",
+      "authors",
+      "year",
+      "abstract",
+      "keywords",
+      "citations",
+      "journal",
+      "volume",
+      "issue",
+      "pages"
+    ],
+    "licence": "CC0 1.0 Universal"
+  },
+  "works": [
+    {
+      "id": "W001",
+      "doi": "10.1234/sample.2023.001",
+      "title": "Machine Learning Approaches to Climate Prediction",
+      "authors": [
+        {"name": "Smith, J.", "orcid": "0000-0001-2345-6789"},
+        {"name": "Chen, L.", "orcid": "0000-0002-3456-7890"}
+      ],
+      "year": 2023,
+      "abstract": "This paper presents novel machine learning approaches for predicting regional climate patterns. We demonstrate that ensemble methods combining deep learning with traditional statistical models achieve superior accuracy on decadal prediction tasks.",
+      "keywords": ["machine learning", "climate prediction", "deep learning", "ensemble methods"],
+      "citations": 15,
+      "journal": "Nature Climate Change",
+      "volume": "13",
+      "issue": "2",
+      "pages": "145-159"
+    },
+    {
+      "id": "W002",
+      "doi": "10.1234/sample.2023.002",
+      "title": "Deep Learning in Genomics: A Comprehensive Survey",
+      "authors": [
+        {"name": "Johnson, M.", "orcid": "0000-0003-4567-8901"},
+        {"name": "Williams, K.", "orcid": null},
+        {"name": "Brown, R.", "orcid": "0000-0004-5678-9012"}
+      ],
+      "year": 2024,
+      "abstract": "We survey recent advances in applying deep learning to genomic data analysis. Topics covered include sequence classification, variant calling, gene expression prediction and protein structure inference.",
+      "keywords": ["deep learning", "genomics", "bioinformatics", "neural networks"],
+      "citations": 8,
+      "journal": "Genome Research",
+      "volume": "34",
+      "issue": "1",
+      "pages": "12-45"
+    },
+    {
+      "id": "W003",
+      "doi": "10.1234/sample.2022.003",
+      "title": "Natural Language Processing for Scientific Literature",
+      "authors": [
+        {"name": "Garcia, M.", "orcid": "0000-0005-6789-0123"}
+      ],
+      "year": 2022,
+      "abstract": "This work explores the application of transformer-based language models to scientific text mining. We introduce a domain-adapted BERT model trained on 10 million research abstracts.",
+      "keywords": ["NLP", "scientific literature", "BERT", "text mining"],
+      "citations": 42,
+      "journal": "Journal of Cheminformatics",
+      "volume": "14",
+      "issue": "4",
+      "pages": "89-102"
+    },
+    {
+      "id": "W004",
+      "doi": "10.1234/sample.2024.004",
+      "title": "Reproducibility in Computational Biology",
+      "authors": [
+        {"name": "Taylor, A.", "orcid": "0000-0006-7890-1234"},
+        {"name": "Anderson, P.", "orcid": "0000-0007-8901-2345"}
+      ],
+      "year": 2024,
+      "abstract": "We examine reproducibility challenges in computational biology and propose a framework for containerised, version-controlled analysis pipelines that ensure long-term reproducibility.",
+      "keywords": ["reproducibility", "computational biology", "containers", "workflows"],
+      "citations": 3,
+      "journal": "PLOS Computational Biology",
+      "volume": "20",
+      "issue": "1",
+      "pages": "e1011789"
+    },
+    {
+      "id": "W005",
+      "doi": "10.1234/sample.2023.005",
+      "title": "Graph Neural Networks for Molecular Property Prediction",
+      "authors": [
+        {"name": "Liu, Y.", "orcid": "0000-0008-9012-3456"},
+        {"name": "Wang, H.", "orcid": "0000-0009-0123-4567"},
+        {"name": "Zhang, X.", "orcid": null}
+      ],
+      "year": 2023,
+      "abstract": "We present a novel graph neural network architecture for predicting molecular properties from chemical structures. Our approach achieves state-of-the-art results on benchmark datasets.",
+      "keywords": ["graph neural networks", "molecular properties", "drug discovery", "chemistry"],
+      "citations": 28,
+      "journal": "Journal of Chemical Information and Modeling",
+      "volume": "63",
+      "issue": "8",
+      "pages": "2456-2470"
+    },
+    {
+      "id": "W006",
+      "doi": "10.1234/sample.2022.006",
+      "title": "Statistical Methods for Single-Cell RNA Sequencing",
+      "authors": [
+        {"name": "Patel, S.", "orcid": "0000-0010-1234-5678"}
+      ],
+      "year": 2022,
+      "abstract": "This review covers statistical methods for analysing single-cell RNA sequencing data, including normalisation, dimensionality reduction, clustering and differential expression testing.",
+      "keywords": ["single-cell", "RNA-seq", "statistics", "bioinformatics"],
+      "citations": 67,
+      "journal": "Nature Methods",
+      "volume": "19",
+      "issue": "5",
+      "pages": "534-548"
+    },
+    {
+      "id": "W007",
+      "doi": "10.1234/sample.2024.007",
+      "title": "Federated Learning for Healthcare Data",
+      "authors": [
+        {"name": "Kim, J.", "orcid": "0000-0011-2345-6789"},
+        {"name": "Lee, S.", "orcid": "0000-0012-3456-7890"}
+      ],
+      "year": 2024,
+      "abstract": "We explore federated learning approaches that enable collaborative model training across healthcare institutions whilst preserving patient privacy and data sovereignty.",
+      "keywords": ["federated learning", "healthcare", "privacy", "machine learning"],
+      "citations": 5,
+      "journal": "npj Digital Medicine",
+      "volume": "7",
+      "issue": "1",
+      "pages": "23"
+    },
+    {
+      "id": "W008",
+      "doi": "10.1234/sample.2023.008",
+      "title": "Causal Inference in Observational Studies",
+      "authors": [
+        {"name": "Robinson, E.", "orcid": "0000-0013-4567-8901"},
+        {"name": "Martinez, C.", "orcid": "0000-0014-5678-9012"},
+        {"name": "Thompson, D.", "orcid": null}
+      ],
+      "year": 2023,
+      "abstract": "This paper reviews modern approaches to causal inference from observational data, including propensity score methods, instrumental variables and difference-in-differences designs.",
+      "keywords": ["causal inference", "observational studies", "propensity scores", "statistics"],
+      "citations": 19,
+      "journal": "Statistical Science",
+      "volume": "38",
+      "issue": "3",
+      "pages": "412-435"
+    },
+    {
+      "id": "W009",
+      "doi": "10.1234/sample.2022.009",
+      "title": "Quantum Computing for Optimisation Problems",
+      "authors": [
+        {"name": "Nguyen, T.", "orcid": "0000-0015-6789-0123"}
+      ],
+      "year": 2022,
+      "abstract": "We analyse the potential of near-term quantum computers for solving combinatorial optimisation problems, comparing quantum approximate optimisation algorithms with classical approaches.",
+      "keywords": ["quantum computing", "optimisation", "QAOA", "combinatorics"],
+      "citations": 35,
+      "journal": "Physical Review X",
+      "volume": "12",
+      "issue": "4",
+      "pages": "041015"
+    },
+    {
+      "id": "W010",
+      "doi": "10.1234/sample.2024.010",
+      "title": "Large Language Models for Code Generation",
+      "authors": [
+        {"name": "Davis, R.", "orcid": "0000-0016-7890-1234"},
+        {"name": "Wilson, J.", "orcid": "0000-0017-8901-2345"}
+      ],
+      "year": 2024,
+      "abstract": "This study evaluates the capabilities of large language models for automated code generation across multiple programming languages and task complexities.",
+      "keywords": ["large language models", "code generation", "AI", "programming"],
+      "citations": 12,
+      "journal": "ACM Computing Surveys",
+      "volume": "56",
+      "issue": "2",
+      "pages": "1-38"
+    },
+    {
+      "id": "W011",
+      "doi": "10.1234/sample.2023.011",
+      "title": "Biodiversity Monitoring with Remote Sensing",
+      "authors": [
+        {"name": "Clark, H.", "orcid": "0000-0018-9012-3456"},
+        {"name": "Lewis, M.", "orcid": null}
+      ],
+      "year": 2023,
+      "abstract": "We demonstrate how satellite and drone-based remote sensing can be combined with machine learning to monitor biodiversity at landscape scales.",
+      "keywords": ["biodiversity", "remote sensing", "ecology", "conservation"],
+      "citations": 22,
+      "journal": "Remote Sensing of Environment",
+      "volume": "287",
+      "issue": null,
+      "pages": "113456"
+    },
+    {
+      "id": "W012",
+      "doi": "10.1234/sample.2022.012",
+      "title": "Interpretable Machine Learning for Healthcare",
+      "authors": [
+        {"name": "Moore, K.", "orcid": "0000-0019-0123-4567"},
+        {"name": "Hall, B.", "orcid": "0000-0020-1234-5678"},
+        {"name": "Young, A.", "orcid": "0000-0021-2345-6789"}
+      ],
+      "year": 2022,
+      "abstract": "This paper reviews methods for building interpretable machine learning models in healthcare settings, where model transparency is essential for clinical adoption.",
+      "keywords": ["interpretability", "healthcare", "machine learning", "clinical AI"],
+      "citations": 54,
+      "journal": "Nature Medicine",
+      "volume": "28",
+      "issue": "9",
+      "pages": "1773-1784"
+    },
+    {
+      "id": "W013",
+      "doi": "10.1234/sample.2024.013",
+      "title": "Time Series Forecasting with Transformers",
+      "authors": [
+        {"name": "Allen, G.", "orcid": "0000-0022-3456-7890"}
+      ],
+      "year": 2024,
+      "abstract": "We introduce a transformer architecture specifically designed for multivariate time series forecasting, achieving significant improvements on standard benchmarks.",
+      "keywords": ["time series", "transformers", "forecasting", "deep learning"],
+      "citations": 7,
+      "journal": "Journal of Machine Learning Research",
+      "volume": "25",
+      "issue": "3",
+      "pages": "1-45"
+    },
+    {
+      "id": "W014",
+      "doi": "10.1234/sample.2023.014",
+      "title": "Privacy-Preserving Data Analysis Techniques",
+      "authors": [
+        {"name": "Scott, L.", "orcid": "0000-0023-4567-8901"},
+        {"name": "King, N.", "orcid": "0000-0024-5678-9012"}
+      ],
+      "year": 2023,
+      "abstract": "This survey covers privacy-preserving techniques for statistical analysis, including differential privacy, secure multi-party computation and homomorphic encryption.",
+      "keywords": ["privacy", "differential privacy", "data analysis", "cryptography"],
+      "citations": 31,
+      "journal": "IEEE Security & Privacy",
+      "volume": "21",
+      "issue": "4",
+      "pages": "56-68"
+    },
+    {
+      "id": "W015",
+      "doi": "10.1234/sample.2022.015",
+      "title": "Network Analysis of Social Media Discourse",
+      "authors": [
+        {"name": "Wright, O.", "orcid": "0000-0025-6789-0123"},
+        {"name": "Adams, F.", "orcid": null},
+        {"name": "Baker, I.", "orcid": "0000-0026-7890-1234"}
+      ],
+      "year": 2022,
+      "abstract": "We apply network analysis methods to understand information flow and community formation in social media discussions around scientific topics.",
+      "keywords": ["social media", "network analysis", "science communication", "Twitter"],
+      "citations": 18,
+      "journal": "Science Communication",
+      "volume": "44",
+      "issue": "6",
+      "pages": "723-751"
+    },
+    {
+      "id": "W016",
+      "doi": "10.1234/sample.2024.016",
+      "title": "Reinforcement Learning for Robotic Manipulation",
+      "authors": [
+        {"name": "Turner, W.", "orcid": "0000-0027-8901-2345"}
+      ],
+      "year": 2024,
+      "abstract": "This work presents advances in reinforcement learning algorithms for robotic manipulation tasks, demonstrating sample-efficient learning of complex motor skills.",
+      "keywords": ["reinforcement learning", "robotics", "manipulation", "motor control"],
+      "citations": 4,
+      "journal": "Science Robotics",
+      "volume": "9",
+      "issue": "86",
+      "pages": "eadj1234"
+    },
+    {
+      "id": "W017",
+      "doi": "10.1234/sample.2023.017",
+      "title": "Data Visualisation for Scientific Communication",
+      "authors": [
+        {"name": "Phillips, R.", "orcid": "0000-0028-9012-3456"},
+        {"name": "Campbell, V.", "orcid": "0000-0029-0123-4567"}
+      ],
+      "year": 2023,
+      "abstract": "We provide guidelines for effective data visualisation in scientific publications, emphasising accessibility, clarity and honest representation of uncertainty.",
+      "keywords": ["data visualisation", "scientific communication", "graphics", "uncertainty"],
+      "citations": 26,
+      "journal": "PLOS Biology",
+      "volume": "21",
+      "issue": "3",
+      "pages": "e3002033"
+    },
+    {
+      "id": "W018",
+      "doi": "10.1234/sample.2022.018",
+      "title": "Bayesian Methods in Ecology",
+      "authors": [
+        {"name": "Parker, Z.", "orcid": "0000-0030-1234-5678"},
+        {"name": "Evans, Q.", "orcid": null}
+      ],
+      "year": 2022,
+      "abstract": "This tutorial introduces Bayesian statistical methods for ecological research, covering model specification, prior selection and posterior interpretation.",
+      "keywords": ["Bayesian statistics", "ecology", "modelling", "inference"],
+      "citations": 41,
+      "journal": "Ecological Modelling",
+      "volume": "468",
+      "issue": null,
+      "pages": "109934"
+    },
+    {
+      "id": "W019",
+      "doi": "10.1234/sample.2024.019",
+      "title": "Ethical Considerations in AI Research",
+      "authors": [
+        {"name": "Mitchell, U.", "orcid": "0000-0031-2345-6789"},
+        {"name": "Roberts, Y.", "orcid": "0000-0032-3456-7890"},
+        {"name": "Carter, X.", "orcid": "0000-0033-4567-8901"}
+      ],
+      "year": 2024,
+      "abstract": "We examine ethical frameworks for AI research, discussing issues of fairness, accountability, transparency and societal impact.",
+      "keywords": ["AI ethics", "fairness", "accountability", "responsible AI"],
+      "citations": 9,
+      "journal": "AI & Society",
+      "volume": "39",
+      "issue": "1",
+      "pages": "45-67"
+    },
+    {
+      "id": "W020",
+      "doi": "10.1234/sample.2023.020",
+      "title": "Computational Approaches to Drug Repurposing",
+      "authors": [
+        {"name": "Hughes, T.", "orcid": "0000-0034-5678-9012"}
+      ],
+      "year": 2023,
+      "abstract": "This review examines computational methods for identifying new therapeutic uses of existing drugs, including network-based approaches and machine learning models.",
+      "keywords": ["drug repurposing", "computational biology", "pharmacology", "networks"],
+      "citations": 33,
+      "journal": "Drug Discovery Today",
+      "volume": "28",
+      "issue": "7",
+      "pages": "103612"
+    }
+  ]
+}

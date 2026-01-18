@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <style>
+      .title { font: bold 22px sans-serif; fill: #1a365d; }
+      .subtitle { font: bold 14px sans-serif; fill: #2c5282; }
+      .label { font: 13px sans-serif; fill: #2d3748; }
+      .code { font: 11px monospace; fill: #4a5568; }
+      .small { font: 10px sans-serif; fill: #718096; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" class="title">Rate Limiting and Retry Strategy</text>
+  
+  <!-- Token Bucket Visualization -->
+  <rect x="20" y="50" width="250" height="180" fill="#ebf8ff" rx="10"/>
+  <text x="145" y="75" text-anchor="middle" class="subtitle">Token Bucket Algorithm</text>
+  
+  <!-- Bucket -->
+  <path d="M 70 100 L 70 200 L 220 200 L 220 100" fill="none" stroke="#4299e1" stroke-width="3"/>
+  <ellipse cx="145" cy="100" rx="75" ry="15" fill="none" stroke="#4299e1" stroke-width="3"/>
+  <ellipse cx="145" cy="200" rx="75" ry="15" fill="#90cdf4"/>
+  
+  <!-- Tokens -->
+  <circle cx="100" cy="180" r="10" fill="#4299e1"/>
+  <circle cx="130" cy="175" r="10" fill="#4299e1"/>
+  <circle cx="160" cy="178" r="10" fill="#4299e1"/>
+  <circle cx="190" cy="180" r="10" fill="#4299e1"/>
+  <circle cx="115" cy="155" r="10" fill="#4299e1"/>
+  <circle cx="145" cy="150" r="10" fill="#4299e1"/>
+  <circle cx="175" cy="155" r="10" fill="#4299e1"/>
+  
+  <!-- Labels -->
+  <text x="145" y="225" text-anchor="middle" class="small">Tokens = requests remaining</text>
+  
+  <!-- Rate limit headers -->
+  <rect x="280" y="50" width="250" height="180" fill="#f0fff4" rx="10"/>
+  <text x="405" y="75" text-anchor="middle" class="subtitle">Rate Limit Headers</text>
+  
+  <rect x="295" y="90" width="220" height="25" fill="white" rx="3"/>
+  <text x="305" y="108" class="code">X-RateLimit-Limit: 1000</text>
+  
+  <rect x="295" y="120" width="220" height="25" fill="white" rx="3"/>
+  <text x="305" y="138" class="code">X-RateLimit-Remaining: 847</text>
+  
+  <rect x="295" y="150" width="220" height="25" fill="white" rx="3"/>
+  <text x="305" y="168" class="code">X-RateLimit-Reset: 1609459200</text>
+  
+  <rect x="295" y="180" width="220" height="25" fill="#fff5f5" rx="3"/>
+  <text x="305" y="198" class="code">Retry-After: 60</text>
+  
+  <text x="405" y="225" text-anchor="middle" class="small">Check these headers in responses</text>
+  
+  <!-- Exponential Backoff -->
+  <rect x="540" y="50" width="250" height="180" fill="#faf5ff" rx="10"/>
+  <text x="665" y="75" text-anchor="middle" class="subtitle">Exponential Backoff</text>
+  
+  <!-- Timeline -->
+  <line x1="560" y1="180" x2="770" y2="180" stroke="#4a5568" stroke-width="2"/>
+  
+  <!-- Retry points -->
+  <circle cx="580" cy="180" r="6" fill="#e53e3e"/>
+  <text x="580" y="200" text-anchor="middle" class="small">Fail</text>
+  
+  <line x1="580" y1="170" x2="620" y2="170" stroke="#9f7aea" stroke-width="2" stroke-dasharray="4"/>
+  <text x="600" y="160" text-anchor="middle" class="small">1s</text>
+  
+  <circle cx="620" cy="180" r="6" fill="#e53e3e"/>
+  <text x="620" y="200" text-anchor="middle" class="small">Fail</text>
+  
+  <line x1="620" y1="170" x2="680" y2="170" stroke="#9f7aea" stroke-width="2" stroke-dasharray="4"/>
+  <text x="650" y="160" text-anchor="middle" class="small">2s</text>
+  
+  <circle cx="680" cy="180" r="6" fill="#e53e3e"/>
+  <text x="680" y="200" text-anchor="middle" class="small">Fail</text>
+  
+  <line x1="680" y1="170" x2="760" y2="170" stroke="#9f7aea" stroke-width="2" stroke-dasharray="4"/>
+  <text x="720" y="160" text-anchor="middle" class="small">4s</text>
+  
+  <circle cx="760" cy="180" r="6" fill="#48bb78"/>
+  <text x="760" y="200" text-anchor="middle" class="small">OK</text>
+  
+  <text x="665" y="125" text-anchor="middle" class="code">wait = 2 ** attempt</text>
+  <text x="665" y="225" text-anchor="middle" class="small">Retry: 1s, 2s, 4s, 8s...</text>
+  
+  <!-- Bottom section: Strategy summary -->
+  <rect x="20" y="250" width="760" height="130" fill="#f7fafc" rx="10"/>
+  <text x="400" y="275" text-anchor="middle" class="subtitle">Retry Strategy Summary</text>
+  
+  <!-- Status codes -->
+  <rect x="40" y="290" width="170" height="75" fill="#c6f6d5" rx="5"/>
+  <text x="125" y="310" text-anchor="middle" class="label" font-weight="bold">2xx Success</text>
+  <text x="125" y="330" text-anchor="middle" class="small">Don't retry</text>
+  <text x="125" y="350" text-anchor="middle" class="small">Request succeeded</text>
+  
+  <rect x="225" y="290" width="170" height="75" fill="#fed7d7" rx="5"/>
+  <text x="310" y="310" text-anchor="middle" class="label" font-weight="bold">4xx Client Error</text>
+  <text x="310" y="330" text-anchor="middle" class="small">Don't retry (except 429)</text>
+  <text x="310" y="350" text-anchor="middle" class="small">Fix request first</text>
+  
+  <rect x="410" y="290" width="170" height="75" fill="#feebc8" rx="5"/>
+  <text x="495" y="310" text-anchor="middle" class="label" font-weight="bold">429 Rate Limited</text>
+  <text x="495" y="330" text-anchor="middle" class="small">Wait Retry-After</text>
+  <text x="495" y="350" text-anchor="middle" class="small">Then retry</text>
+  
+  <rect x="595" y="290" width="170" height="75" fill="#e9d8fd" rx="5"/>
+  <text x="680" y="310" text-anchor="middle" class="label" font-weight="bold">5xx Server Error</text>
+  <text x="680" y="330" text-anchor="middle" class="small">Retry with backoff</text>
+  <text x="680" y="350" text-anchor="middle" class="small">Server may recover</text>
+</svg>

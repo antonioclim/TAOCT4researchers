@@ -1,0 +1,50 @@
+@startuml oauth2_flow
+!theme plain
+skinparam backgroundColor #FEFEFE
+
+title OAuth 2.0 Client Credentials Flow
+
+participant "Research\nApplication" as App
+participant "Authorization\nServer" as Auth
+participant "Resource\nServer (API)" as API
+
+== Token Request ==
+
+App -> Auth : **POST /oauth/token**\nclient_id=XXX\nclient_secret=YYY\ngrant_type=client_credentials\nscope=read:publications
+
+activate Auth
+Auth -> Auth : Validate credentials
+Auth -> Auth : Generate access token
+Auth --> App : **200 OK**\n{\n  "access_token": "eyJhbG...",\n  "token_type": "Bearer",\n  "expires_in": 3600\n}
+deactivate Auth
+
+note right of App
+  **Store token securely**
+  Cache until expires_in - 60s
+  (refresh before expiry)
+end note
+
+== API Request with Token ==
+
+App -> API : **GET /api/publications**\nAuthorization: Bearer eyJhbG...
+
+activate API
+API -> API : Validate token signature
+API -> API : Check token expiry
+API -> API : Verify scope permissions
+API --> App : **200 OK**\n{"publications": [...]}
+deactivate API
+
+== Token Refresh (if expired) ==
+
+App -> Auth : **POST /oauth/token**\n(repeat token request)
+Auth --> App : New access token
+
+note bottom of Auth
+  **Client Credentials Flow**
+  Used for machine-to-machine
+  authentication where no user
+  context is required.
+end note
+
+@enduml
