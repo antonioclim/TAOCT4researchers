@@ -8,7 +8,7 @@
 
 # THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS
 
-### A Comprehensive Educational Framework for Computational Literacy in Scientific Inquiry
+### A Thorough Educational Framework for Computational Literacy in Scientific Inquiry
 
 **Extended Edition — Fourteen Instructional Units**
 
@@ -102,7 +102,7 @@
 
 ### 1.1 Mission Statement
 
-This repository constitutes the primary educational resource accompanying *The Art of Computational Thinking for Researchers*, a comprehensive textbook designed to cultivate computational fluency amongst academic researchers across disciplinary boundaries. The materials herein represent a carefully orchestrated pedagogical intervention addressing a critical gap in contemporary research training: the systematic development of algorithmic reasoning capabilities that transcend mere programming proficiency.
+This repository constitutes the primary educational resource accompanying *The Art of Computational Thinking for Researchers*, a thorough textbook designed to cultivate computational fluency amongst academic researchers across disciplinary boundaries. The materials herein represent a carefully orchestrated pedagogical intervention addressing a critical gap in contemporary research training: the systematic development of algorithmic reasoning capabilities that transcend mere programming proficiency.
 
 The curriculum spans fourteen interconnected units, each addressing a distinct facet of computational thinking whilst maintaining rigorous attention to theoretical foundations and practical applicability. From the epistemological underpinnings of computation itself through advanced concerns of parallel processing and machine learning, the materials guide learners through a carefully scaffolded progression that respects both the intellectual depth of the subject matter and the time constraints facing working researchers.
 
@@ -122,12 +122,12 @@ Participants completing this curriculum will demonstrate mastery of:
 - Visual communication principles and publication-quality figure generation
 - Testing frameworks and continuous integration pipelines ensuring reproducibility
 - Recursive problem decomposition and dynamic programming strategies
-- Exception handling paradigms and defensive programming methodologies
+- Exception handling approaches and defensive programming methodologies
 - Data persistence mechanisms from file systems to relational databases
 - Text processing pipelines and natural language processing fundamentals
 - Web API consumption and ethical data acquisition practices
 - Machine learning workflows from preprocessing to model evaluation
-- Parallel and distributed computing paradigms for computational scalability
+- Parallel and distributed computing approaches for computational scalability
 
 **Metacognitive Awareness**
 
@@ -159,11 +159,11 @@ Several characteristics distinguish this curriculum from alternative approaches 
 | **Multi-Modal Assessment** | Learning outcomes are verified through diverse assessment modalities including automated testing, peer review and reflective writing |
 | **Reproducibility Emphasis** | Contemporary concerns regarding computational reproducibility permeate all units, culminating in dedicated treatment |
 | **Interactive Elements** | HTML-based visualisations and animations support conceptual understanding of abstract computational processes |
-| **Extended Coverage** | Fourteen units provide comprehensive treatment from foundations through advanced topics in ML and parallel computing |
+| **Extended Coverage** | Fourteen units provide complete treatment from foundations through advanced topics in ML and parallel computing |
 
 ### 1.4 Scope and Delimitations
 
-This curriculum addresses computational thinking as a cognitive framework applicable across research domains; it does not constitute a computer science degree programme nor a comprehensive introduction to any specific programming language. Python serves as the implementation vehicle throughout, selected for its readability, extensive scientific ecosystem and widespread adoption in research contexts. However, the principles and patterns addressed transfer readily to other languages and environments.
+This curriculum addresses computational thinking as a cognitive framework applicable across research domains; it does not constitute a computer science degree programme nor a full introduction to any specific programming language. Python serves as the implementation vehicle throughout, selected for its readability, extensive scientific libraries and widespread adoption in research contexts. However, the principles and patterns addressed transfer readily to other languages and environments.
 
 The materials assume basic Python competency equivalent to a single introductory course or self-directed study programme. Researchers lacking this foundation may wish to consult preparatory resources enumerated in [Section 32](#32-further-reading) before engaging with the primary curriculum.
 
@@ -173,7 +173,7 @@ The materials assume basic Python competency equivalent to a single introductory
 
 ### 2.1 Computational Thinking as a Cognitive Framework
 
-The concept of computational thinking, as articulated by Jeannette Wing and subsequently elaborated by numerous scholars, represents a distinctive mode of reasoning that extends far beyond the mechanics of programming. At its core, computational thinking encompasses the capacity to recognise problems amenable to algorithmic solution, to decompose complex challenges into tractable subproblems and to reason abstractly about computational processes without recourse to specific implementation details.
+The concept of computational thinking, as articulated by Jeannette Wing and subsequently elaborated by numerous scholars, represents a distinctive mode of reasoning that extends far beyond the mechanics of programming. Computational thinking involves the capacity to recognise problems amenable to algorithmic solution, to decompose complex challenges into tractable subproblems and to reason abstractly about computational processes without recourse to specific implementation details.
 
 This curriculum adopts a constructivist epistemology, recognising that genuine understanding emerges through active engagement with challenging material rather than passive reception of transmitted knowledge. Laboratory exercises therefore assume central importance, providing the experiential substrate upon which theoretical understanding crystallises.
 
@@ -701,7 +701,7 @@ Upon completion of this unit, participants will:
 
 Upon completion of this unit, participants will:
 
-- Construct comprehensive test suites using pytest
+- Construct thorough test suites using pytest
 - Configure continuous integration pipelines
 - Structure research projects for reproducibility
 - Document code and workflows for future researchers
@@ -962,10 +962,10 @@ end note
 
 Upon completion of this unit, participants will:
 
-- Distinguish supervised, unsupervised and reinforcement learning paradigms
+- Distinguish supervised, unsupervised and reinforcement learning approaches
 - Implement train-test splits with appropriate stratification
 - Construct ML pipelines incorporating preprocessing and modelling
-- Apply cross-validation for robust model evaluation
+- Apply cross-validation for rigorous model evaluation
 - Interpret evaluation metrics appropriate to problem types
 
 ### 17.2 Machine Learning Workflow
@@ -1018,7 +1018,7 @@ Upon completion of this unit, participants will:
 Upon completion of this unit, participants will:
 
 - Distinguish parallelism from concurrency
-- Navigate Python's Global Interpreter Lock (GIL) constraints
+- Work around Python's Global Interpreter Lock (GIL) constraints
 - Implement multiprocessing for CPU-bound workloads
 - Apply threading for I/O-bound operations
 - Scale computations using Dask for larger-than-memory datasets
@@ -1263,7 +1263,7 @@ git clone https://github.com/antonioclim/TAOCT4researchers.git
 # Or clone with SSH (if configured)
 git clone git@github.com:antonioclim/TAOCT4researchers.git
 
-# Navigate to the repository
+# Go to the repository
 cd TAOCT4researchers
 ```
 
@@ -1327,7 +1327,7 @@ Each unit may be engaged independently. The following workflow applies to any un
 ### 25.1 General Unit Workflow
 
 ```bash
-# Step 1: Navigate to the unit directory
+# Step 1: Go to the unit directory
 cd "XXUNIT - Title (keyword)"
 
 # Step 2: Review the unit README
@@ -1560,7 +1560,7 @@ pytest tests/test_lab_XX_01.py::test_specific_function -v
 - Cormen, T. H., et al. (2022). *Introduction to Algorithms* (4th ed.). MIT Press
 - Martin, R. C. (2017). *Clean Architecture*. Prentice Hall
 
-### 32.2 Python Ecosystem
+### 32.2 Python Libraries
 
 - Ramalho, L. (2022). *Fluent Python* (2nd ed.). O'Reilly Media
 - VanderPlas, J. (2016). *Python Data Science Handbook*. O'Reilly Media
@@ -1711,7 +1711,7 @@ This curriculum draws upon the foundational contributions of numerous scholars w
 
 - **Alan Turing** and **Alonzo Church** for establishing the theoretical foundations of computation
 - **Edsger Dijkstra** for contributions to algorithm design and structured programming
-- **Donald Knuth** for comprehensive treatment of algorithm analysis
+- **Donald Knuth** for complete treatment of algorithm analysis
 - **Barbara Liskov** for contributions to abstract data types and substitution principles
 - **Edward Tufte** for principles of graphical excellence
 - **Leland Wilkinson** for the grammar of graphics
@@ -1742,16 +1742,16 @@ The repository benefits from:
 
 - Extended curriculum to fourteen instructional units
 - Added Units 08-14 covering advanced topics
-- Comprehensive test coverage for all laboratories
+- Thorough test coverage for all laboratories
 - Interactive HTML presentations for each unit
-- Enhanced documentation and quick start guides
+- Improved documentation and quick start guides
 - Improved licence presentation
 
 ### 36.2 Change Log
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 4.0.0 | 2025-01 | Extended to 14 units, comprehensive revision |
+| 4.0.0 | 2025-01 | Extended to 14 units, full revision |
 | 3.2.0 | 2025-01 | Complete seven-unit curriculum |
 | 3.1.0 | 2024-12 | Added Unit 07 capstone materials |
 | 3.0.0 | 2024-11 | Major restructuring, added Units 05-06 |

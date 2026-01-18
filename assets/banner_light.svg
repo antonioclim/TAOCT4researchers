@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200">
+  <defs>
+    <linearGradient id="bg_light" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f8f9fa"/>
+      <stop offset="100%" style="stop-color:#e9ecef"/>
+    </linearGradient>
+    <linearGradient id="accent_light" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2563eb"/>
+      <stop offset="50%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#db2777"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="200" fill="url(#bg_light)"/>
+  
+  <!-- Decorative accent bar -->
+  <rect x="0" y="0" width="1200" height="4" fill="url(#accent_light)"/>
+  
+  <!-- Left decorative element -->
+  <g transform="translate(50, 50)">
+    <circle cx="50" cy="50" r="45" fill="none" stroke="#2563eb" stroke-width="2" opacity="0.3"/>
+    <circle cx="50" cy="50" r="35" fill="none" stroke="#7c3aed" stroke-width="2" opacity="0.3"/>
+    <circle cx="50" cy="50" r="25" fill="none" stroke="#db2777" stroke-width="2" opacity="0.3"/>
+    <text x="50" y="58" font-family="Arial, sans-serif" font-size="28" font-weight="bold" 
+          fill="#1e293b" text-anchor="middle">CT</text>
+  </g>
+  
+  <!-- Main title -->
+  <text x="180" y="80" font-family="Georgia, serif" font-size="32" font-weight="bold" fill="#1e293b">
+    THE ART OF COMPUTATIONAL THINKING
+  </text>
+  <text x="180" y="115" font-family="Georgia, serif" font-size="24" fill="#475569">
+    FOR RESEARCHERS
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="180" y="155" font-family="Arial, sans-serif" font-size="14" fill="#64748b">
+    Extended Edition — Fourteen Instructional Units
+  </text>
+  
+  <!-- Right side badges -->
+  <g transform="translate(900, 60)">
+    <rect x="0" y="0" width="80" height="30" rx="4" fill="#2563eb"/>
+    <text x="40" y="20" font-family="Arial, sans-serif" font-size="12" 
+          fill="#ffffff" text-anchor="middle">14 UNITS</text>
+  </g>
+  <g transform="translate(990, 60)">
+    <rect x="0" y="0" width="80" height="30" rx="4" fill="#7c3aed"/>
+    <text x="40" y="20" font-family="Arial, sans-serif" font-size="12" 
+          fill="#ffffff" text-anchor="middle">143+ HRS</text>
+  </g>
+  <g transform="translate(1080, 60)">
+    <rect x="0" y="0" width="80" height="30" rx="4" fill="#059669"/>
+    <text x="40" y="20" font-family="Arial, sans-serif" font-size="12" 
+          fill="#ffffff" text-anchor="middle">PY 3.12+</text>
+  </g>
+  
+  <!-- Author line -->
+  <text x="900" y="130" font-family="Arial, sans-serif" font-size="12" fill="#64748b">
+    Antonio Clim, Ph.D. — ASE-CSIE Bucharest
+  </text>
+  
+  <!-- Bottom accent -->
+  <rect x="0" y="196" width="1200" height="4" fill="url(#accent_light)"/>
+</svg>

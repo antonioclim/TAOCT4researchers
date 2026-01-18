@@ -1,0 +1,287 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "taoct4researchers"
+version = "5.0.0"
+description = "The Art of Computational Thinking for Researchers — Educational curriculum materials"
+readme = "README.md"
+license = {file = "LICENCE.md"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Antonio Clim", email = "antonio.clim@csie.ase.ro"}
+]
+maintainers = [
+    {name = "Antonio Clim", email = "antonio.clim@csie.ase.ro"}
+]
+keywords = [
+    "computational thinking",
+    "education",
+    "research methods",
+    "python",
+    "algorithms",
+    "data structures",
+    "scientific computing",
+    "machine learning",
+    "curriculum"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: Other/Proprietary License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering",
+    "Typing :: Typed"
+]
+
+dependencies = [
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "scipy>=1.10.0",
+]
+
+[project.optional-dependencies]
+# Unit-specific dependencies
+unit01 = []
+unit02 = []
+unit03 = ["memory-profiler>=0.60"]
+unit04 = ["networkx>=3.0"]
+unit05 = ["scipy>=1.10.0"]
+unit06 = ["plotly>=5.14.0", "kaleido>=0.2.1"]
+unit07 = ["pytest>=7.0.0", "pytest-cov>=4.0.0"]
+unit08 = []
+unit09 = ["tenacity>=8.2.0"]
+unit10 = ["sqlalchemy>=2.0.0", "msgpack>=1.0.0"]
+unit11 = ["nltk>=3.8.0", "regex>=2023.0"]
+unit12 = ["requests>=2.28.0", "flask>=2.3.0", "beautifulsoup4>=4.11.0"]
+unit13 = ["scikit-learn>=1.2.0", "joblib>=1.2.0"]
+unit14 = ["dask[complete]>=2023.1.0", "distributed>=2023.1.0"]
+
+# Aggregate installation options
+core = [
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "scipy>=1.10.0",
+    "pytest>=7.0.0",
+]
+full = [
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "scipy>=1.10.0",
+    "networkx>=3.0",
+    "plotly>=5.14.0",
+    "kaleido>=0.2.1",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "memory-profiler>=0.60",
+    "tenacity>=8.2.0",
+    "sqlalchemy>=2.0.0",
+    "msgpack>=1.0.0",
+    "nltk>=3.8.0",
+    "regex>=2023.0",
+    "requests>=2.28.0",
+    "flask>=2.3.0",
+    "beautifulsoup4>=4.11.0",
+    "scikit-learn>=1.2.0",
+    "joblib>=1.2.0",
+    "dask[complete]>=2023.1.0",
+    "distributed>=2023.1.0",
+]
+dev = [
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "pre-commit>=3.0.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-xdist>=3.0.0",
+    "sphinx>=6.0.0",
+    "sphinx-rtd-theme>=1.2.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/antonioclim/TAOCT4researchers"
+Documentation = "https://github.com/antonioclim/TAOCT4researchers#readme"
+Repository = "https://github.com/antonioclim/TAOCT4researchers.git"
+Issues = "https://github.com/antonioclim/TAOCT4researchers/issues"
+Changelog = "https://github.com/antonioclim/TAOCT4researchers/releases"
+
+# ============================================================================
+# Tool Configurations
+# ============================================================================
+
+[tool.setuptools]
+packages = []
+include-package-data = false
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # Pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+    "ARG",    # flake8-unused-arguments
+    "SIM",    # flake8-simplify
+    "TCH",    # flake8-type-checking
+    "PTH",    # flake8-use-pathlib
+    "PL",     # Pylint
+    "RUF",    # Ruff-specific
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "PLR0913", # too many arguments
+    "PLR2004", # magic value comparison
+]
+
+[tool.ruff.per-file-ignores]
+"tests/*" = ["ARG", "PLR2004"]
+"**/solutions/*" = ["ARG"]
+
+[tool.ruff.isort]
+known-first-party = ["taoct4researchers"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+follow_imports = "silent"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = [
+    "01UNIT - The Epistemology of Computation (foundations)/tests",
+    "02UNIT - Abstraction and Encapsulation (patterns)/tests",
+    "03UNIT - Algorithmic Complexity (performance)/tests",
+    "04UNIT - Advanced Data Structures (design)/tests",
+    "05UNIT - Scientific Computing (simulations)/tests",
+    "06UNIT - Visualisation for Research (communication)/tests",
+    "07UNIT - Reproducibility and Capstone (integration)/tests",
+    "08UNIT - Recursion and Dynamic Programming (algorithms)/tests",
+    "09UNIT - Exception Handling and Defensive Code (robustness)/tests",
+    "10UNIT - Data Persistence and Serialisation (storage)/tests",
+    "11UNIT - Text Processing and NLP Fundamentals (text analysis)/tests",
+    "12UNIT - Web APIs and Data Acquisition (web integration)/tests",
+    "13UNIT - Machine Learning for Researchers (ML basics)/tests",
+    "14UNIT - Parallel Computing and Scalability (performance+)/tests",
+]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--tb=short",
+    "-ra",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests requiring external services",
+    "unit01: tests for Unit 01",
+    "unit02: tests for Unit 02",
+    "unit03: tests for Unit 03",
+    "unit04: tests for Unit 04",
+    "unit05: tests for Unit 05",
+    "unit06: tests for Unit 06",
+    "unit07: tests for Unit 07",
+    "unit08: tests for Unit 08",
+    "unit09: tests for Unit 09",
+    "unit10: tests for Unit 10",
+    "unit11: tests for Unit 11",
+    "unit12: tests for Unit 12",
+    "unit13: tests for Unit 13",
+    "unit14: tests for Unit 14",
+]
+
+[tool.coverage.run]
+source = [
+    "01UNIT*/lab",
+    "02UNIT*/lab",
+    "03UNIT*/lab",
+    "04UNIT*/lab",
+    "05UNIT*/lab",
+    "06UNIT*/lab",
+    "07UNIT*/lab",
+    "08UNIT*/lab",
+    "09UNIT*/lab",
+    "10UNIT*/lab",
+    "11UNIT*/lab",
+    "12UNIT*/lab",
+    "13UNIT*/lab",
+    "14UNIT*/lab",
+]
+omit = [
+    "*/tests/*",
+    "*/solutions/*",
+    "*/__pycache__/*",
+]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+]
+fail_under = 80
+show_missing = true
+skip_covered = true
+
+[tool.black]
+line-length = 88
+target-version = ["py310", "py311", "py312"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.ruff_cache
+  | \.venv
+  | __pycache__
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["taoct4researchers"]
+skip_gitignore = true
