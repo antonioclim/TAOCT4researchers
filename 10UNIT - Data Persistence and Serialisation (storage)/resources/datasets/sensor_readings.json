@@ -1,0 +1,89 @@
+{
+  "metadata": {
+    "dataset_id": "ENV-2025-001",
+    "description": "Environmental monitoring sensor readings",
+    "created": "2025-01-15T10:00:00Z",
+    "version": "1.0.0",
+    "units": {
+      "temperature": "celsius",
+      "humidity": "percent",
+      "pressure": "hPa"
+    }
+  },
+  "sensors": [
+    {
+      "sensor_id": "T001",
+      "type": "thermometer",
+      "location": "Lab A",
+      "calibration_date": "2025-01-01"
+    },
+    {
+      "sensor_id": "H001",
+      "type": "hygrometer",
+      "location": "Lab A",
+      "calibration_date": "2025-01-01"
+    },
+    {
+      "sensor_id": "P001",
+      "type": "barometer",
+      "location": "Lab A",
+      "calibration_date": "2025-01-01"
+    }
+  ],
+  "readings": [
+    {
+      "timestamp": "2025-01-15T10:00:00Z",
+      "sensor_id": "T001",
+      "value": 22.5,
+      "quality": "valid"
+    },
+    {
+      "timestamp": "2025-01-15T10:00:00Z",
+      "sensor_id": "H001",
+      "value": 45.2,
+      "quality": "valid"
+    },
+    {
+      "timestamp": "2025-01-15T10:00:00Z",
+      "sensor_id": "P001",
+      "value": 1013.25,
+      "quality": "valid"
+    },
+    {
+      "timestamp": "2025-01-15T10:05:00Z",
+      "sensor_id": "T001",
+      "value": 22.7,
+      "quality": "valid"
+    },
+    {
+      "timestamp": "2025-01-15T10:05:00Z",
+      "sensor_id": "H001",
+      "value": 44.8,
+      "quality": "valid"
+    },
+    {
+      "timestamp": "2025-01-15T10:05:00Z",
+      "sensor_id": "P001",
+      "value": 1013.30,
+      "quality": "valid"
+    },
+    {
+      "timestamp": "2025-01-15T10:10:00Z",
+      "sensor_id": "T001",
+      "value": 22.9,
+      "quality": "valid"
+    },
+    {
+      "timestamp": "2025-01-15T10:10:00Z",
+      "sensor_id": "H001",
+      "value": 44.5,
+      "quality": "valid"
+    },
+    {
+      "timestamp": "2025-01-15T10:10:00Z",
+      "sensor_id": "P001",
+      "value": 1013.28,
+      "quality": "valid"
+    }
+  ]
+}

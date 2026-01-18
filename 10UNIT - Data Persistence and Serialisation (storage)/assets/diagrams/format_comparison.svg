@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="jsonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4FC3F7"/>
+      <stop offset="100%" style="stop-color:#0288D1"/>
+    </linearGradient>
+    <linearGradient id="csvGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#81C784"/>
+      <stop offset="100%" style="stop-color:#388E3C"/>
+    </linearGradient>
+    <linearGradient id="pickleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFB74D"/>
+      <stop offset="100%" style="stop-color:#F57C00"/>
+    </linearGradient>
+    <linearGradient id="parquetGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#BA68C8"/>
+      <stop offset="100%" style="stop-color:#7B1FA2"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#333">
+    Serialisation Format Comparison
+  </text>
+  
+  <!-- JSON Card -->
+  <g transform="translate(30, 60)">
+    <rect x="0" y="0" width="170" height="400" rx="15" fill="url(#jsonGrad)"/>
+    <text x="85" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white">JSON</text>
+    
+    <rect x="10" y="50" width="150" height="340" rx="10" fill="white" fill-opacity="0.95"/>
+    
+    <text x="85" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#0288D1">STRENGTHS</text>
+    <text x="20" y="100" font-family="Arial, sans-serif" font-size="11" fill="#333">• Human readable</text>
+    <text x="20" y="118" font-family="Arial, sans-serif" font-size="11" fill="#333">• Universal support</text>
+    <text x="20" y="136" font-family="Arial, sans-serif" font-size="11" fill="#333">• Web native</text>
+    <text x="20" y="154" font-family="Arial, sans-serif" font-size="11" fill="#333">• Hierarchical data</text>
+    
+    <text x="85" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#D32F2F">LIMITATIONS</text>
+    <text x="20" y="205" font-family="Arial, sans-serif" font-size="11" fill="#333">• No datetime type</text>
+    <text x="20" y="223" font-family="Arial, sans-serif" font-size="11" fill="#333">• No binary data</text>
+    <text x="20" y="241" font-family="Arial, sans-serif" font-size="11" fill="#333">• Text overhead</text>
+    
+    <text x="85" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#1565C0">BEST FOR</text>
+    <text x="20" y="295" font-family="Arial, sans-serif" font-size="11" fill="#333">• Configuration</text>
+    <text x="20" y="313" font-family="Arial, sans-serif" font-size="11" fill="#333">• API responses</text>
+    <text x="20" y="331" font-family="Arial, sans-serif" font-size="11" fill="#333">• Metadata</text>
+    <text x="20" y="349" font-family="Arial, sans-serif" font-size="11" fill="#333">• Small datasets</text>
+  </g>
+  
+  <!-- CSV Card -->
+  <g transform="translate(220, 60)">
+    <rect x="0" y="0" width="170" height="400" rx="15" fill="url(#csvGrad)"/>
+    <text x="85" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white">CSV</text>
+    
+    <rect x="10" y="50" width="150" height="340" rx="10" fill="white" fill-opacity="0.95"/>
+    
+    <text x="85" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#388E3C">STRENGTHS</text>
+    <text x="20" y="100" font-family="Arial, sans-serif" font-size="11" fill="#333">• Simple format</text>
+    <text x="20" y="118" font-family="Arial, sans-serif" font-size="11" fill="#333">• Spreadsheet ready</text>
+    <text x="20" y="136" font-family="Arial, sans-serif" font-size="11" fill="#333">• Universal support</text>
+    <text x="20" y="154" font-family="Arial, sans-serif" font-size="11" fill="#333">• Streamable</text>
+    
+    <text x="85" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#D32F2F">LIMITATIONS</text>
+    <text x="20" y="205" font-family="Arial, sans-serif" font-size="11" fill="#333">• No type info</text>
+    <text x="20" y="223" font-family="Arial, sans-serif" font-size="11" fill="#333">• Flat structure only</text>
+    <text x="20" y="241" font-family="Arial, sans-serif" font-size="11" fill="#333">• Delimiter issues</text>
+    
+    <text x="85" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#2E7D32">BEST FOR</text>
+    <text x="20" y="295" font-family="Arial, sans-serif" font-size="11" fill="#333">• Tabular data</text>
+    <text x="20" y="313" font-family="Arial, sans-serif" font-size="11" fill="#333">• Data exchange</text>
+    <text x="20" y="331" font-family="Arial, sans-serif" font-size="11" fill="#333">• Excel import</text>
+    <text x="20" y="349" font-family="Arial, sans-serif" font-size="11" fill="#333">• Log files</text>
+  </g>
+  
+  <!-- Pickle Card -->
+  <g transform="translate(410, 60)">
+    <rect x="0" y="0" width="170" height="400" rx="15" fill="url(#pickleGrad)"/>
+    <text x="85" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white">Pickle</text>
+    
+    <rect x="10" y="50" width="150" height="340" rx="10" fill="white" fill-opacity="0.95"/>
+    
+    <text x="85" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#F57C00">STRENGTHS</text>
+    <text x="20" y="100" font-family="Arial, sans-serif" font-size="11" fill="#333">• Any Python object</text>
+    <text x="20" y="118" font-family="Arial, sans-serif" font-size="11" fill="#333">• Fast serialisation</text>
+    <text x="20" y="136" font-family="Arial, sans-serif" font-size="11" fill="#333">• Preserves types</text>
+    <text x="20" y="154" font-family="Arial, sans-serif" font-size="11" fill="#333">• Compact binary</text>
+    
+    <text x="85" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#D32F2F">LIMITATIONS</text>
+    <text x="20" y="205" font-family="Arial, sans-serif" font-size="11" fill="#333">• ⚠️ SECURITY RISK</text>
+    <text x="20" y="223" font-family="Arial, sans-serif" font-size="11" fill="#333">• Python only</text>
+    <text x="20" y="241" font-family="Arial, sans-serif" font-size="11" fill="#333">• Version sensitive</text>
+    
+    <text x="85" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#E65100">BEST FOR</text>
+    <text x="20" y="295" font-family="Arial, sans-serif" font-size="11" fill="#333">• Checkpointing</text>
+    <text x="20" y="313" font-family="Arial, sans-serif" font-size="11" fill="#333">• Local caching</text>
+    <text x="20" y="331" font-family="Arial, sans-serif" font-size="11" fill="#333">• ML models</text>
+    <text x="20" y="349" font-family="Arial, sans-serif" font-size="11" fill="#333">• TRUSTED data</text>
+  </g>
+  
+  <!-- Parquet Card -->
+  <g transform="translate(600, 60)">
+    <rect x="0" y="0" width="170" height="400" rx="15" fill="url(#parquetGrad)"/>
+    <text x="85" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white">Parquet</text>
+    
+    <rect x="10" y="50" width="150" height="340" rx="10" fill="white" fill-opacity="0.95"/>
+    
+    <text x="85" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#7B1FA2">STRENGTHS</text>
+    <text x="20" y="100" font-family="Arial, sans-serif" font-size="11" fill="#333">• Columnar storage</text>
+    <text x="20" y="118" font-family="Arial, sans-serif" font-size="11" fill="#333">• Efficient queries</text>
+    <text x="20" y="136" font-family="Arial, sans-serif" font-size="11" fill="#333">• Great compression</text>
+    <text x="20" y="154" font-family="Arial, sans-serif" font-size="11" fill="#333">• Cross-platform</text>
+    
+    <text x="85" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#D32F2F">LIMITATIONS</text>
+    <text x="20" y="205" font-family="Arial, sans-serif" font-size="11" fill="#333">• Not human readable</text>
+    <text x="20" y="223" font-family="Arial, sans-serif" font-size="11" fill="#333">• Write-once design</text>
+    <text x="20" y="241" font-family="Arial, sans-serif" font-size="11" fill="#333">• Library required</text>
+    
+    <text x="85" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#6A1B9A">BEST FOR</text>
+    <text x="20" y="295" font-family="Arial, sans-serif" font-size="11" fill="#333">• Big data analytics</text>
+    <text x="20" y="313" font-family="Arial, sans-serif" font-size="11" fill="#333">• Data warehouses</text>
+    <text x="20" y="331" font-family="Arial, sans-serif" font-size="11" fill="#333">• ML pipelines</text>
+    <text x="20" y="349" font-family="Arial, sans-serif" font-size="11" fill="#333">• Cloud storage</text>
+  </g>
+</svg>

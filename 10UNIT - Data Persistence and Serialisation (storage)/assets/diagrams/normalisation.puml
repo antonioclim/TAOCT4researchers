@@ -1,0 +1,50 @@
+@startuml normalisation
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+title Database Normalisation Process
+
+state "Unnormalised Data" as UNF {
+    state "Repeating groups" as ug
+    state "Redundant data" as rd
+}
+
+state "First Normal Form (1NF)" as 1NF {
+    state "Atomic values only" as av
+    state "Unique rows" as ur
+}
+
+state "Second Normal Form (2NF)" as 2NF {
+    state "1NF achieved" as nf1
+    state "No partial dependencies\non composite keys" as pd
+}
+
+state "Third Normal Form (3NF)" as 3NF {
+    state "2NF achieved" as nf2
+    state "No transitive\ndependencies" as td
+}
+
+[*] --> UNF : Raw data
+
+UNF --> 1NF : Eliminate\nrepeating groups
+note right of 1NF
+    Split multi-valued
+    attributes into rows
+end note
+
+1NF --> 2NF : Remove partial\nkey dependencies
+note right of 2NF
+    Every non-key attribute
+    depends on whole key
+end note
+
+2NF --> 3NF : Remove transitive\ndependencies
+note right of 3NF
+    Non-key attributes depend
+    only on primary key
+end note
+
+3NF --> [*] : Normalised\nschema
+
+@enduml

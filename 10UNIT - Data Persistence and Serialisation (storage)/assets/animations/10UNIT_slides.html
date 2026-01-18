@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 10: Data Persistence and Serialisation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+            min-height: 100vh;
+        }
+        
+        .slide {
+            display: none;
+            min-height: 100vh;
+            padding: 40px 60px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            color: #00d4ff;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        h2 {
+            font-size: 2em;
+            color: #00d4ff;
+            margin-bottom: 25px;
+        }
+        
+        h3 {
+            font-size: 1.5em;
+            color: #7dd3fc;
+            margin-bottom: 15px;
+        }
+        
+        p, li {
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            margin-left: 40px;
+        }
+        
+        .code-block {
+            background: #0d1117;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 1em;
+            overflow-x: auto;
+            border-left: 4px solid #00d4ff;
+        }
+        
+        .code-block code {
+            color: #c9d1d9;
+        }
+        
+        .keyword { color: #ff7b72; }
+        .string { color: #a5d6ff; }
+        .function { color: #d2a8ff; }
+        .comment { color: #8b949e; }
+        .number { color: #79c0ff; }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(125, 211, 252, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 123, 114, 0.1), rgba(255, 166, 158, 0.1));
+            border: 1px solid rgba(255, 123, 114, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card h3 {
+            border-bottom: 2px solid #00d4ff;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        th {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+        
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            background: rgba(0, 212, 255, 0.2);
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background: #00d4ff;
+            color: #1a1a2e;
+        }
+        
+        .slide-counter {
+            position: fixed;
+            bottom: 35px;
+            left: 30px;
+            color: #8b949e;
+            font-size: 1em;
+        }
+        
+        .title-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .title-slide h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+        }
+        
+        .title-slide .subtitle {
+            font-size: 1.8em;
+            color: #8b949e;
+            margin-bottom: 40px;
+        }
+        
+        .quote {
+            font-style: italic;
+            color: #7dd3fc;
+            border-left: 4px solid #00d4ff;
+            padding-left: 20px;
+            margin: 30px 0;
+            font-size: 1.2em;
+        }
+        
+        .quote-author {
+            text-align: right;
+            color: #8b949e;
+            margin-top: 10px;
+        }
+        
+        .emoji {
+            font-size: 1.5em;
+        }
+        
+        .flex-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .comparison-table th:first-child,
+        .comparison-table td:first-child {
+            font-weight: bold;
+            color: #00d4ff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 1: Title -->
+    <div class="slide active title-slide" id="slide-1">
+        <h1>Unit 10</h1>
+        <div class="subtitle">Data Persistence and Serialisation</div>
+        <p style="font-size: 1.2em; color: #8b949e;">The Art of Computational Thinking for Researchers</p>
+        <p style="margin-top: 40px; color: #00d4ff;">Press → to begin</p>
+    </div>
+
+    <!-- Slide 2: Quote -->
+    <div class="slide" id="slide-2">
+        <h2>The Persistence Imperative</h2>
+        <div class="quote">
+            "Scientific computing also involves practical constraints that sometimes necessitate side effects. Large datasets may not fit entirely in memory, requiring streaming processing. Simulations may run for days or weeks, necessitating checkpointing—saving intermediate states to files."
+            <div class="quote-author">— Wilson et al., 2017</div>
+        </div>
+        <div class="highlight-box" style="margin-top: 40px;">
+            <h3>Today's Challenge</h3>
+            <p>Bridge the gap between ephemeral computation and permanent scientific record.</p>
+        </div>
+    </div>
+
+    <!-- Slide 3: Learning Objectives -->
+    <div class="slide" id="slide-3">
+        <h2>🎯 Learning Objectives</h2>
+        <ul>
+            <li><strong>Remember</strong> file modes, encodings and their use cases</li>
+            <li><strong>Understand</strong> trade-offs between human-readable and binary formats</li>
+            <li><strong>Apply</strong> pathlib and context managers for reliable file handling</li>
+            <li><strong>Analyse</strong> data storage requirements for format selection</li>
+            <li><strong>Evaluate</strong> when databases outperform flat files</li>
+            <li><strong>Create</strong> data versioning systems with checksums</li>
+        </ul>
+    </div>
+
+    <!-- Slide 4: Roadmap -->
+    <div class="slide" id="slide-4">
+        <h2>🗺️ Unit Roadmap</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Part 1: File I/O</h3>
+                <ul>
+                    <li>Text and binary modes</li>
+                    <li>Encoding specification</li>
+                    <li>Context managers</li>
+                    <li>Streaming I/O</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Part 2: Serialisation</h3>
+                <ul>
+                    <li>JSON for interchange</li>
+                    <li>CSV for tabular data</li>
+                    <li>Pickle for Python objects</li>
+                    <li>Parquet for analytics</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Part 3: Databases</h3>
+                <ul>
+                    <li>SQLite fundamentals</li>
+                    <li>Schema design</li>
+                    <li>Parameterised queries</li>
+                    <li>Transactions (ACID)</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Part 4: Versioning</h3>
+                <ul>
+                    <li>Cryptographic checksums</li>
+                    <li>Manifest files</li>
+                    <li>Change detection</li>
+                    <li>Data integrity</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: File Modes -->
+    <div class="slide" id="slide-5">
+        <h2>File Modes Explained</h2>
+        <table>
+            <tr>
+                <th>Mode</th>
+                <th>Operation</th>
+                <th>Creates?</th>
+                <th>Truncates?</th>
+                <th>Pointer</th>
+            </tr>
+            <tr><td>'r'</td><td>Read</td><td>No</td><td>No</td><td>Start</td></tr>
+            <tr><td>'w'</td><td>Write</td><td>Yes</td><td>Yes</td><td>Start</td></tr>
+            <tr><td>'a'</td><td>Append</td><td>Yes</td><td>No</td><td>End</td></tr>
+            <tr><td>'x'</td><td>Exclusive create</td><td>Yes</td><td>—</td><td>Start</td></tr>
+            <tr><td>'b'</td><td>Binary modifier</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>'+'</td><td>Read+Write</td><td>—</td><td>—</td><td>—</td></tr>
+        </table>
+    </div>
+
+    <!-- Slide 6: Context Managers -->
+    <div class="slide" id="slide-6">
+        <h2>Context Managers: The Safe Way</h2>
+        <div class="grid-2">
+            <div class="warning-box">
+                <h3>❌ Dangerous</h3>
+                <div class="code-block">
+                    <code>
+<span class="comment"># Risk: file never closes on error</span>
+f = <span class="function">open</span>(<span class="string">'data.txt'</span>, <span class="string">'r'</span>)
+content = f.read()
+f.close()  <span class="comment"># May never execute!</span>
+                    </code>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <h3>✅ Safe</h3>
+                <div class="code-block">
+                    <code>
+<span class="comment"># Guaranteed cleanup</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">'data.txt'</span>, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:
+    content = f.read()
+<span class="comment"># File automatically closed here</span>
+                    </code>
+                </div>
+            </div>
+        </div>
+        <p style="margin-top: 20px;"><strong>Always</strong> use context managers for file operations!</p>
+    </div>
+
+    <!-- Slide 7: Encoding -->
+    <div class="slide" id="slide-7">
+        <h2>⚠️ Encoding Matters</h2>
+        <div class="highlight-box">
+            <p>Without explicit encoding, Python uses <strong>platform defaults</strong>—a recipe for irreproducible behaviour!</p>
+        </div>
+        <div class="code-block">
+            <code>
+<span class="comment"># ALWAYS specify encoding explicitly</span>
+<span class="keyword">with</span> <span class="function">open</span>(filepath, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:
+    content = f.read()
+
+<span class="comment"># For binary data, NO encoding</span>
+<span class="keyword">with</span> <span class="function">open</span>(filepath, <span class="string">'rb'</span>) <span class="keyword">as</span> f:
+    data = f.read()
+            </code>
+        </div>
+        <p><strong>UTF-8</strong> is the standard for text interchange.</p>
+    </div>
+
+    <!-- Slide 8: pathlib -->
+    <div class="slide" id="slide-8">
+        <h2>Modern Path Handling: pathlib</h2>
+        <div class="code-block">
+            <code>
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+
+<span class="comment"># Create paths with / operator</span>
+data_dir = Path(<span class="string">'experiments'</span>) / <span class="string">'trial_001'</span> / <span class="string">'results'</span>
+
+<span class="comment"># Useful methods</span>
+data_dir.mkdir(parents=<span class="keyword">True</span>, exist_ok=<span class="keyword">True</span>)
+data_dir.exists()      <span class="comment"># Check existence</span>
+data_dir.is_file()     <span class="comment"># Is it a file?</span>
+data_dir.is_dir()      <span class="comment"># Is it a directory?</span>
+
+<span class="comment"># Find files</span>
+<span class="keyword">for</span> csv_file <span class="keyword">in</span> data_dir.glob(<span class="string">'*.csv'</span>):
+    <span class="function">print</span>(csv_file.name)
+            </code>
+        </div>
+    </div>
+
+    <!-- Slide 9: Streaming -->
+    <div class="slide" id="slide-9">
+        <h2>Streaming: Memory-Efficient Processing</h2>
+        <p>For files larger than RAM, process incrementally:</p>
+        <div class="code-block">
+            <code>
+<span class="keyword">def</span> <span class="function">count_words</span>(filepath: Path) -> <span class="keyword">int</span>:
+    <span class="string">"""Process file line by line, constant memory."""</span>
+    total = <span class="number">0</span>
+    
+    <span class="keyword">with</span> <span class="function">open</span>(filepath, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:
+        <span class="keyword">for</span> line <span class="keyword">in</span> f:  <span class="comment"># Iterate line by line</span>
+            total += <span class="function">len</span>(line.split())
+    
+    <span class="keyword">return</span> total
+            </code>
+        </div>
+        <div class="highlight-box">
+            <p>This pattern handles <strong>gigabyte files</strong> with minimal memory.</p>
+        </div>
+    </div>
+
+    <!-- Slide 10: JSON Introduction -->
+    <div class="slide" id="slide-10">
+        <h2>JSON: Universal Interchange</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Advantages</h3>
+                <ul>
+                    <li>Human-readable</li>
+                    <li>Language-agnostic</li>
+                    <li>Universal support</li>
+                    <li>Web-native format</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Limitations</h3>
+                <ul>
+                    <li>No datetime type</li>
+                    <li>No binary data</li>
+                    <li>Text overhead</li>
+                    <li>Parse latency</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11: JSON Code -->
+    <div class="slide" id="slide-11">
+        <h2>JSON in Python</h2>
+        <div class="code-block">
+            <code>
+<span class="keyword">import</span> json
+
+<span class="comment"># Serialise to string</span>
+data = {<span class="string">'name'</span>: <span class="string">'experiment_1'</span>, <span class="string">'values'</span>: [<span class="number">1.5</span>, <span class="number">2.3</span>, <span class="number">3.1</span>]}
+json_str = json.dumps(data, indent=<span class="number">2</span>)
+
+<span class="comment"># Save to file</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">'config.json'</span>, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:
+    json.dump(data, f, indent=<span class="number">2</span>)
+
+<span class="comment"># Load from file</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">'config.json'</span>, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:
+    loaded = json.load(f)
+            </code>
+        </div>
+    </div>
+
+    <!-- Slide 12: CSV -->
+    <div class="slide" id="slide-12">
+        <h2>CSV: Tabular Data Standard</h2>
+        <div class="code-block">
+            <code>
+<span class="keyword">import</span> csv
+
+<span class="comment"># Read as dictionaries</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">'data.csv'</span>, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>, newline=<span class="string">''</span>) <span class="keyword">as</span> f:
+    reader = csv.DictReader(f)
+    <span class="keyword">for</span> row <span class="keyword">in</span> reader:
+        <span class="function">print</span>(row[<span class="string">'sensor_id'</span>], row[<span class="string">'value'</span>])
+
+<span class="comment"># Write from dictionaries</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">'output.csv'</span>, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>, newline=<span class="string">''</span>) <span class="keyword">as</span> f:
+    writer = csv.DictWriter(f, fieldnames=[<span class="string">'id'</span>, <span class="string">'value'</span>])
+    writer.writeheader()
+    writer.writerows(data)
+            </code>
+        </div>
+        <p><strong>Note:</strong> Always use <code>newline=''</code> to prevent extra blank lines.</p>
+    </div>
+
+    <!-- Slide 13: Pickle Warning -->
+    <div class="slide" id="slide-13">
+        <h2>⚠️ Pickle: Power with Peril</h2>
+        <div class="warning-box">
+            <h3>Security Warning</h3>
+            <p><strong>NEVER unpickle data from untrusted sources!</strong></p>
+            <p>Pickle can execute arbitrary code during deserialisation.</p>
+        </div>
+        <div class="grid-2" style="margin-top: 20px;">
+            <div class="card">
+                <h3>✅ Safe Uses</h3>
+                <ul>
+                    <li>Local checkpointing</li>
+                    <li>Caching computed results</li>
+                    <li>Same-machine persistence</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>❌ Unsafe Uses</h3>
+                <ul>
+                    <li>Data from users</li>
+                    <li>Downloaded files</li>
+                    <li>Cross-system transfer</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 14: Format Comparison -->
+    <div class="slide" id="slide-14">
+        <h2>Format Comparison</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>Format</th>
+                <th>Human Readable</th>
+                <th>Type Preservation</th>
+                <th>Cross-Platform</th>
+                <th>Best For</th>
+            </tr>
+            <tr><td>JSON</td><td>✅</td><td>Partial</td><td>✅</td><td>Config, APIs</td></tr>
+            <tr><td>CSV</td><td>✅</td><td>❌</td><td>✅</td><td>Tabular data</td></tr>
+            <tr><td>Pickle</td><td>❌</td><td>✅</td><td>❌</td><td>Python objects</td></tr>
+            <tr><td>Parquet</td><td>❌</td><td>✅</td><td>✅</td><td>Large analytics</td></tr>
+            <tr><td>HDF5</td><td>❌</td><td>✅</td><td>✅</td><td>Scientific arrays</td></tr>
+        </table>
+    </div>
+
+    <!-- Slide 15: Databases Introduction -->
+    <div class="slide" id="slide-15">
+        <h2>When to Use a Database?</h2>
+        <div class="quote">
+            "Database systems epitomize this pattern, maintaining indices to accelerate queries at the cost of increased storage and update overhead."
+            <div class="quote-author">— Garcia-Molina et al., 2008</div>
+        </div>
+        <div class="grid-2" style="margin-top: 30px;">
+            <div class="card">
+                <h3>Use Flat Files When</h3>
+                <ul>
+                    <li>Single read/write</li>
+                    <li>Simple structure</li>
+                    <li>Small dataset</li>
+                    <li>Maximum portability</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Use Database When</h3>
+                <ul>
+                    <li>Complex queries</li>
+                    <li>Relational data</li>
+                    <li>Concurrent access</li>
+                    <li>Data integrity critical</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 16: SQLite -->
+    <div class="slide" id="slide-16">
+        <h2>SQLite: Database in a File</h2>
+        <div class="highlight-box">
+            <p>Self-contained, serverless, zero-configuration database engine.</p>
+        </div>
+        <div class="code-block">
+            <code>
+<span class="keyword">import</span> sqlite3
+
+<span class="comment"># Connect (creates file if needed)</span>
+conn = sqlite3.connect(<span class="string">'research.db'</span>)
+conn.row_factory = sqlite3.Row  <span class="comment"># Access by column name</span>
+
+<span class="comment"># Create table</span>
+conn.execute(<span class="string">'''
+    CREATE TABLE IF NOT EXISTS measurements (
+        id INTEGER PRIMARY KEY,
+        sensor TEXT NOT NULL,
+        value REAL NOT NULL,
+        timestamp TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+'''</span>)
+conn.commit()
+            </code>
+        </div>
+    </div>
+
+    <!-- Slide 17: SQL Injection -->
+    <div class="slide" id="slide-17">
+        <h2>🛡️ SQL Injection Prevention</h2>
+        <div class="grid-2">
+            <div class="warning-box">
+                <h3>❌ Vulnerable</h3>
+                <div class="code-block">
+                    <code>
+<span class="comment"># NEVER do this!</span>
+query = f<span class="string">"SELECT * FROM users WHERE name = '{user_input}'"</span>
+cursor.execute(query)
+                    </code>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <h3>✅ Safe</h3>
+                <div class="code-block">
+                    <code>
+<span class="comment"># Parameterised query</span>
+cursor.execute(
+    <span class="string">"SELECT * FROM users WHERE name = ?"</span>,
+    (user_input,)
+)
+                    </code>
+                </div>
+            </div>
+        </div>
+        <p style="margin-top: 20px;"><strong>Always</strong> use parameterised queries!</p>
+    </div>
+
+    <!-- Slide 18: ACID -->
+    <div class="slide" id="slide-18">
+        <h2>ACID Properties</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Atomicity</h3>
+                <p>All-or-nothing execution. If any part fails, entire transaction is rolled back.</p>
+            </div>
+            <div class="card">
+                <h3>Consistency</h3>
+                <p>Database always transitions from one valid state to another.</p>
+            </div>
+            <div class="card">
+                <h3>Isolation</h3>
+                <p>Concurrent transactions don't interfere with each other.</p>
+            </div>
+            <div class="card">
+                <h3>Durability</h3>
+                <p>Committed changes survive system failures.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 19: Normalisation -->
+    <div class="slide" id="slide-19">
+        <h2>Database Normalisation</h2>
+        <p>Systematically eliminate redundancy and anomalies:</p>
+        <table>
+            <tr>
+                <th>Normal Form</th>
+                <th>Requirement</th>
+            </tr>
+            <tr>
+                <td><strong>1NF</strong></td>
+                <td>Atomic values, unique rows</td>
+            </tr>
+            <tr>
+                <td><strong>2NF</strong></td>
+                <td>1NF + no partial dependencies on composite keys</td>
+            </tr>
+            <tr>
+                <td><strong>3NF</strong></td>
+                <td>2NF + no transitive dependencies</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Slide 20: Checksums -->
+    <div class="slide" id="slide-20">
+        <h2>Data Integrity with Checksums</h2>
+        <div class="code-block">
+            <code>
+<span class="keyword">import</span> hashlib
+
+<span class="keyword">def</span> <span class="function">compute_checksum</span>(filepath: Path) -> <span class="keyword">str</span>:
+    <span class="string">"""Compute SHA-256 checksum efficiently."""</span>
+    hasher = hashlib.sha256()
+    
+    <span class="keyword">with</span> <span class="function">open</span>(filepath, <span class="string">'rb'</span>) <span class="keyword">as</span> f:
+        <span class="keyword">for</span> chunk <span class="keyword">in</span> <span class="function">iter</span>(<span class="keyword">lambda</span>: f.read(<span class="number">65536</span>), b<span class="string">''</span>):
+            hasher.update(chunk)
+    
+    <span class="keyword">return</span> hasher.hexdigest()
+            </code>
+        </div>
+        <div class="highlight-box">
+            <p>Checksums detect any modification—even a single changed bit.</p>
+        </div>
+    </div>
+
+    <!-- Slide 21-40: Additional content slides -->
+    <div class="slide" id="slide-21">
+        <h2>Research Applications</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>🌡️ Climate Science</h3>
+                <p>NetCDF/HDF5 for multi-dimensional arrays of temperature, pressure, precipitation across spatial grids and temporal spans.</p>
+            </div>
+            <div class="card">
+                <h3>🧬 Genomics</h3>
+                <p>FASTA indices enable random access to specific sequences within multi-gigabyte genome files.</p>
+            </div>
+            <div class="card">
+                <h3>📊 Social Science</h3>
+                <p>Relational databases for longitudinal survey data with proper schema design across decades of studies.</p>
+            </div>
+            <div class="card">
+                <h3>📚 Digital Humanities</h3>
+                <p>SQLite with full-text search for corpus management and annotation layers.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 22: Common Pitfalls -->
+    <div class="slide" id="slide-22">
+        <h2>Common Pitfalls</h2>
+        <div class="grid-3">
+            <div class="warning-box">
+                <h3>Resource Leaks</h3>
+                <p>Not closing files → exhaustion</p>
+                <p><strong>Fix:</strong> Context managers</p>
+            </div>
+            <div class="warning-box">
+                <h3>Pickle Security</h3>
+                <p>Untrusted data → code execution</p>
+                <p><strong>Fix:</strong> Use JSON instead</p>
+            </div>
+            <div class="warning-box">
+                <h3>SQL Injection</h3>
+                <p>String concatenation → vulnerability</p>
+                <p><strong>Fix:</strong> Parameterised queries</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 23: Key Takeaways -->
+    <div class="slide" id="slide-23">
+        <h2>🔑 Key Takeaways</h2>
+        <ul>
+            <li><strong>Always</strong> use context managers for file operations</li>
+            <li><strong>Always</strong> specify encoding explicitly (UTF-8)</li>
+            <li><strong>Always</strong> use parameterised SQL queries</li>
+            <li><strong>Never</strong> unpickle untrusted data</li>
+            <li>Choose format based on use case, not familiarity</li>
+            <li>Checksums verify integrity but don't fix corruption</li>
+        </ul>
+    </div>
+
+    <!-- Slide 24: Lab Preview -->
+    <div class="slide" id="slide-24">
+        <h2>🧪 Lab Activities</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Lab 10.1: File I/O & Serialisation</h3>
+                <ul>
+                    <li>Text and binary file operations</li>
+                    <li>JSON with custom encoders</li>
+                    <li>CSV processing patterns</li>
+                    <li>Format benchmarking</li>
+                </ul>
+                <p><strong>Time:</strong> 90 minutes</p>
+            </div>
+            <div class="card">
+                <h3>Lab 10.2: Database Fundamentals</h3>
+                <ul>
+                    <li>SQLite schema design</li>
+                    <li>CRUD operations</li>
+                    <li>Advanced queries</li>
+                    <li>Data integrity verification</li>
+                </ul>
+                <p><strong>Time:</strong> 75 minutes</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 25: Questions -->
+    <div class="slide title-slide" id="slide-25">
+        <h1>Questions?</h1>
+        <div class="subtitle" style="margin-top: 40px;">
+            <p>Unit 10: Data Persistence and Serialisation</p>
+            <p style="color: #8b949e; margin-top: 20px;">Next: Lab Activities</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next →</button>
+    </div>
+    
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">25</span>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 25;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+        
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('current-slide').textContent = currentSlide;
+        }
+        
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+        
+        function prevSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+@startuml json_encoder_flow
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+title Custom JSON Encoder Flow
+
+start
+
+:Python Object;
+
+if (Is basic type?\n(str, int, float, bool, None)) then (yes)
+    :Standard JSON encoding;
+else (no)
+    if (Is dict?) then (yes)
+        :Encode keys & values\nrecursively;
+    else (no)
+        if (Is list/tuple?) then (yes)
+            :Encode each element\nrecursively;
+        else (no)
+            if (Is datetime?) then (yes)
+                :Convert to\nISO 8601 string;
+                :Add __type__ marker;
+            else (no)
+                if (Is Path?) then (yes)
+                    :Convert to string;
+                    :Add __type__ marker;
+                else (no)
+                    if (Is dataclass?) then (yes)
+                        :Call asdict();
+                        :Add __type__ marker;
+                    else (no)
+                        if (Has __dict__?) then (yes)
+                            :Extract __dict__;
+                            :Add __type__ marker;
+                        else (no)
+                            :Raise TypeError;
+                            stop
+                        endif
+                    endif
+                endif
+            endif
+        endif
+    endif
+endif
+
+:JSON String;
+stop
+
+@enduml

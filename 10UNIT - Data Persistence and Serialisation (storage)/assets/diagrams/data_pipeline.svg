@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A90D9"/>
+      <stop offset="100%" style="stop-color:#357ABD"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#5CB85C"/>
+      <stop offset="100%" style="stop-color:#449D44"/>
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F0AD4E"/>
+      <stop offset="100%" style="stop-color:#EC971F"/>
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#9B59B6"/>
+      <stop offset="100%" style="stop-color:#8E44AD"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Title -->
+  <text x="450" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333">
+    Research Data Persistence Pipeline
+  </text>
+  
+  <!-- Stage 1: Data Sources -->
+  <g transform="translate(50, 70)">
+    <rect x="0" y="0" width="140" height="100" rx="10" fill="url(#blueGrad)"/>
+    <text x="70" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Data Sources</text>
+    <text x="70" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">• Sensors</text>
+    <text x="70" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">• Instruments</text>
+    <text x="70" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">• APIs</text>
+  </g>
+  
+  <!-- Arrow 1 -->
+  <line x1="195" y1="120" x2="240" y2="120" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Stage 2: Ingestion -->
+  <g transform="translate(250, 70)">
+    <rect x="0" y="0" width="140" height="100" rx="10" fill="url(#greenGrad)"/>
+    <text x="70" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Ingestion</text>
+    <text x="70" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">• File I/O</text>
+    <text x="70" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">• Validation</text>
+    <text x="70" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">• Type Conversion</text>
+  </g>
+  
+  <!-- Arrow 2 -->
+  <line x1="395" y1="120" x2="440" y2="120" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Stage 3: Processing -->
+  <g transform="translate(450, 70)">
+    <rect x="0" y="0" width="140" height="100" rx="10" fill="url(#orangeGrad)"/>
+    <text x="70" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Processing</text>
+    <text x="70" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">• Transform</text>
+    <text x="70" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">• Aggregate</text>
+    <text x="70" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">• Checkpoint</text>
+  </g>
+  
+  <!-- Arrow 3 -->
+  <line x1="595" y1="120" x2="640" y2="120" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Stage 4: Storage -->
+  <g transform="translate(650, 70)">
+    <rect x="0" y="0" width="140" height="100" rx="10" fill="url(#purpleGrad)"/>
+    <text x="70" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Storage</text>
+    <text x="70" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">• SQLite DB</text>
+    <text x="70" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">• JSON/Parquet</text>
+    <text x="70" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">• Archives</text>
+  </g>
+  
+  <!-- Bottom Section: Format Selection -->
+  <g transform="translate(50, 220)">
+    <rect x="0" y="0" width="800" height="150" rx="10" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2"/>
+    <text x="400" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">Format Selection by Use Case</text>
+    
+    <!-- JSON -->
+    <g transform="translate(30, 45)">
+      <rect x="0" y="0" width="160" height="80" rx="8" fill="#e3f2fd" stroke="#2196F3" stroke-width="1"/>
+      <text x="80" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#1565C0">JSON</text>
+      <text x="80" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">Configuration</text>
+      <text x="80" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">Metadata</text>
+      <text x="80" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">API Exchange</text>
+    </g>
+    
+    <!-- CSV -->
+    <g transform="translate(220, 45)">
+      <rect x="0" y="0" width="160" height="80" rx="8" fill="#e8f5e9" stroke="#4CAF50" stroke-width="1"/>
+      <text x="80" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#2E7D32">CSV</text>
+      <text x="80" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">Tabular Data</text>
+      <text x="80" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">Spreadsheet Import</text>
+      <text x="80" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">Data Sharing</text>
+    </g>
+    
+    <!-- SQLite -->
+    <g transform="translate(410, 45)">
+      <rect x="0" y="0" width="160" height="80" rx="8" fill="#fff3e0" stroke="#FF9800" stroke-width="1"/>
+      <text x="80" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#E65100">SQLite</text>
+      <text x="80" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">Complex Queries</text>
+      <text x="80" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">Relational Data</text>
+      <text x="80" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">Transactions</text>
+    </g>
+    
+    <!-- Parquet -->
+    <g transform="translate(600, 45)">
+      <rect x="0" y="0" width="160" height="80" rx="8" fill="#f3e5f5" stroke="#9C27B0" stroke-width="1"/>
+      <text x="80" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#6A1B9A">Parquet/HDF5</text>
+      <text x="80" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">Large Datasets</text>
+      <text x="80" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">Analytics</text>
+      <text x="80" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">Columnar Access</text>
+    </g>
+  </g>
+</svg>

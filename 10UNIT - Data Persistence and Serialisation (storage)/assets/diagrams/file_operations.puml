@@ -1,0 +1,50 @@
+@startuml file_operations
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+title File Operation Lifecycle
+
+participant "Python Code" as code
+participant "Context Manager" as ctx
+participant "File Handle" as fh
+participant "Operating System" as os
+participant "Storage" as storage
+
+code -> ctx: with open(path, mode)
+activate ctx
+
+ctx -> os: open() syscall
+activate os
+os -> storage: allocate buffer
+os --> ctx: file descriptor
+deactivate os
+
+ctx -> fh: create handle
+activate fh
+ctx --> code: __enter__ returns handle
+
+code -> fh: read() / write()
+fh -> os: I/O syscall
+os -> storage: disk access
+os --> fh: data / bytes written
+fh --> code: result
+
+note right of code: Normal execution\nor exception
+
+code -> ctx: exit (normal or error)
+ctx -> fh: flush()
+fh -> os: sync buffers
+ctx -> fh: close()
+fh -> os: close() syscall
+deactivate fh
+os -> storage: release buffer
+ctx --> code: __exit__ completes
+deactivate ctx
+
+note over code,storage
+    Context manager ensures cleanup
+    even if exception occurs
+end note
+
+@enduml

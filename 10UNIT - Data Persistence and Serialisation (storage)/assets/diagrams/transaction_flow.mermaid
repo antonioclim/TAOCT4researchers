@@ -1,0 +1,40 @@
+---
+title: Database Transaction Flow
+---
+sequenceDiagram
+    participant App as Application
+    participant Conn as Connection
+    participant DB as SQLite Database
+    participant Disk as Storage
+    
+    App->>Conn: BEGIN TRANSACTION
+    activate Conn
+    Conn->>DB: Start transaction
+    DB->>DB: Create savepoint
+    
+    App->>Conn: INSERT INTO measurements
+    Conn->>DB: Execute SQL
+    DB->>DB: Write to journal
+    
+    App->>Conn: UPDATE sensors
+    Conn->>DB: Execute SQL
+    DB->>DB: Write to journal
+    
+    alt Success Path
+        App->>Conn: COMMIT
+        Conn->>DB: Commit transaction
+        DB->>Disk: Sync journal to database
+        Disk-->>DB: Write confirmed
+        DB-->>Conn: Transaction committed
+        Conn-->>App: Success
+    else Error Path
+        App->>Conn: ROLLBACK
+        Conn->>DB: Rollback transaction
+        DB->>DB: Restore from savepoint
+        DB-->>Conn: Transaction rolled back
+        Conn-->>App: Rolled back
+    end
+    
+    deactivate Conn
+    
+    Note over DB,Disk: ACID: Atomic, Consistent, Isolated, Durable
