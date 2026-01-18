@@ -1,0 +1,94 @@
+# Sample Corpus for Text Processing Exercises
+# Unit 11: Text Processing and NLP Fundamentals
+
+## Document 1: Introduction to Computational Thinking
+
+Computational thinking represents a fundamental shift in how we approach problems.
+It provides a new language for the mind, emphasising precision, abstraction and
+systematic problem-solving. This intellectual framework transcends the boundaries
+of any specific programming language or technical implementation.
+
+The value of computational thinking extends beyond specific applications to
+encompass a broader transformation in how researchers conceptualise problems.
+Traditional approaches often rely on intuition, approximation and qualitative
+reasoning. Computational thinking provides tools for precisely articulating
+models, systematically exploring implications and rigorously testing hypotheses.
+
+Keywords: computational thinking, abstraction, decomposition, algorithms
+
+## Document 2: Regular Expressions in Research
+
+Regular expressions constitute a formal language for specifying character patterns.
+Rooted in automata theory, regular expressions describe the class of regular
+languages. This theoretical grounding ensures that regex pattern matching operates
+in linear time with respect to input length.
+
+The practical utility of regular expressions extends far beyond theoretical
+elegance. They provide a concise notation for expressing patterns that would
+require extensive procedural code. A pattern like \b[A-Z][a-z]+\b captures
+capitalised words in a single expression.
+
+In literary studies, computational text analysis has uncovered authorship patterns
+and thematic developments across centuries of literature. Researchers use regex
+to extract citations, identify named entities and segment documents.
+
+Keywords: regular expressions, pattern matching, text extraction, automation
+
+## Document 3: Natural Language Processing Fundamentals
+
+Natural language processing transforms unstructured text into structured data
+suitable for computational analysis. The preprocessing pipeline typically includes
+tokenisation, normalisation, stopword removal and feature extraction.
+
+Tokenisation segments continuous text into discrete units. Word tokenisation
+handles contractions, punctuation and hyphenation. Sentence tokenisation
+addresses abbreviations and decimal points.
+
+Stemming applies rule-based affix removal to reduce words to stems. The Porter
+stemmer, published in 1980, remains widely used. Lemmatisation employs dictionary
+lookup to find canonical forms, producing valid words like "run" from "running".
+
+TF-IDF weights terms by their frequency in a document relative to their frequency
+across the corpus. High TF-IDF indicates terms that are locally frequent but
+globally rare—distinctive terms for that document.
+
+Keywords: NLP, tokenisation, stemming, lemmatisation, TF-IDF
+
+## Document 4: Text Processing for Digital Humanities
+
+Digital humanities scholars employ text processing to analyse cultural artefacts
+at unprecedented scale. Distant reading complements close reading, revealing
+patterns invisible to individual readers.
+
+Authorship attribution uses stylometric features including word frequencies,
+function word patterns and syntactic preferences. These computational fingerprints
+can identify anonymous authors and detect collaborative writing.
+
+Topic modelling algorithms discover latent themes across document collections.
+Researchers track how topics evolve over time, mapping intellectual history
+through computational analysis of textual corpora.
+
+Keywords: digital humanities, distant reading, authorship attribution, topic modelling
+
+## Document 5: Unicode and Multilingual Text
+
+Unicode provides a universal character set assigning unique code points to
+characters across all writing systems. Understanding encoding is essential
+because text files are ultimately byte sequences requiring proper interpretation.
+
+UTF-8 encodes Unicode code points using variable-length byte sequences.
+ASCII characters use single bytes, ensuring backward compatibility. UTF-8
+dominates web content and serves as the recommended encoding for text files.
+
+Unicode normalisation ensures that equivalent strings compare as equal.
+The character é can be represented as a single precomposed code point or
+as the letter e followed by a combining acute accent. NFC normalisation
+composes such sequences into canonical form.
+
+Keywords: Unicode, UTF-8, encoding, normalisation, multilingual
+
+---
+
+End of Sample Corpus
+Total Documents: 5
+Approximate Word Count: 550

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <style>
+      .bg { fill: #1a1a2e; }
+      .title { fill: #4a9eff; font-size: 22px; font-family: Arial, sans-serif; font-weight: bold; }
+      .label { fill: #eaeaea; font-size: 14px; font-family: Arial, sans-serif; }
+      .formula { fill: #ffa657; font-size: 16px; font-family: monospace; }
+      .bar-high { fill: #3fb950; }
+      .bar-med { fill: #f0883e; }
+      .bar-low { fill: #f85149; }
+      .axis { stroke: #8b949e; stroke-width: 1; }
+      .box { fill: #2d2d44; stroke: #4a9eff; stroke-width: 1; rx: 5; }
+    </style>
+  </defs>
+  
+  <rect class="bg" width="800" height="450"/>
+  
+  <text class="title" x="400" y="30" text-anchor="middle">TF-IDF: Term Frequency × Inverse Document Frequency</text>
+  
+  <!-- Formula boxes -->
+  <rect class="box" x="50" y="50" width="200" height="60"/>
+  <text class="label" x="150" y="75" text-anchor="middle">Term Frequency (TF)</text>
+  <text class="formula" x="150" y="100" text-anchor="middle">count(t,d) / |d|</text>
+  
+  <rect class="box" x="300" y="50" width="200" height="60"/>
+  <text class="label" x="400" y="75" text-anchor="middle">Inverse Doc Freq (IDF)</text>
+  <text class="formula" x="400" y="100" text-anchor="middle">log(N / df(t))</text>
+  
+  <rect class="box" x="550" y="50" width="200" height="60"/>
+  <text class="label" x="650" y="75" text-anchor="middle">TF-IDF</text>
+  <text class="formula" x="650" y="100" text-anchor="middle">TF × IDF</text>
+  
+  <!-- Example visualization -->
+  <text class="label" x="400" y="150" text-anchor="middle">Example: TF-IDF Scores for Document 1</text>
+  
+  <!-- Axis -->
+  <line class="axis" x1="100" y1="380" x2="700" y2="380"/>
+  <line class="axis" x1="100" y1="180" x2="100" y2="380"/>
+  
+  <!-- Bars -->
+  <rect class="bar-high" x="150" y="220" width="60" height="160"/>
+  <text class="label" x="180" y="400" text-anchor="middle">cat</text>
+  <text class="label" x="180" y="210" text-anchor="middle">0.56</text>
+  
+  <rect class="bar-med" x="250" y="280" width="60" height="100"/>
+  <text class="label" x="280" y="400" text-anchor="middle">sat</text>
+  <text class="label" x="280" y="270" text-anchor="middle">0.35</text>
+  
+  <rect class="bar-med" x="350" y="290" width="60" height="90"/>
+  <text class="label" x="380" y="400" text-anchor="middle">mat</text>
+  <text class="label" x="380" y="280" text-anchor="middle">0.32</text>
+  
+  <rect class="bar-low" x="450" y="350" width="60" height="30"/>
+  <text class="label" x="480" y="400" text-anchor="middle">the</text>
+  <text class="label" x="480" y="340" text-anchor="middle">0.10</text>
+  
+  <rect class="bar-low" x="550" y="355" width="60" height="25"/>
+  <text class="label" x="580" y="400" text-anchor="middle">on</text>
+  <text class="label" x="580" y="345" text-anchor="middle">0.08</text>
+  
+  <!-- Legend -->
+  <rect class="bar-high" x="620" y="200" width="20" height="15"/>
+  <text class="label" x="650" y="212">High (distinctive)</text>
+  
+  <rect class="bar-med" x="620" y="225" width="20" height="15"/>
+  <text class="label" x="650" y="237">Medium</text>
+  
+  <rect class="bar-low" x="620" y="250" width="20" height="15"/>
+  <text class="label" x="650" y="262">Low (common)</text>
+  
+  <text class="label" x="400" y="440" text-anchor="middle" style="font-size: 12px;">© 2025 Antonio Clim</text>
+</svg>

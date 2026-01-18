@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <style>
+      .bg { fill: #1a1a2e; }
+      .title { fill: #4a9eff; font-size: 24px; font-family: Arial, sans-serif; font-weight: bold; }
+      .category { fill: #58a6ff; font-size: 16px; font-family: Arial, sans-serif; font-weight: bold; }
+      .metachar { fill: #ffa657; font-size: 20px; font-family: monospace; font-weight: bold; }
+      .desc { fill: #eaeaea; font-size: 12px; font-family: Arial, sans-serif; }
+      .box { fill: #2d2d44; stroke: #4a9eff; stroke-width: 1; rx: 5; }
+    </style>
+  </defs>
+  
+  <rect class="bg" width="800" height="500"/>
+  
+  <text class="title" x="400" y="35" text-anchor="middle">Regex Metacharacters Reference</text>
+  
+  <!-- Anchors -->
+  <text class="category" x="100" y="70">Anchors</text>
+  <rect class="box" x="20" y="80" width="160" height="40"/>
+  <text class="metachar" x="40" y="105">^</text>
+  <text class="desc" x="70" y="105">Start of string</text>
+  
+  <rect class="box" x="20" y="125" width="160" height="40"/>
+  <text class="metachar" x="40" y="150">$</text>
+  <text class="desc" x="70" y="150">End of string</text>
+  
+  <rect class="box" x="20" y="170" width="160" height="40"/>
+  <text class="metachar" x="40" y="195">\b</text>
+  <text class="desc" x="75" y="195">Word boundary</text>
+  
+  <!-- Quantifiers -->
+  <text class="category" x="310" y="70">Quantifiers</text>
+  <rect class="box" x="220" y="80" width="160" height="40"/>
+  <text class="metachar" x="240" y="105">*</text>
+  <text class="desc" x="270" y="105">Zero or more</text>
+  
+  <rect class="box" x="220" y="125" width="160" height="40"/>
+  <text class="metachar" x="240" y="150">+</text>
+  <text class="desc" x="270" y="150">One or more</text>
+  
+  <rect class="box" x="220" y="170" width="160" height="40"/>
+  <text class="metachar" x="240" y="195">?</text>
+  <text class="desc" x="270" y="195">Zero or one</text>
+  
+  <rect class="box" x="220" y="215" width="160" height="40"/>
+  <text class="metachar" x="240" y="240">{n,m}</text>
+  <text class="desc" x="300" y="240">n to m times</text>
+  
+  <!-- Character Classes -->
+  <text class="category" x="520" y="70">Character Classes</text>
+  <rect class="box" x="420" y="80" width="160" height="40"/>
+  <text class="metachar" x="440" y="105">.</text>
+  <text class="desc" x="470" y="105">Any character</text>
+  
+  <rect class="box" x="420" y="125" width="160" height="40"/>
+  <text class="metachar" x="440" y="150">\d</text>
+  <text class="desc" x="480" y="150">Digit [0-9]</text>
+  
+  <rect class="box" x="420" y="170" width="160" height="40"/>
+  <text class="metachar" x="440" y="195">\w</text>
+  <text class="desc" x="480" y="195">Word char</text>
+  
+  <rect class="box" x="420" y="215" width="160" height="40"/>
+  <text class="metachar" x="440" y="240">\s</text>
+  <text class="desc" x="480" y="240">Whitespace</text>
+  
+  <!-- Groups -->
+  <text class="category" x="710" y="70">Groups</text>
+  <rect class="box" x="620" y="80" width="160" height="40"/>
+  <text class="metachar" x="640" y="105">()</text>
+  <text class="desc" x="680" y="105">Capture group</text>
+  
+  <rect class="box" x="620" y="125" width="160" height="40"/>
+  <text class="metachar" x="640" y="150">(?:)</text>
+  <text class="desc" x="695" y="150">Non-capture</text>
+  
+  <rect class="box" x="620" y="170" width="160" height="40"/>
+  <text class="metachar" x="640" y="195">|</text>
+  <text class="desc" x="670" y="195">Alternation</text>
+  
+  <!-- Special -->
+  <text class="category" x="100" y="290">Special</text>
+  <rect class="box" x="20" y="300" width="160" height="40"/>
+  <text class="metachar" x="40" y="325">[]</text>
+  <text class="desc" x="80" y="325">Character set</text>
+  
+  <rect class="box" x="20" y="345" width="160" height="40"/>
+  <text class="metachar" x="40" y="370">[^]</text>
+  <text class="desc" x="85" y="370">Negated set</text>
+  
+  <rect class="box" x="20" y="390" width="160" height="40"/>
+  <text class="metachar" x="40" y="415">\</text>
+  <text class="desc" x="70" y="415">Escape char</text>
+  
+  <!-- Assertions -->
+  <text class="category" x="310" y="290">Assertions</text>
+  <rect class="box" x="220" y="300" width="180" height="40"/>
+  <text class="metachar" x="240" y="325">(?=)</text>
+  <text class="desc" x="295" y="325">Pos lookahead</text>
+  
+  <rect class="box" x="220" y="345" width="180" height="40"/>
+  <text class="metachar" x="240" y="370">(?!)</text>
+  <text class="desc" x="295" y="370">Neg lookahead</text>
+  
+  <rect class="box" x="220" y="390" width="180" height="40"/>
+  <text class="metachar" x="240" y="415">(?&lt;=)</text>
+  <text class="desc" x="310" y="415">Pos lookbehind</text>
+  
+  <rect class="box" x="220" y="435" width="180" height="40"/>
+  <text class="metachar" x="240" y="460">(?&lt;!)</text>
+  <text class="desc" x="310" y="460">Neg lookbehind</text>
+  
+  <text class="desc" x="400" y="490" text-anchor="middle">© 2025 Antonio Clim</text>
+</svg>

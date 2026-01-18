@@ -1,0 +1,47 @@
+@startuml tokenisation_approaches
+!theme plain
+skinparam backgroundColor #1a1a2e
+skinparam defaultFontColor #eaeaea
+skinparam ArrowColor #4a9eff
+
+title Tokenisation Approaches Comparison
+
+skinparam class {
+  BackgroundColor #2d2d44
+  BorderColor #4a9eff
+  FontColor #eaeaea
+}
+
+class WhitespaceTokeniser {
+  + Fast execution
+  + Simple implementation
+  - No punctuation handling
+  - Contractions attached
+}
+
+class RegexTokeniser {
+  + Configurable patterns
+  + Good for structured data
+  - Requires pattern design
+  - May miss edge cases
+}
+
+class RuleBasedTokeniser {
+  + Handles contractions
+  + Language-aware
+  - Language-specific
+  - More complex
+}
+
+class SubwordTokeniser {
+  + Handles OOV words
+  + Used in transformers
+  - Requires training
+  - Less interpretable
+}
+
+WhitespaceTokeniser <|-- RegexTokeniser : extends
+RegexTokeniser <|-- RuleBasedTokeniser : extends
+RuleBasedTokeniser <|-- SubwordTokeniser : different approach
+
+@enduml

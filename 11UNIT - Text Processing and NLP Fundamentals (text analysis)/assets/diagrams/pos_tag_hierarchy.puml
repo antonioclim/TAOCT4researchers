@@ -1,0 +1,71 @@
+@startuml pos_tag_hierarchy
+!theme plain
+skinparam backgroundColor #1a1a2e
+skinparam defaultFontColor #eaeaea
+skinparam ArrowColor #4a9eff
+
+title Part-of-Speech Tag Hierarchy
+
+skinparam object {
+  BackgroundColor #2d2d44
+  BorderColor #4a9eff
+}
+
+object "POS Tags" as root {
+  Universal tagset
+}
+
+object "Open Classes" as open {
+  Content words
+}
+
+object "Closed Classes" as closed {
+  Function words
+}
+
+object "NOUN" as noun {
+  NN, NNS, NNP, NNPS
+}
+
+object "VERB" as verb {
+  VB, VBD, VBG, VBN, VBP, VBZ
+}
+
+object "ADJ" as adj {
+  JJ, JJR, JJS
+}
+
+object "ADV" as adv {
+  RB, RBR, RBS
+}
+
+object "DET" as det {
+  DT
+}
+
+object "PREP" as prep {
+  IN
+}
+
+object "CONJ" as conj {
+  CC
+}
+
+object "PRON" as pron {
+  PRP, PRP$, WP
+}
+
+root --> open
+root --> closed
+
+open --> noun
+open --> verb
+open --> adj
+open --> adv
+
+closed --> det
+closed --> prep
+closed --> conj
+closed --> pron
+
+@enduml

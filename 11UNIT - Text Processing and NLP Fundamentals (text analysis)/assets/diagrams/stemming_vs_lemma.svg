@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <style>
+      .bg { fill: #1a1a2e; }
+      .title { fill: #4a9eff; font-size: 22px; font-family: Arial, sans-serif; font-weight: bold; }
+      .subtitle { fill: #58a6ff; font-size: 16px; font-family: Arial, sans-serif; font-weight: bold; }
+      .word { fill: #eaeaea; font-size: 14px; font-family: Arial, sans-serif; }
+      .result-stem { fill: #ffa657; font-size: 14px; font-family: monospace; font-weight: bold; }
+      .result-lemma { fill: #3fb950; font-size: 14px; font-family: monospace; font-weight: bold; }
+      .arrow { stroke: #8b949e; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .box { fill: #2d2d44; stroke: #4a9eff; stroke-width: 1; rx: 5; }
+      .box-stem { fill: #2d2d44; stroke: #ffa657; stroke-width: 2; rx: 5; }
+      .box-lemma { fill: #2d2d44; stroke: #3fb950; stroke-width: 2; rx: 5; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8b949e"/>
+    </marker>
+  </defs>
+  
+  <rect class="bg" width="800" height="400"/>
+  
+  <text class="title" x="400" y="35" text-anchor="middle">Stemming vs Lemmatisation</text>
+  
+  <!-- Stemming column -->
+  <rect class="box-stem" x="50" y="60" width="300" height="35"/>
+  <text class="subtitle" x="200" y="85" text-anchor="middle">Stemming (Porter)</text>
+  
+  <!-- Lemmatisation column -->
+  <rect class="box-lemma" x="450" y="60" width="300" height="35"/>
+  <text class="subtitle" x="600" y="85" text-anchor="middle">Lemmatisation</text>
+  
+  <!-- Examples -->
+  <!-- Row 1: running -->
+  <rect class="box" x="100" y="110" width="100" height="30"/>
+  <text class="word" x="150" y="130" text-anchor="middle">running</text>
+  <line class="arrow" x1="205" y1="125" x2="240" y2="125"/>
+  <text class="result-stem" x="270" y="130">run</text>
+  
+  <rect class="box" x="500" y="110" width="100" height="30"/>
+  <text class="word" x="550" y="130" text-anchor="middle">running</text>
+  <line class="arrow" x1="605" y1="125" x2="640" y2="125"/>
+  <text class="result-lemma" x="670" y="130">run ✓</text>
+  
+  <!-- Row 2: studies -->
+  <rect class="box" x="100" y="155" width="100" height="30"/>
+  <text class="word" x="150" y="175" text-anchor="middle">studies</text>
+  <line class="arrow" x1="205" y1="170" x2="240" y2="170"/>
+  <text class="result-stem" x="270" y="175">studi ✗</text>
+  
+  <rect class="box" x="500" y="155" width="100" height="30"/>
+  <text class="word" x="550" y="175" text-anchor="middle">studies</text>
+  <line class="arrow" x1="605" y1="170" x2="640" y2="170"/>
+  <text class="result-lemma" x="670" y="175">study ✓</text>
+  
+  <!-- Row 3: better -->
+  <rect class="box" x="100" y="200" width="100" height="30"/>
+  <text class="word" x="150" y="220" text-anchor="middle">better</text>
+  <line class="arrow" x1="205" y1="215" x2="240" y2="215"/>
+  <text class="result-stem" x="270" y="220">better</text>
+  
+  <rect class="box" x="500" y="200" width="100" height="30"/>
+  <text class="word" x="550" y="220" text-anchor="middle">better</text>
+  <line class="arrow" x1="605" y1="215" x2="640" y2="215"/>
+  <text class="result-lemma" x="670" y="220">good ✓</text>
+  
+  <!-- Row 4: universities -->
+  <rect class="box" x="100" y="245" width="100" height="30"/>
+  <text class="word" x="150" y="265" text-anchor="middle">universities</text>
+  <line class="arrow" x1="205" y1="260" x2="240" y2="260"/>
+  <text class="result-stem" x="270" y="265">univers</text>
+  
+  <rect class="box" x="500" y="245" width="100" height="30"/>
+  <text class="word" x="550" y="265" text-anchor="middle">universities</text>
+  <line class="arrow" x1="605" y1="260" x2="640" y2="260"/>
+  <text class="result-lemma" x="670" y="265">university ✓</text>
+  
+  <!-- Summary boxes -->
+  <rect class="box-stem" x="50" y="300" width="300" height="70"/>
+  <text class="word" x="200" y="325" text-anchor="middle">✓ Fast (rule-based)</text>
+  <text class="word" x="200" y="345" text-anchor="middle">✓ No dictionary needed</text>
+  <text class="word" x="200" y="365" text-anchor="middle">✗ May produce non-words</text>
+  
+  <rect class="box-lemma" x="450" y="300" width="300" height="70"/>
+  <text class="word" x="600" y="325" text-anchor="middle">✓ Valid words output</text>
+  <text class="word" x="600" y="345" text-anchor="middle">✓ Handles irregulars</text>
+  <text class="word" x="600" y="365" text-anchor="middle">✗ Slower, needs POS</text>
+  
+  <text class="word" x="400" y="390" text-anchor="middle" style="font-size: 12px;">© 2025 Antonio Clim</text>
+</svg>
