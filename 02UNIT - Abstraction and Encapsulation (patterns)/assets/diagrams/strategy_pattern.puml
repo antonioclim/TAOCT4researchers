@@ -1,0 +1,85 @@
+@startuml strategy_pattern
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName "Segoe UI"
+
+title Strategy Pattern: Interchangeable Algorithms
+
+package "Strategy Interface" {
+    interface Strategy<T, R> <<Protocol>> {
+        +execute(data: T): R
+    }
+}
+
+package "Concrete Strategies" {
+    class ConcreteStrategyA implements Strategy {
+        +execute(data: T): R
+        --
+        Algorithm variant A
+    }
+    
+    class ConcreteStrategyB implements Strategy {
+        +execute(data: T): R
+        --
+        Algorithm variant B
+    }
+    
+    class ConcreteStrategyC implements Strategy {
+        +execute(data: T): R
+        --
+        Algorithm variant C
+    }
+}
+
+class Context {
+    -strategy: Strategy<T, R>
+    --
+    +set_strategy(s: Strategy): None
+    +execute_strategy(data: T): R
+}
+
+Context o--> Strategy : uses
+
+note right of Context
+    Client code configures
+    the strategy at runtime
+end note
+
+note bottom of Strategy
+    Defines common interface
+    for algorithm family
+end note
+
+== Research Example: Transmission Models ==
+
+interface TransmissionStrategy <<Protocol>> {
+    +transmission_rate(S, I, N, beta): float
+}
+
+class FrequencyDependent implements TransmissionStrategy {
+    +transmission_rate(S, I, N, beta): float
+    --
+    Returns: β·S·I/N
+}
+
+class DensityDependent implements TransmissionStrategy {
+    +transmission_rate(S, I, N, beta): float
+    --
+    Returns: β·S·I
+}
+
+class SaturatingTransmission implements TransmissionStrategy {
+    +transmission_rate(S, I, N, beta): float
+    --
+    Returns: β·S·I/(1+αI)
+}
+
+class SIRModel {
+    -transmission: TransmissionStrategy
+    +set_transmission(t: TransmissionStrategy)
+    +step(dt: float)
+}
+
+SIRModel o--> TransmissionStrategy
+
+@enduml
