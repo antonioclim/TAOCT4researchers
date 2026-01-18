@@ -1,0 +1,112 @@
+@startuml bfs_dfs_comparison
+' ═══════════════════════════════════════════════════════════════════════════════
+' 04UNIT: BFS vs DFS Comparison
+' Traversal State Diagrams
+' ═══════════════════════════════════════════════════════════════════════════════
+
+skinparam backgroundColor #0d1117
+skinparam defaultFontColor #c9d1d9
+skinparam defaultFontName "Segoe UI"
+skinparam shadowing false
+skinparam stateBorderColor #30363d
+skinparam stateBackgroundColor #161b22
+skinparam stateArrowColor #58a6ff
+
+title **BFS vs DFS Traversal Comparison**\nState Transitions and Order
+
+' BFS Section
+rectangle "Breadth-First Search (BFS)" as bfs_section #21262d {
+    
+    state "Queue-Based Traversal" as bfs_state {
+        state "Initialise" as bfs_init : queue ← [source]\nvisited ← {source}
+        state "Dequeue" as bfs_dequeue : u ← queue.popleft()
+        state "Process" as bfs_process : yield u
+        state "Expand" as bfs_expand : for v in neighbours(u):\n  if v not visited:\n    visited.add(v)\n    queue.append(v)
+        state "Check" as bfs_check : queue empty?
+        state "Done" as bfs_done : traversal complete
+        
+        [*] --> bfs_init
+        bfs_init --> bfs_dequeue
+        bfs_dequeue --> bfs_process
+        bfs_process --> bfs_expand
+        bfs_expand --> bfs_check
+        bfs_check --> bfs_dequeue : No
+        bfs_check --> bfs_done : Yes
+        bfs_done --> [*]
+    }
+    
+    note right of bfs_state
+      **Properties**:
+      • Explores level by level
+      • Finds shortest path (unweighted)
+      • Uses FIFO queue
+      • Memory: O(V) worst case
+      
+      **Order on Tree**:
+      ```
+            1
+          / | \
+         2  3  4
+        /|     |
+       5 6     7
+      ```
+      Visit order: 1,2,3,4,5,6,7
+    end note
+}
+
+' DFS Section  
+rectangle "Depth-First Search (DFS)" as dfs_section #21262d {
+    
+    state "Stack-Based Traversal" as dfs_state {
+        state "Initialise" as dfs_init : stack ← [source]\nvisited ← {source}
+        state "Pop" as dfs_pop : u ← stack.pop()
+        state "Process" as dfs_process : yield u
+        state "Expand" as dfs_expand : for v in neighbours(u):\n  if v not visited:\n    visited.add(v)\n    stack.append(v)
+        state "Check" as dfs_check : stack empty?
+        state "Done" as dfs_done : traversal complete
+        
+        [*] --> dfs_init
+        dfs_init --> dfs_pop
+        dfs_pop --> dfs_process
+        dfs_process --> dfs_expand
+        dfs_expand --> dfs_check
+        dfs_check --> dfs_pop : No
+        dfs_check --> dfs_done : Yes
+        dfs_done --> [*]
+    }
+    
+    note right of dfs_state
+      **Properties**:
+      • Explores depth first
+      • Finds any path (not shortest)
+      • Uses LIFO stack
+      • Memory: O(height) typical
+      
+      **Order on Tree**:
+      ```
+            1
+          / | \
+         2  5  6
+        /|     |
+       3 4     7
+      ```
+      Visit order: 1,2,3,4,5,6,7
+    end note
+}
+
+bfs_section -[hidden]-> dfs_section
+
+legend bottom
+  |= Characteristic |= BFS |= DFS |
+  | Data Structure | Queue (FIFO) | Stack (LIFO) |
+  | Traversal Pattern | Level-order | Pre-order |
+  | Path Found | Shortest (unweighted) | Any valid path |
+  | Memory Usage | O(branching^depth) | O(max depth) |
+  | Complete | Yes | Yes (finite graphs) |
+  | Use Cases | Shortest path, level traversal | Topological sort, cycle detection |
+  
+  **Complexity** (both): Time O(V + E), Space O(V)
+endlegend
+
+footer © 2025 Antonio Clim. All rights reserved.
+@enduml
