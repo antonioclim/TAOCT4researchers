@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="naiveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f85149"/>
+      <stop offset="100%" style="stop-color:#b33a3a"/>
+    </linearGradient>
+    <linearGradient id="memoGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0883e"/>
+      <stop offset="100%" style="stop-color:#b86428"/>
+    </linearGradient>
+    <linearGradient id="tabGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3fb950"/>
+      <stop offset="100%" style="stop-color:#2d8a3c"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="900" height="600" fill="url(#bgGrad)"/>
+  
+  <!-- Title -->
+  <text x="450" y="45" text-anchor="middle" fill="#58a6ff" font-family="Segoe UI, sans-serif" font-size="24" font-weight="bold">
+    Fibonacci Implementation Comparison
+  </text>
+  <text x="450" y="70" text-anchor="middle" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="14">
+    Time Complexity: Naive O(2ⁿ) vs Memoised O(n) vs Tabulated O(n)
+  </text>
+  
+  <!-- Chart Area -->
+  <g transform="translate(100, 100)">
+    <!-- Axes -->
+    <line x1="50" y1="350" x2="700" y2="350" stroke="#30363d" stroke-width="2"/>
+    <line x1="50" y1="350" x2="50" y2="50" stroke="#30363d" stroke-width="2"/>
+    
+    <!-- Y-axis labels -->
+    <text x="40" y="355" text-anchor="end" fill="#8b949e" font-family="monospace" font-size="12">0</text>
+    <text x="40" y="275" text-anchor="end" fill="#8b949e" font-family="monospace" font-size="12">10⁶</text>
+    <text x="40" y="200" text-anchor="end" fill="#8b949e" font-family="monospace" font-size="12">10⁹</text>
+    <text x="40" y="125" text-anchor="end" fill="#8b949e" font-family="monospace" font-size="12">10¹²</text>
+    <text x="40" y="55" text-anchor="end" fill="#8b949e" font-family="monospace" font-size="12">10¹⁵</text>
+    
+    <!-- Y-axis title -->
+    <text x="-30" y="200" text-anchor="middle" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="14" transform="rotate(-90, -30, 200)">
+      Function Calls (log scale)
+    </text>
+    
+    <!-- X-axis labels -->
+    <text x="120" y="375" text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="12">n=10</text>
+    <text x="230" y="375" text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="12">n=20</text>
+    <text x="340" y="375" text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="12">n=30</text>
+    <text x="450" y="375" text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="12">n=40</text>
+    <text x="560" y="375" text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="12">n=50</text>
+    
+    <!-- X-axis title -->
+    <text x="375" y="400" text-anchor="middle" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="14">
+      Input Size (n)
+    </text>
+    
+    <!-- Grid lines -->
+    <line x1="50" y1="275" x2="700" y2="275" stroke="#21262d" stroke-dasharray="5,5"/>
+    <line x1="50" y1="200" x2="700" y2="200" stroke="#21262d" stroke-dasharray="5,5"/>
+    <line x1="50" y1="125" x2="700" y2="125" stroke="#21262d" stroke-dasharray="5,5"/>
+    
+    <!-- Naive Recursive Curve (exponential growth) -->
+    <path d="M 120,340 Q 175,330 230,280 Q 285,200 340,80" 
+          fill="none" stroke="url(#naiveGrad)" stroke-width="4" stroke-linecap="round" filter="url(#shadow)"/>
+    <circle cx="120" cy="340" r="6" fill="#f85149"/>
+    <circle cx="230" cy="280" r="6" fill="#f85149"/>
+    <circle cx="340" cy="80" r="6" fill="#f85149"/>
+    
+    <!-- Vertical dashed line showing where naive becomes infeasible -->
+    <line x1="370" y1="50" x2="370" y2="350" stroke="#f85149" stroke-width="2" stroke-dasharray="8,4" opacity="0.5"/>
+    <text x="380" y="70" fill="#f85149" font-family="Segoe UI, sans-serif" font-size="11" font-style="italic">
+      Naive infeasible
+    </text>
+    
+    <!-- Memoised Curve (linear) -->
+    <path d="M 120,340 L 230,335 L 340,330 L 450,325 L 560,320" 
+          fill="none" stroke="url(#memoGrad)" stroke-width="4" stroke-linecap="round" filter="url(#shadow)"/>
+    <circle cx="120" cy="340" r="6" fill="#f0883e"/>
+    <circle cx="230" cy="335" r="6" fill="#f0883e"/>
+    <circle cx="340" cy="330" r="6" fill="#f0883e"/>
+    <circle cx="450" cy="325" r="6" fill="#f0883e"/>
+    <circle cx="560" cy="320" r="6" fill="#f0883e"/>
+    
+    <!-- Tabulated Curve (linear, slightly better constants) -->
+    <path d="M 120,342 L 230,338 L 340,334 L 450,330 L 560,326" 
+          fill="none" stroke="url(#tabGrad)" stroke-width="4" stroke-linecap="round" filter="url(#shadow)"/>
+    <circle cx="120" cy="342" r="6" fill="#3fb950"/>
+    <circle cx="230" cy="338" r="6" fill="#3fb950"/>
+    <circle cx="340" cy="334" r="6" fill="#3fb950"/>
+    <circle cx="450" cy="330" r="6" fill="#3fb950"/>
+    <circle cx="560" cy="326" r="6" fill="#3fb950"/>
+  </g>
+  
+  <!-- Legend -->
+  <g transform="translate(620, 130)">
+    <rect x="0" y="0" width="220" height="130" rx="8" fill="#0d1117" stroke="#30363d" filter="url(#shadow)"/>
+    
+    <line x1="20" y1="30" x2="50" y2="30" stroke="#f85149" stroke-width="4"/>
+    <circle cx="35" cy="30" r="5" fill="#f85149"/>
+    <text x="60" y="35" fill="#e6e6e6" font-family="Segoe UI, sans-serif" font-size="13">Naive O(2ⁿ)</text>
+    
+    <line x1="20" y1="60" x2="50" y2="60" stroke="#f0883e" stroke-width="4"/>
+    <circle cx="35" cy="60" r="5" fill="#f0883e"/>
+    <text x="60" y="65" fill="#e6e6e6" font-family="Segoe UI, sans-serif" font-size="13">Memoised O(n)</text>
+    
+    <line x1="20" y1="90" x2="50" y2="90" stroke="#3fb950" stroke-width="4"/>
+    <circle cx="35" cy="90" r="5" fill="#3fb950"/>
+    <text x="60" y="95" fill="#e6e6e6" font-family="Segoe UI, sans-serif" font-size="13">Tabulated O(n)</text>
+    
+    <text x="110" y="120" text-anchor="middle" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="10">
+      Space: O(n) | O(n) | O(1)*
+    </text>
+  </g>
+  
+  <!-- Call count annotations -->
+  <g transform="translate(100, 100)">
+    <text x="350" y="70" fill="#f85149" font-family="monospace" font-size="11" font-weight="bold">
+      ~10⁹ calls
+    </text>
+    <text x="575" y="310" fill="#f0883e" font-family="monospace" font-size="11">
+      51 calls
+    </text>
+    <text x="575" y="340" fill="#3fb950" font-family="monospace" font-size="11">
+      50 iterations
+    </text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="450" y="580" text-anchor="middle" fill="#484f58" font-family="Segoe UI, sans-serif" font-size="11">
+    08UNIT — Recursion and Dynamic Programming | © 2026 Antonio Clim
+  </text>
+</svg>

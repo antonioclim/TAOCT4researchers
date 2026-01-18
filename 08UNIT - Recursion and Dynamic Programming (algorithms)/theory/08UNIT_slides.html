@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 8: Recursion and Dynamic Programming | Computational Thinking for Researchers</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/night.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/monokai.css">
+    
+    <!-- KaTeX for mathematics -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <style>
+        :root {
+            --r-heading-color: #58a6ff;
+            --r-link-color: #79c0ff;
+            --r-selection-background-color: #264f78;
+        }
+        
+        .reveal h1, .reveal h2 { text-transform: none; }
+        
+        .reveal .slides section {
+            text-align: left;
+        }
+        
+        .hook-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-left: 4px solid #e94560;
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+        
+        .hook-box .source {
+            font-size: 0.7em;
+            color: #888;
+            margin-top: 10px;
+            font-style: normal;
+        }
+        
+        .definition-box {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            border: 1px solid #58a6ff;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .definition-box h4 {
+            color: #58a6ff;
+            margin: 0 0 10px 0;
+            font-size: 1em;
+        }
+        
+        .theorem-box {
+            background: linear-gradient(135deg, #1a472a 0%, #16213e 100%);
+            border: 1px solid #3fb950;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .theorem-box h4 {
+            color: #3fb950;
+            margin: 0 0 10px 0;
+        }
+        
+        .example-box {
+            background: linear-gradient(135deg, #3d2914 0%, #16213e 100%);
+            border: 1px solid #f0883e;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .example-box h4 {
+            color: #f0883e;
+            margin: 0 0 10px 0;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #3d1414 0%, #16213e 100%);
+            border: 1px solid #f85149;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .warning-box h4 {
+            color: #f85149;
+            margin: 0 0 10px 0;
+        }
+        
+        .diagram-box {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.65em;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+        
+        .math-display {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+        
+        .highlight-text {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .small-text {
+            font-size: 0.7em;
+            color: #8b949e;
+        }
+        
+        .reveal pre code {
+            max-height: 500px;
+        }
+        
+        .two-column {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .two-column > div {
+            flex: 1;
+        }
+        
+        .katex { font-size: 1.1em; }
+        
+        table {
+            font-size: 0.85em;
+            width: 100%;
+        }
+        
+        th {
+            background: #21262d;
+            padding: 10px;
+        }
+        
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .complexity-good { color: #3fb950; }
+        .complexity-medium { color: #f0883e; }
+        .complexity-bad { color: #f85149; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- TITLE SLIDE -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h1>Unit 8</h1>
+                <h2 style="color: #58a6ff;">Recursion and Dynamic Programming</h2>
+                <p>The Art of Computational Thinking for Researchers</p>
+                <p class="small-text">Dr. Antonio Clim | ASE-CSIE Bucharest | 2026</p>
+                
+                <aside class="notes">
+                    Welcome to Unit 8. Today we explore two of the most powerful algorithmic 
+                    paradigms: recursion and dynamic programming. These techniques transform 
+                    seemingly intractable problems into elegant, efficient solutions.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- HOOK -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>The Paradox of Elegance</h2>
+                <div class="hook-box">
+                    "In the autumn of 1952, Richard Bellman faced a dilemma. As a mathematician 
+                    at RAND Corporation during the Cold War, he needed funding for research into 
+                    multi-stage decision processes. Seeking to disguise the theoretical nature 
+                    of his work, Bellman coined the term 'dynamic programming'—a label deliberately 
+                    chosen to be meaningless yet impressive to military sponsors."
+                    <div class="source">— Bellman, R. (1984). Eye of the Hurricane: An Autobiography</div>
+                </div>
+                <p class="fragment">This "meaningless" term would become one of the most powerful 
+                algorithmic paradigms in computational science.</p>
+                
+                <aside class="notes">
+                    The irony of dynamic programming's naming perfectly captures its essence: 
+                    a seemingly simple idea that yields extraordinary power when properly applied.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- LEARNING OBJECTIVES -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>Learning Objectives</h2>
+                <p>By the end of this unit, you will be able to:</p>
+                <ol>
+                    <li class="fragment"><strong>Implement</strong> recursive solutions with appropriate base cases</li>
+                    <li class="fragment"><strong>Derive</strong> recurrence relations and analyse complexity</li>
+                    <li class="fragment"><strong>Transform</strong> naive recursion into memoised versions</li>
+                    <li class="fragment"><strong>Construct</strong> bottom-up dynamic programming solutions</li>
+                    <li class="fragment"><strong>Evaluate</strong> when to apply each optimisation strategy</li>
+                </ol>
+                
+                <aside class="notes">
+                    These objectives span cognitive levels from Apply through Evaluate, 
+                    building systematic mastery of recursive algorithmic design.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART 1: RECURSION FUNDAMENTALS -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>Part 1</h2>
+                <h3 style="color: #58a6ff;">Recursion Fundamentals</h3>
+            </section>
+            
+            <section>
+                <h2>What is Recursion?</h2>
+                <div class="definition-box">
+                    <h4>Definition: Recursive Algorithm</h4>
+                    <p>A computational procedure that solves a problem by reducing it to one or 
+                    more <em>smaller instances of the same problem</em>, with explicitly defined 
+                    base cases that terminate the recursion.</p>
+                </div>
+                <p class="fragment">Recursion embodies <strong>reductionism</strong>—defining 
+                something in terms of simpler versions of itself.</p>
+                
+                <aside class="notes">
+                    Recursion is not just a programming technique but a fundamental way of 
+                    thinking about problem decomposition.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Anatomy of Recursive Solutions</h2>
+                <div class="two-column">
+                    <div>
+                        <h4 style="color: #3fb950;">Base Case(s)</h4>
+                        <ul>
+                            <li>Simplest problem instances</li>
+                            <li>Solved directly</li>
+                            <li>Termination conditions</li>
+                            <li>At least one required</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #f0883e;">Recursive Case(s)</h4>
+                        <ul>
+                            <li>Break into subproblems</li>
+                            <li>Same problem type</li>
+                            <li>Strictly smaller</li>
+                            <li>Combine solutions</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <aside class="notes">
+                    Every recursive algorithm must have these two components. Missing or 
+                    incorrect base cases lead to infinite recursion.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Example: Factorial</h2>
+                <div class="math-display">
+                    <span class="katex">n! = \begin{cases} 1 & \text{if } n \leq 1 \\ n \times (n-1)! & \text{if } n > 1 \end{cases}</span>
+                </div>
+                <pre><code class="language-python">def factorial(n: int) -> int:
+    """Compute n! recursively."""
+    # Base case
+    if n <= 1:
+        return 1
+    
+    # Recursive case
+    return n * factorial(n - 1)</code></pre>
+                <p class="small-text fragment">Complexity: Time O(n), Space O(n) for call stack</p>
+                
+                <aside class="notes">
+                    Factorial demonstrates linear recursion—each call makes exactly one 
+                    recursive call, forming a single chain.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>The Call Stack</h2>
+                <div class="diagram-box">
+factorial(4)
+├── 4 * factorial(3)
+│   ├── 3 * factorial(2)
+│   │   ├── 2 * factorial(1)
+│   │   │   └── return 1        ← Base case
+│   │   └── return 2 * 1 = 2
+│   └── return 3 * 2 = 6
+└── return 4 * 6 = 24
+                </div>
+                <p class="fragment">Each call waits for its child to complete before returning.</p>
+                
+                <aside class="notes">
+                    Understanding the call stack is crucial for reasoning about space 
+                    complexity and potential stack overflow issues.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Recursive Patterns</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pattern</th>
+                            <th>Structure</th>
+                            <th>Time</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Linear</td>
+                            <td>One recursive call</td>
+                            <td class="complexity-good">O(n)</td>
+                            <td>Factorial</td>
+                        </tr>
+                        <tr>
+                            <td>Binary</td>
+                            <td>Two recursive calls</td>
+                            <td class="complexity-bad">O(2ⁿ)*</td>
+                            <td>Fibonacci (naive)</td>
+                        </tr>
+                        <tr>
+                            <td>Logarithmic</td>
+                            <td>Halve problem size</td>
+                            <td class="complexity-good">O(log n)</td>
+                            <td>Binary search</td>
+                        </tr>
+                        <tr>
+                            <td>Divide-and-Conquer</td>
+                            <td>Split, solve, combine</td>
+                            <td class="complexity-medium">O(n log n)</td>
+                            <td>Merge sort</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="small-text">*Without optimisation</p>
+                
+                <aside class="notes">
+                    Different recursive patterns lead to dramatically different complexity 
+                    profiles. Recognising these patterns is key to algorithm design.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- THE FIBONACCI PROBLEM -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>The Fibonacci Sequence</h2>
+                <div class="math-display">
+                    <span class="katex">F(n) = \begin{cases} 0 & \text{if } n = 0 \\ 1 & \text{if } n = 1 \\ F(n-1) + F(n-2) & \text{if } n > 1 \end{cases}</span>
+                </div>
+                <p>Sequence: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, ...</p>
+                <pre><code class="language-python">def fibonacci_naive(n: int) -> int:
+    if n <= 1:
+        return n
+    return fibonacci_naive(n - 1) + fibonacci_naive(n - 2)</code></pre>
+                
+                <aside class="notes">
+                    This elegant recursive definition hides a catastrophic inefficiency 
+                    that we will expose and fix.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>The Hidden Problem</h2>
+                <div class="diagram-box">
+                         fibonacci(5)
+                        /           \
+                   fib(4)           fib(3)
+                  /      \         /      \
+              fib(3)   fib(2)   fib(2)   fib(1)
+              /    \    /   \    /   \
+          fib(2) fib(1) ...  ... ...  ...
+          /   \
+      fib(1) fib(0)
+                </div>
+                <p class="fragment"><span class="highlight-text">Overlapping subproblems</span>: 
+                fib(3) computed twice, fib(2) computed three times...</p>
+                
+                <aside class="notes">
+                    The call tree reveals massive redundancy. This is the key insight that 
+                    motivates memoisation and dynamic programming.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Exponential Growth</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>n</th>
+                            <th>F(n)</th>
+                            <th>Function Calls</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>10</td><td>55</td><td>177</td></tr>
+                        <tr><td>20</td><td>6,765</td><td>21,891</td></tr>
+                        <tr><td>30</td><td>832,040</td><td>2,692,537</td></tr>
+                        <tr><td>40</td><td>102,334,155</td><td>331,160,281</td></tr>
+                        <tr><td>50</td><td>12,586,269,025</td><td class="complexity-bad">~40 billion</td></tr>
+                    </tbody>
+                </table>
+                <div class="warning-box fragment">
+                    <h4>⚠️ Warning</h4>
+                    <p>Computing F(50) with naive recursion would take hours or days!</p>
+                </div>
+                
+                <aside class="notes">
+                    The exponential growth makes naive recursion completely impractical 
+                    for even moderate values of n.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Recurrence Relation</h2>
+                <div class="definition-box">
+                    <h4>Time Complexity Analysis</h4>
+                    <p>For naive Fibonacci:</p>
+                    <div class="math-display">
+                        <span class="katex">T(n) = T(n-1) + T(n-2) + O(1)</span>
+                    </div>
+                    <p>Solution: <span class="katex">T(n) = O(\phi^n)</span> where <span class="katex">\phi \approx 1.618</span></p>
+                </div>
+                <p class="fragment">The golden ratio appears because the recurrence relation 
+                <em>is</em> the Fibonacci recurrence!</p>
+                
+                <aside class="notes">
+                    The mathematical analysis confirms what we observed empirically: 
+                    exponential growth in function calls.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART 2: MEMOISATION -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>Part 2</h2>
+                <h3 style="color: #58a6ff;">Memoisation</h3>
+                <p class="fragment">"Trading space for time"</p>
+            </section>
+            
+            <section>
+                <h2>The Key Insight</h2>
+                <div class="theorem-box">
+                    <h4>Observation</h4>
+                    <p>Recursion's inefficiency is not inherent to the paradigm itself, but 
+                    to implementations that fail to address <strong>redundant computation</strong>.</p>
+                </div>
+                <p class="fragment">Solution: <strong>Remember</strong> what we've already computed.</p>
+                
+                <aside class="notes">
+                    This insight is transformative. We don't need to abandon recursion; 
+                    we need to make it smarter.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Memoisation Defined</h2>
+                <div class="definition-box">
+                    <h4>Definition: Memoisation</h4>
+                    <p>An optimisation technique that stores the results of expensive function 
+                    calls and returns the cached result when the same inputs occur again.</p>
+                </div>
+                <p class="fragment">Named by Donald Michie (1968) — derived from "memorandum"</p>
+                
+                <aside class="notes">
+                    Memoisation is one of the most powerful general-purpose optimisation 
+                    techniques in computer science.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Memoised Fibonacci</h2>
+                <pre><code class="language-python">def fibonacci_memoised(n: int, memo: dict = None) -> int:
+    if memo is None:
+        memo = {}
+    
+    # Check cache first
+    if n in memo:
+        return memo[n]
+    
+    # Base cases
+    if n <= 1:
+        return n
+    
+    # Compute and cache
+    memo[n] = fibonacci_memoised(n - 1, memo) + \
+              fibonacci_memoised(n - 2, memo)
+    return memo[n]</code></pre>
+                
+                <aside class="notes">
+                    The structure is nearly identical to naive recursion, but with a 
+                    cache lookup at the start and cache storage at the end.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Dramatic Improvement</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>n</th>
+                            <th>Naive Calls</th>
+                            <th>Memoised Calls</th>
+                            <th>Speedup</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>20</td><td>21,891</td><td class="complexity-good">39</td><td>561×</td></tr>
+                        <tr><td>30</td><td>2,692,537</td><td class="complexity-good">59</td><td>45,636×</td></tr>
+                        <tr><td>40</td><td>331,160,281</td><td class="complexity-good">79</td><td>4,192,155×</td></tr>
+                        <tr><td>50</td><td>~40 billion</td><td class="complexity-good">99</td><td>~400 million×</td></tr>
+                    </tbody>
+                </table>
+                <p class="fragment">Complexity: <span class="complexity-bad">O(φⁿ)</span> → <span class="complexity-good">O(n)</span></p>
+                
+                <aside class="notes">
+                    The improvement is astronomical. This is why memoisation is so important.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Python's Built-in: @lru_cache</h2>
+                <pre><code class="language-python">from functools import lru_cache
+
+@lru_cache(maxsize=None)
+def fibonacci_lru(n: int) -> int:
+    if n <= 1:
+        return n
+    return fibonacci_lru(n - 1) + fibonacci_lru(n - 2)</code></pre>
+                <p class="fragment">LRU = Least Recently Used (eviction policy when cache is full)</p>
+                <p class="fragment small-text">Access statistics: <code>fibonacci_lru.cache_info()</code></p>
+                
+                <aside class="notes">
+                    The standard library provides a powerful, production-ready memoisation 
+                    decorator. Use it when possible.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>When Does Memoisation Help?</h2>
+                <div class="two-column">
+                    <div>
+                        <h4 style="color: #3fb950;">✓ Helps When</h4>
+                        <ul>
+                            <li>Overlapping subproblems</li>
+                            <li>Same inputs recur</li>
+                            <li>Pure functions</li>
+                            <li>Hashable arguments</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #f85149;">✗ Doesn't Help When</h4>
+                        <ul>
+                            <li>No repeated subproblems</li>
+                            <li>Side effects present</li>
+                            <li>Arguments unhashable</li>
+                            <li>Memory constrained</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <aside class="notes">
+                    Memoisation is not a universal solution. Understanding when to apply 
+                    it is as important as knowing how.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART 3: DYNAMIC PROGRAMMING -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>Part 3</h2>
+                <h3 style="color: #58a6ff;">Dynamic Programming</h3>
+                <p class="fragment">"Bottom-up construction"</p>
+            </section>
+            
+            <section>
+                <h2>Two Approaches</h2>
+                <div class="two-column">
+                    <div class="definition-box">
+                        <h4>Top-Down (Memoisation)</h4>
+                        <ul>
+                            <li>Start with original problem</li>
+                            <li>Recursively decompose</li>
+                            <li>Cache results</li>
+                            <li>Lazy evaluation</li>
+                        </ul>
+                    </div>
+                    <div class="theorem-box">
+                        <h4>Bottom-Up (Tabulation)</h4>
+                        <ul>
+                            <li>Start with base cases</li>
+                            <li>Build up iteratively</li>
+                            <li>Fill table systematically</li>
+                            <li>Eager evaluation</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <aside class="notes">
+                    Both approaches achieve the same asymptotic complexity but differ in 
+                    their implementation style and practical trade-offs.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Tabulated Fibonacci</h2>
+                <pre><code class="language-python">def fibonacci_tabulated(n: int) -> int:
+    if n <= 1:
+        return n
+    
+    # Initialise table
+    dp = [0] * (n + 1)
+    dp[0] = 0
+    dp[1] = 1
+    
+    # Fill table bottom-up
+    for i in range(2, n + 1):
+        dp[i] = dp[i - 1] + dp[i - 2]
+    
+    return dp[n]</code></pre>
+                <p class="fragment">No recursion. No function call overhead. No stack overflow risk.</p>
+                
+                <aside class="notes">
+                    The tabulated version is often faster in practice due to avoiding 
+                    recursion overhead, though both are O(n).
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Space Optimisation</h2>
+                <div class="theorem-box">
+                    <h4>Observation</h4>
+                    <p>Each Fibonacci number depends only on the <em>two previous</em> numbers. 
+                    We don't need the entire table!</p>
+                </div>
+                <pre><code class="language-python">def fibonacci_optimised(n: int) -> int:
+    if n <= 1:
+        return n
+    
+    prev2, prev1 = 0, 1
+    for _ in range(2, n + 1):
+        prev2, prev1 = prev1, prev2 + prev1
+    
+    return prev1</code></pre>
+                <p class="fragment">Space: <span class="complexity-medium">O(n)</span> → <span class="complexity-good">O(1)</span></p>
+                
+                <aside class="notes">
+                    Space optimisation is a powerful technique that often applies when 
+                    the recurrence has limited dependencies.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>The Two Key Properties</h2>
+                <div class="definition-box">
+                    <h4>1. Optimal Substructure</h4>
+                    <p>An optimal solution contains optimal solutions to its subproblems.</p>
+                </div>
+                <div class="definition-box">
+                    <h4>2. Overlapping Subproblems</h4>
+                    <p>The same subproblems are encountered multiple times during computation.</p>
+                </div>
+                <p class="fragment">Both properties must be present for DP to be applicable.</p>
+                
+                <aside class="notes">
+                    These properties are the formal criteria for when dynamic programming 
+                    provides benefit. Learn to identify them.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Bellman's Principle of Optimality</h2>
+                <div class="theorem-box">
+                    <h4>Theorem (Bellman, 1957)</h4>
+                    <p>"An optimal policy has the property that whatever the initial state 
+                    and initial decision are, the remaining decisions must constitute an 
+                    optimal policy with regard to the state resulting from the first decision."</p>
+                </div>
+                <p class="fragment">This principle enables building optimal solutions incrementally.</p>
+                
+                <aside class="notes">
+                    Bellman's principle is the mathematical foundation that justifies 
+                    the correctness of dynamic programming.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART 4: CLASSICAL DP PROBLEMS -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>Part 4</h2>
+                <h3 style="color: #58a6ff;">Classical DP Problems</h3>
+            </section>
+            
+            <section>
+                <h2>The 0-1 Knapsack Problem</h2>
+                <div class="example-box">
+                    <h4>Problem</h4>
+                    <p>Given n items with weights and values, and a knapsack with capacity W, 
+                    select items to maximise total value without exceeding capacity.</p>
+                </div>
+                <table class="fragment">
+                    <tr><th>Item</th><th>Weight</th><th>Value</th></tr>
+                    <tr><td>1</td><td>2</td><td>3</td></tr>
+                    <tr><td>2</td><td>3</td><td>4</td></tr>
+                    <tr><td>3</td><td>4</td><td>5</td></tr>
+                    <tr><td>4</td><td>5</td><td>6</td></tr>
+                </table>
+                <p class="fragment">Capacity W = 8. What's the maximum value?</p>
+                
+                <aside class="notes">
+                    The knapsack problem is a canonical example of constrained optimisation 
+                    with countless real-world applications.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Knapsack: State Transition</h2>
+                <div class="definition-box">
+                    <h4>State Definition</h4>
+                    <p><span class="katex">dp[i][w]</span> = maximum value using items 1..i with capacity w</p>
+                </div>
+                <div class="math-display fragment">
+                    <span class="katex">dp[i][w] = \max\begin{cases} dp[i-1][w] & \text{(exclude item i)} \\ v_i + dp[i-1][w-w_i] & \text{(include item i)} \end{cases}</span>
+                </div>
+                
+                <aside class="notes">
+                    The state transition captures the fundamental choice: include or exclude 
+                    each item. This is the essence of the 0-1 designation.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Knapsack: Implementation</h2>
+                <pre><code class="language-python">def knapsack(weights, values, capacity):
+    n = len(weights)
+    dp = [[0] * (capacity + 1) for _ in range(n + 1)]
+    
+    for i in range(1, n + 1):
+        for w in range(1, capacity + 1):
+            if weights[i-1] > w:
+                dp[i][w] = dp[i-1][w]
+            else:
+                dp[i][w] = max(
+                    dp[i-1][w],
+                    values[i-1] + dp[i-1][w - weights[i-1]]
+                )
+    
+    return dp[n][capacity]</code></pre>
+                <p class="fragment">Complexity: Time O(nW), Space O(nW)</p>
+                
+                <aside class="notes">
+                    This is pseudo-polynomial complexity—polynomial in the numeric value 
+                    of W, not its bit length.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Longest Common Subsequence</h2>
+                <div class="example-box">
+                    <h4>Problem</h4>
+                    <p>Find the longest subsequence common to two strings.</p>
+                </div>
+                <p class="fragment">Example: LCS("ABCDGH", "AEDFHR") = "ADH"</p>
+                <div class="math-display fragment">
+                    <span class="katex">dp[i][j] = \begin{cases} dp[i-1][j-1] + 1 & \text{if } s_1[i] = s_2[j] \\ \max(dp[i-1][j], dp[i][j-1]) & \text{otherwise} \end{cases}</span>
+                </div>
+                
+                <aside class="notes">
+                    LCS is fundamental to bioinformatics (sequence alignment) and 
+                    text comparison (diff algorithms).
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Edit Distance (Levenshtein)</h2>
+                <div class="example-box">
+                    <h4>Problem</h4>
+                    <p>Minimum single-character edits (insert, delete, substitute) to 
+                    transform one string into another.</p>
+                </div>
+                <p class="fragment">Example: edit_distance("kitten", "sitting") = 3</p>
+                <ol class="fragment small-text">
+                    <li>kitten → sitten (substitute k→s)</li>
+                    <li>sitten → sittin (substitute e→i)</li>
+                    <li>sittin → sitting (insert g)</li>
+                </ol>
+                
+                <aside class="notes">
+                    Edit distance is used in spell checkers, DNA analysis, and 
+                    plagiarism detection.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Matrix Chain Multiplication</h2>
+                <div class="example-box">
+                    <h4>Problem</h4>
+                    <p>Find optimal parenthesisation for multiplying matrices A₁ × A₂ × ... × Aₙ 
+                    to minimise scalar multiplications.</p>
+                </div>
+                <p class="fragment">Different parenthesisations yield dramatically different costs!</p>
+                <p class="fragment small-text">Example: For 10×30, 30×5, 5×60 matrices:</p>
+                <ul class="fragment small-text">
+                    <li>(A₁ × A₂) × A₃ = 10×30×5 + 10×5×60 = 4,500</li>
+                    <li>A₁ × (A₂ × A₃) = 30×5×60 + 10×30×60 = 27,000</li>
+                </ul>
+                
+                <aside class="notes">
+                    This problem appears in database query optimisation and 
+                    computational physics simulations.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART 5: DIVIDE AND CONQUER -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>Part 5</h2>
+                <h3 style="color: #58a6ff;">Divide-and-Conquer</h3>
+            </section>
+            
+            <section>
+                <h2>The Paradigm</h2>
+                <div class="definition-box">
+                    <h4>Divide-and-Conquer</h4>
+                    <ol>
+                        <li><strong>Divide</strong>: Split problem into smaller subproblems</li>
+                        <li><strong>Conquer</strong>: Solve subproblems recursively</li>
+                        <li><strong>Combine</strong>: Merge solutions into final answer</li>
+                    </ol>
+                </div>
+                <p class="fragment">Key difference from DP: subproblems are <em>independent</em> (non-overlapping)</p>
+                
+                <aside class="notes">
+                    Divide-and-conquer and DP are related but distinct. D&C doesn't benefit 
+                    from memoisation because subproblems don't repeat.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Merge Sort</h2>
+                <pre><code class="language-python">def merge_sort(arr: list) -> list:
+    if len(arr) <= 1:
+        return arr.copy()
+    
+    # Divide
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    
+    # Combine
+    return merge(left, right)</code></pre>
+                <div class="math-display fragment">
+                    <span class="katex">T(n) = 2T(n/2) + O(n) \Rightarrow T(n) = O(n \log n)</span>
+                </div>
+                
+                <aside class="notes">
+                    Merge sort is the quintessential divide-and-conquer algorithm, 
+                    guaranteed O(n log n) regardless of input.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Binary Search</h2>
+                <pre><code class="language-python">def binary_search(arr, target, low=0, high=None):
+    if high is None:
+        high = len(arr) - 1
+    
+    if low > high:
+        return -1  # Not found
+    
+    mid = (low + high) // 2
+    
+    if arr[mid] == target:
+        return mid
+    elif arr[mid] > target:
+        return binary_search(arr, target, low, mid - 1)
+    else:
+        return binary_search(arr, target, mid + 1, high)</code></pre>
+                <p class="fragment">Complexity: O(log n) — each call halves the search space</p>
+                
+                <aside class="notes">
+                    Binary search demonstrates logarithmic recursion—extraordinarily 
+                    efficient even for massive datasets.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>The Master Theorem</h2>
+                <div class="theorem-box">
+                    <h4>Master Theorem</h4>
+                    <p>For recurrences <span class="katex">T(n) = aT(n/b) + f(n)</span>:</p>
+                    <ol>
+                        <li>If <span class="katex">f(n) = O(n^{\log_b a - \epsilon})</span>: <span class="katex">T(n) = \Theta(n^{\log_b a})</span></li>
+                        <li>If <span class="katex">f(n) = \Theta(n^{\log_b a})</span>: <span class="katex">T(n) = \Theta(n^{\log_b a} \log n)</span></li>
+                        <li>If <span class="katex">f(n) = \Omega(n^{\log_b a + \epsilon})</span>: <span class="katex">T(n) = \Theta(f(n))</span></li>
+                    </ol>
+                </div>
+                
+                <aside class="notes">
+                    The Master Theorem provides a mechanical way to solve many common 
+                    recurrence relations arising from divide-and-conquer algorithms.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART 6: BACKTRACKING -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>Part 6</h2>
+                <h3 style="color: #58a6ff;">Backtracking</h3>
+            </section>
+            
+            <section>
+                <h2>Systematic Search</h2>
+                <div class="definition-box">
+                    <h4>Backtracking</h4>
+                    <p>Incrementally build candidates for solutions, abandoning ("backtracking" from) 
+                    candidates as soon as they cannot possibly lead to a valid solution.</p>
+                </div>
+                <p class="fragment">Key idea: <strong>Pruning</strong> eliminates vast portions of the search space.</p>
+                
+                <aside class="notes">
+                    Backtracking is the go-to technique for constraint satisfaction 
+                    and combinatorial enumeration problems.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>N-Queens Problem</h2>
+                <div class="example-box">
+                    <h4>Problem</h4>
+                    <p>Place n queens on an n×n chessboard such that no two queens threaten each other.</p>
+                </div>
+                <div class="diagram-box fragment">
+  . Q . .        For n=4, there are
+  . . . Q        exactly 2 solutions.
+  Q . . .
+  . . Q .
+                </div>
+                
+                <aside class="notes">
+                    N-Queens is a classic constraint satisfaction problem that 
+                    demonstrates the power of backtracking with pruning.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Backtracking Template</h2>
+                <pre><code class="language-python">def solve_n_queens(n: int) -> list[list[int]]:
+    solutions = []
+    
+    def is_safe(queens, row, col):
+        for prev_row, prev_col in enumerate(queens):
+            if prev_col == col:
+                return False  # Same column
+            if abs(prev_row - row) == abs(prev_col - col):
+                return False  # Same diagonal
+        return True
+    
+    def backtrack(queens):
+        row = len(queens)
+        if row == n:
+            solutions.append(queens.copy())
+            return
+        
+        for col in range(n):
+            if is_safe(queens, row, col):
+                queens.append(col)
+                backtrack(queens)
+                queens.pop()  # Backtrack!
+    
+    backtrack([])
+    return solutions</code></pre>
+                
+                <aside class="notes">
+                    The key insight is the systematic exploration with early pruning. 
+                    Invalid partial solutions are abandoned immediately.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- SUMMARY AND NEXT STEPS -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>Summary: Choosing the Right Approach</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Approach</th>
+                            <th>When to Use</th>
+                            <th>Trade-offs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Naive Recursion</td>
+                            <td>Small inputs, prototyping</td>
+                            <td>Clear but potentially exponential</td>
+                        </tr>
+                        <tr>
+                            <td>Memoisation</td>
+                            <td>Overlapping subproblems</td>
+                            <td>Space for time, maintains recursion</td>
+                        </tr>
+                        <tr>
+                            <td>Tabulation</td>
+                            <td>All subproblems needed</td>
+                            <td>No stack overflow, can optimise space</td>
+                        </tr>
+                        <tr>
+                            <td>Divide-and-Conquer</td>
+                            <td>Independent subproblems</td>
+                            <td>Natural parallelisation</td>
+                        </tr>
+                        <tr>
+                            <td>Backtracking</td>
+                            <td>Constraint satisfaction</td>
+                            <td>Pruning effectiveness varies</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <aside class="notes">
+                    Selecting the right approach requires understanding both the problem 
+                    structure and the computational constraints.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Key Takeaways</h2>
+                <ol>
+                    <li class="fragment"><strong>Recursion</strong> is a powerful way of thinking, not just a technique</li>
+                    <li class="fragment"><strong>Overlapping subproblems</strong> signal opportunity for optimisation</li>
+                    <li class="fragment"><strong>Memoisation</strong> transforms exponential → polynomial with minimal code changes</li>
+                    <li class="fragment"><strong>Dynamic programming</strong> builds solutions systematically from base cases</li>
+                    <li class="fragment"><strong>Space optimisation</strong> is often possible when dependencies are limited</li>
+                </ol>
+                
+                <aside class="notes">
+                    These principles will serve you throughout your computational 
+                    research career.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Laboratory Preview</h2>
+                <div class="two-column">
+                    <div>
+                        <h4>Lab 08.01: Recursive Patterns</h4>
+                        <ul class="small-text">
+                            <li>Factorial and Fibonacci</li>
+                            <li>Tree traversals</li>
+                            <li>Divide-and-conquer sorting</li>
+                            <li>Backtracking: N-Queens</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Lab 08.02: Dynamic Programming</h4>
+                        <ul class="small-text">
+                            <li>0-1 Knapsack</li>
+                            <li>Longest Common Subsequence</li>
+                            <li>Edit Distance</li>
+                            <li>Matrix Chain Multiplication</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <aside class="notes">
+                    The labs provide hands-on experience with all the concepts 
+                    covered in this lecture.
+                </aside>
+            </section>
+            
+            <section>
+                <h2>Questions?</h2>
+                <p style="text-align: center; margin-top: 100px;">
+                    <span style="font-size: 4em;">🤔</span>
+                </p>
+                <p class="small-text" style="text-align: center; margin-top: 50px;">
+                    Next: Lab 08.01 — Recursive Patterns and Memoisation
+                </p>
+            </section>
+            
+            <section>
+                <h2>References</h2>
+                <ul class="small-text">
+                    <li>Bellman, R. (1957). <em>Dynamic Programming</em>. Princeton University Press.</li>
+                    <li>Cormen, T. H., et al. (2009). <em>Introduction to Algorithms</em> (3rd ed.). MIT Press.</li>
+                    <li>Sedgewick, R., & Wayne, K. (2011). <em>Algorithms</em> (4th ed.). Addison-Wesley.</li>
+                    <li>Kleinberg, J., & Tardos, É. (2006). <em>Algorithm Design</em>. Pearson.</li>
+                </ul>
+                <p class="small-text" style="margin-top: 30px;">
+                    © 2026 Dr. Antonio Clim | ASE-CSIE Bucharest
+                </p>
+            </section>
+            
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/math/math.js"></script>
+    
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            transition: 'slide',
+            plugins: [ RevealNotes, RevealHighlight, RevealMath.KaTeX ]
+        });
+    </script>
+</body>
+</html>

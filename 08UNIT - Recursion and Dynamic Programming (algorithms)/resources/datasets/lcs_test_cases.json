@@ -1,0 +1,61 @@
+{
+  "description": "Test cases for Longest Common Subsequence problem",
+  "test_cases": [
+    {
+      "name": "classic",
+      "s1": "ABCDGH",
+      "s2": "AEDFHR",
+      "expected_length": 3,
+      "expected_lcs": "ADH"
+    },
+    {
+      "name": "identical",
+      "s1": "ALGORITHM",
+      "s2": "ALGORITHM",
+      "expected_length": 9,
+      "expected_lcs": "ALGORITHM"
+    },
+    {
+      "name": "no_common",
+      "s1": "ABC",
+      "s2": "XYZ",
+      "expected_length": 0,
+      "expected_lcs": ""
+    },
+    {
+      "name": "subsequence",
+      "s1": "AGGTAB",
+      "s2": "GXTXAYB",
+      "expected_length": 4,
+      "expected_lcs": "GTAB"
+    },
+    {
+      "name": "single_match",
+      "s1": "A",
+      "s2": "A",
+      "expected_length": 1,
+      "expected_lcs": "A"
+    },
+    {
+      "name": "empty",
+      "s1": "",
+      "s2": "ABC",
+      "expected_length": 0,
+      "expected_lcs": ""
+    },
+    {
+      "name": "bioinformatics",
+      "s1": "ACGTACGT",
+      "s2": "TACGTAGC",
+      "expected_length": 6,
+      "note": "DNA sequence comparison"
+    },
+    {
+      "name": "programming",
+      "s1": "DYNAMIC",
+      "s2": "PROGRAMMING",
+      "expected_length": 4,
+      "expected_lcs": "NAMI"
+    }
+  ]
+}

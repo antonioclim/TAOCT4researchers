@@ -1,0 +1,59 @@
+@startuml optimal_substructure
+!theme cyborg
+skinparam backgroundColor #1a1a2e
+skinparam defaultFontColor #e6e6e6
+skinparam ArrowColor #58a6ff
+skinparam rectangleBorderColor #58a6ff
+skinparam noteBorderColor #3fb950
+skinparam noteBackgroundColor #0d1117
+
+title <color:#58a6ff>Optimal Substructure Principle</color>\nFoundation of Dynamic Programming
+
+rectangle "<b>Original Problem</b>\nOptimal(A, B)" as original #0f3460 {
+}
+
+rectangle "<b>Subproblem 1</b>\nOptimal(A', B')" as sub1 #16213e {
+}
+
+rectangle "<b>Subproblem 2</b>\nOptimal(A'', B'')" as sub2 #16213e {
+}
+
+rectangle "<b>Base Cases</b>\nTrivial Solutions" as base #1a472a {
+}
+
+original --> sub1 : decompose
+original --> sub2 : decompose
+sub1 --> base : recursive\ndecomposition
+sub2 --> base : recursive\ndecomposition
+base --> sub1 : build up
+sub1 --> original : combine
+sub2 --> original : combine
+
+note right of original
+  <b>Key Property:</b>
+  An optimal solution to the
+  original problem contains
+  optimal solutions to subproblems.
+end note
+
+note right of base #0d1117
+  <b>Examples:</b>
+  • Fibonacci: F(0)=0, F(1)=1
+  • Knapsack: dp[0][w]=0
+  • LCS: dp[0][j]=0, dp[i][0]=0
+end note
+
+note bottom of sub1 #0d1117
+  <b>Overlapping Property:</b>
+  Same subproblems appear
+  multiple times — cache results!
+end note
+
+legend right
+  |= Approach |= Direction |= Storage |
+  | Memoisation | Top-down | Dictionary/Cache |
+  | Tabulation | Bottom-up | Array/Table |
+end legend
+
+footer 08UNIT — Recursion and Dynamic Programming | © 2026 Antonio Clim
+@enduml
