@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <defs>
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3fb950"/>
+      <stop offset="100%" style="stop-color:#58a6ff"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect x="0" y="0" width="200" height="60" rx="8" fill="#21262d"/>
+  
+  <!-- Unit number badge -->
+  <rect x="8" y="8" width="50" height="44" rx="6" fill="url(#badgeGrad)"/>
+  <text x="33" y="38" text-anchor="middle" fill="#0d1117" font-family="Segoe UI, sans-serif" font-size="20" font-weight="700">07</text>
+  
+  <!-- Text -->
+  <text x="68" y="25" fill="#e6edf3" font-family="Segoe UI, sans-serif" font-size="12" font-weight="600">UNIT</text>
+  <text x="68" y="42" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="10">Reproducibility</text>
+  <text x="68" y="54" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="9">&amp; Capstone</text>
+</svg>

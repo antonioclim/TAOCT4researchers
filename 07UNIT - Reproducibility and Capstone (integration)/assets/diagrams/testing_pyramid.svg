@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 550" width="800" height="550">
+  <defs>
+    <!-- Gradient for unit tests (base) -->
+    <linearGradient id="unitGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#27ae60;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2ecc71;stop-opacity:1" />
+    </linearGradient>
+    <!-- Gradient for integration tests (middle) -->
+    <linearGradient id="integrationGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f39c12;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f1c40f;stop-opacity:1" />
+    </linearGradient>
+    <!-- Gradient for e2e tests (top) -->
+    <linearGradient id="e2eGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#e74c3c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1" />
+    </linearGradient>
+    <!-- Drop shadow -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="3" dy="3" stdDeviation="4" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="550" fill="#1a1a2e"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#fff">
+    The Testing Pyramid
+  </text>
+  <text x="400" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#888">
+    Balancing test types for effective quality assurance
+  </text>
+  
+  <!-- Pyramid structure -->
+  <g transform="translate(150, 90)" filter="url(#shadow)">
+    <!-- E2E Tests (top) -->
+    <polygon points="250,0 325,100 175,100" fill="url(#e2eGrad)" stroke="#c0392b" stroke-width="2"/>
+    <text x="250" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">E2E Tests</text>
+    <text x="250" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#fdd">Few, slow</text>
+    
+    <!-- Integration Tests (middle) -->
+    <polygon points="175,105 325,105 400,215 100,215" fill="url(#integrationGrad)" stroke="#e67e22" stroke-width="2"/>
+    <text x="250" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">Integration Tests</text>
+    <text x="250" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">Some, moderate speed</text>
+    
+    <!-- Unit Tests (base) -->
+    <polygon points="100,220 400,220 500,370 0,370" fill="url(#unitGrad)" stroke="#27ae60" stroke-width="2"/>
+    <text x="250" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#fff">Unit Tests</text>
+    <text x="250" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#d5f5e3">Many, fast</text>
+    <text x="250" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#a9dfbf">Foundation of test suite</text>
+  </g>
+  
+  <!-- Arrows and labels on left -->
+  <g transform="translate(50, 90)">
+    <!-- Speed arrow -->
+    <line x1="30" y1="350" x2="30" y2="50" stroke="#4a90d9" stroke-width="3" marker-end="url(#arrowBlue)"/>
+    <polygon points="30,45 25,60 35,60" fill="#4a90d9"/>
+    <text x="30" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#4a90d9">SLOWER</text>
+    <text x="30" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#4a90d9">FASTER</text>
+    
+    <!-- Rotate "Execution Speed" text -->
+    <text transform="rotate(-90, 10, 200)" x="10" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#888">Execution Speed</text>
+  </g>
+  
+  <!-- Arrows and labels on right -->
+  <g transform="translate(680, 90)">
+    <!-- Quantity arrow -->
+    <line x1="30" y1="50" x2="30" y2="350" stroke="#9b59b6" stroke-width="3"/>
+    <polygon points="30,355 25,340 35,340" fill="#9b59b6"/>
+    <text x="30" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#9b59b6">FEWER</text>
+    <text x="30" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#9b59b6">MORE</text>
+    
+    <!-- Rotate "Number of Tests" text -->
+    <text transform="rotate(90, 50, 200)" x="50" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#888">Number of Tests</text>
+  </g>
+  
+  <!-- Details boxes on right -->
+  <g transform="translate(520, 110)">
+    <!-- E2E box -->
+    <rect x="0" y="0" width="220" height="75" rx="6" fill="#2d2d44" stroke="#e74c3c" stroke-width="1"/>
+    <text x="110" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#e74c3c">End-to-End Tests</text>
+    <text x="10" y="38" font-family="Arial, sans-serif" font-size="10" fill="#ccc">• Full user workflows</text>
+    <text x="10" y="52" font-family="Arial, sans-serif" font-size="10" fill="#ccc">• Browser/API testing</text>
+    <text x="10" y="66" font-family="Arial, sans-serif" font-size="10" fill="#ccc">• ~5% of test suite</text>
+    
+    <!-- Integration box -->
+    <rect x="0" y="90" width="220" height="90" rx="6" fill="#2d2d44" stroke="#f39c12" stroke-width="1"/>
+    <text x="110" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f39c12">Integration Tests</text>
+    <text x="10" y="128" font-family="Arial, sans-serif" font-size="10" fill="#ccc">• Component interactions</text>
+    <text x="10" y="142" font-family="Arial, sans-serif" font-size="10" fill="#ccc">• Database, file system</text>
+    <text x="10" y="156" font-family="Arial, sans-serif" font-size="10" fill="#ccc">• External services (mocked)</text>
+    <text x="10" y="170" font-family="Arial, sans-serif" font-size="10" fill="#ccc">• ~15% of test suite</text>
+    
+    <!-- Unit box -->
+    <rect x="0" y="195" width="220" height="105" rx="6" fill="#2d2d44" stroke="#27ae60" stroke-width="1"/>
+    <text x="110" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#27ae60">Unit Tests</text>
+    <text x="10" y="233" font-family="Arial, sans-serif" font-size="10" fill="#ccc">• Single function/method</text>
+    <text x="10" y="247" font-family="Arial, sans-serif" font-size="10" fill="#ccc">• Isolated, no dependencies</text>
+    <text x="10" y="261" font-family="Arial, sans-serif" font-size="10" fill="#ccc">• Fast (ms per test)</text>
+    <text x="10" y="275" font-family="Arial, sans-serif" font-size="10" fill="#ccc">• Run on every commit</text>
+    <text x="10" y="289" font-family="Arial, sans-serif" font-size="10" fill="#ccc">• ~80% of test suite</text>
+  </g>
+  
+  <!-- pytest examples at bottom -->
+  <g transform="translate(50, 480)">
+    <rect x="0" y="0" width="700" height="55" rx="6" fill="#2d2d44" stroke="#555" stroke-width="1"/>
+    <text x="20" y="20" font-family="monospace" font-size="11" fill="#4a90d9"># Run all tests</text>
+    <text x="20" y="35" font-family="monospace" font-size="11" fill="#aaa">pytest tests/ --cov=src --cov-report=html</text>
+    <text x="380" y="20" font-family="monospace" font-size="11" fill="#4a90d9"># Run unit tests only</text>
+    <text x="380" y="35" font-family="monospace" font-size="11" fill="#aaa">pytest tests/unit/ -v --fast</text>
+  </g>
+  
+  <!-- Target coverage indicator -->
+  <g transform="translate(50, 420)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#fff">Target Coverage: ≥80%</text>
+    
+    <!-- Progress bar background -->
+    <rect x="170" y="-12" width="200" height="18" rx="4" fill="#333"/>
+    <!-- Progress bar fill -->
+    <rect x="170" y="-12" width="160" height="18" rx="4" fill="#27ae60"/>
+    <text x="270" y="2" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#fff">80%</text>
+    
+    <text x="400" y="2" font-family="Arial, sans-serif" font-size="11" fill="#888">Research code minimum</text>
+  </g>
+  
+  <!-- Key insight callout -->
+  <g transform="translate(50, 450)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="11" fill="#f39c12">💡 </text>
+    <text x="20" y="0" font-family="Arial, sans-serif" font-size="11" fill="#aaa">The pyramid shape reflects the ideal ratio: more unit tests, fewer E2E tests</text>
+  </g>
+  
+  <!-- Copyright -->
+  <text x="400" y="540" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#555">
+    © 2025 Antonio Clim — Week 7: Reproducibility and Capstone
+  </text>
+</svg>

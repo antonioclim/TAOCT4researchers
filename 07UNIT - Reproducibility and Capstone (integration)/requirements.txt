@@ -1,0 +1,22 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# 07UNIT: Reproducibility and Capstone
+# Requirements for Computational Thinking Course
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Core testing and quality assurance
+pytest>=7.0
+pytest-cov>=4.0
+pytest-mock>=3.0
+ruff>=0.1
+mypy>=1.0
+
+# Templating and configuration
+pyyaml>=6.0
+jinja2>=3.0
+
+# Type stubs for better type checking
+types-PyYAML>=6.0
+
+# Development utilities (optional)
+# pre-commit>=3.0
+# black>=23.0

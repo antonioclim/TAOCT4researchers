@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>07UNIT: Reproducibility and Capstone | Computational Thinking</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/night.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/monokai.css">
+    
+    <style>
+        /* === BASE STYLES === */
+        :root {
+            --r-heading-color: #58a6ff;
+            --primary-blue: #4a9eff;
+            --success-green: #3fb950;
+            --warning-red: #f85149;
+            --text-muted: #8b949e;
+            --border-color: #30363d;
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+        }
+        
+        .reveal h1, .reveal h2 { text-transform: none; }
+        .reveal .slides section { text-align: left; }
+        
+        /* === RESPONSIVE BREAKPOINTS === */
+        @media (max-width: 480px) {
+            .reveal h1 { font-size: 1.5em !important; }
+            .reveal h2 { font-size: 1.2em !important; }
+            .reveal p, .reveal li { font-size: 0.8em !important; }
+            .two-columns { flex-direction: column !important; }
+            .diagram-box { font-size: 0.4em !important; }
+        }
+        
+        @media (max-width: 768px) {
+            .reveal h1 { font-size: 1.8em !important; }
+            .reveal h2 { font-size: 1.4em !important; }
+            table { font-size: 0.6em !important; }
+            .two-columns { gap: 15px !important; }
+        }
+        
+        @media (min-width: 1024px) {
+            .reveal .slides section {
+                padding: 20px 40px;
+            }
+        }
+        
+        /* === COMPONENT STYLES === */
+        .hook-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-left: 4px solid #e94560;
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+        .hook-box .source {
+            font-size: 0.7em;
+            color: var(--text-muted);
+            margin-top: 10px;
+            font-style: normal;
+        }
+        
+        .checklist-box {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            border: 1px solid var(--success-green);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        .checklist-box h4 {
+            color: var(--success-green);
+            margin: 0 0 10px 0;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #2d1b1b 0%, #16213e 100%);
+            border: 1px solid var(--warning-red);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        .warning-box h4 {
+            color: var(--warning-red);
+            margin: 0 0 10px 0;
+        }
+        
+        .diagram-box {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.55em;
+            line-height: 1.3;
+            overflow-x: auto;
+        }
+        
+        .two-columns {
+            display: flex;
+            gap: 30px;
+        }
+        .two-columns > div { flex: 1; }
+        
+        .highlight-text {
+            color: #ffa657;
+            font-weight: bold;
+        }
+        .small-text {
+            font-size: 0.75em;
+            color: var(--text-muted);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.7em;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: var(--bg-card);
+            color: var(--primary-blue);
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+        }
+        
+        /* Code block styling */
+        pre code {
+            font-size: 0.7em !important;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            pre code {
+                font-size: 0.55em !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- SLIDE 1: TITLE -->
+            <section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #161b22 100%)">
+                <h1 style="font-size: 2em;">🎓 Unit 7</h1>
+                <h2 style="color: #58a6ff; font-size: 1.5em;">REPRODUCIBILITY AND CAPSTONE</h2>
+                <p style="color: #8b949e; font-size: 0.9em;">
+                    Reproducibility • Documentation • Presentation
+                </p>
+                <hr style="border-color: #30363d; margin: 30px 0;">
+                <p style="font-size: 0.7em; color: #8b949e;">
+                    THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS<br>
+                    Version 3.2 — January 2025
+                </p>
+                <aside class="notes">
+                    Welcome to the final unit. Today we synthesise all course concepts into reproducible research software.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 2: HOOK -->
+            <section>
+                <h2>🔬 The Reproducibility Crisis</h2>
+                
+                <div class="hook-box">
+                    <p>
+                        In 2016, Nature published a survey where 70% of researchers 
+                        admitted they could not reproduce others' experiments, and 
+                        <strong>50% could not reproduce their own experiments</strong>.
+                    </p>
+                    <p>
+                        Programming has become essential in research, but most academic 
+                        code is written to "run once," not to be reproduced.
+                    </p>
+                    <p class="source">
+                        — Baker, M. "1,500 scientists lift the lid on reproducibility." 
+                        Nature 533, 452–454 (2016)
+                    </p>
+                </div>
+                
+                <p class="fragment">
+                    This week: <span class="highlight-text">code as scientific artefact</span>.
+                </p>
+                <aside class="notes">
+                    The reproducibility crisis is not just about experimental sciences—computational research faces similar challenges.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 3: AGENDA -->
+            <section>
+                <h2>📋 Session Structure</h2>
+                
+                <table>
+                    <tr><th>Time</th><th>Activity</th></tr>
+                    <tr><td>0:00-0:45</td><td>Theory: Reproducibility and Packaging</td></tr>
+                    <tr><td>0:45-1:30</td><td>Workshop: GitHub Repository Setup</td></tr>
+                    <tr><td>1:30-1:45</td><td>☕ Break</td></tr>
+                    <tr><td>1:45-2:30</td><td>Workshop: Documentation and Testing</td></tr>
+                    <tr><td>2:30-3:15</td><td>Work Session: Project Finalisation</td></tr>
+                    <tr><td>3:15-4:00</td><td>Capstone Presentations (first volunteers)</td></tr>
+                </table>
+                
+                <p class="small-text" style="margin-top: 20px;">
+                    <strong>Project deadline:</strong> Friday, 23:59<br>
+                    <strong>Full presentations:</strong> Additional session next week
+                </p>
+                <aside class="notes">
+                    Structure the session to balance theory with hands-on practice.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 4: PART I HEADER -->
+            <section>
+                <section>
+                    <h1>PART I</h1>
+                    <h2 style="color: #58a6ff;">Reproducibility</h2>
+                    <p class="small-text">From "works on my machine" to science</p>
+                </section>
+                
+                <!-- SLIDE 5: LEVELS -->
+                <section>
+                    <h2>Levels of Reproducibility</h2>
+                    
+                    <div class="diagram-box">
+<pre>
+    ┌─────────────────────────────────────────────────────────────────────┐
+    │                    REPRODUCIBILITY PYRAMID                          │
+    ├─────────────────────────────────────────────────────────────────────┤
+    │                                                                     │
+    │                        ┌─────────────┐                              │
+    │                        │  REPLICABLE │  Identical results with     │
+    │                        │             │  different data and code    │
+    │                        └──────┬──────┘                              │
+    │                               │                                     │
+    │                    ┌──────────┴──────────┐                          │
+    │                    │    REPRODUCIBLE     │  Identical results      │
+    │                    │                     │  with same code & data  │
+    │                    └──────────┬──────────┘                          │
+    │                               │                                     │
+    │              ┌────────────────┴────────────────┐                    │
+    │              │          REPEATABLE             │  Same              │
+    │              │                                 │  researcher        │
+    │              └────────────────┬────────────────┘  can rerun         │
+    │                               │                                     │
+    │         ┌────────────────────┴────────────────────┐                │
+    │         │              DOCUMENTED                  │  Code exists  │
+    │         │                                          │  and readable │
+    │         └──────────────────────────────────────────┘                │
+    │                                                                     │
+    │    🎯 Minimum objective: REPRODUCIBLE                               │
+    │    🌟 Ideal objective: REPLICABLE                                   │
+    └─────────────────────────────────────────────────────────────────────┘
+</pre>
+                    </div>
+                    <aside class="notes">
+                        The pyramid shows increasingly stringent reproducibility standards.
+                    </aside>
+                </section>
+                
+                <!-- SLIDE 6: PRACTICAL STEPS -->
+                <section>
+                    <h2>Practical Steps for Reproducibility</h2>
+                    
+                    <div class="checklist-box">
+                        <h4>✅ Minimum Requirements</h4>
+                        <ul>
+                            <li>Version control (Git) for all code</li>
+                            <li>Pinned dependency versions</li>
+                            <li>Documented execution instructions</li>
+                            <li>Fixed random seeds</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="checklist-box">
+                        <h4>🌟 Recommended Practices</h4>
+                        <ul>
+                            <li>Automated tests with CI/CD</li>
+                            <li>Containerisation (Docker)</li>
+                            <li>Data manifests with checksums</li>
+                            <li>Experiment logging</li>
+                        </ul>
+                    </div>
+                    <aside class="notes">
+                        Start with minimum requirements, then progressively adopt recommended practices.
+                    </aside>
+                </section>
+            </section>
+            
+            <!-- SLIDE 7: SEED MANAGEMENT -->
+            <section>
+                <h2>🎲 Random Seed Management</h2>
+                
+                <p>Every source of randomness must be controlled:</p>
+                
+                <pre><code class="language-python">def configure_reproducibility(seed: int) -> None:
+    """Configure all random generators deterministically."""
+    import random
+    import os
+    
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    
+    import numpy as np
+    np.random.seed(seed)
+    
+    try:
+        import torch
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+            torch.backends.cudnn.deterministic = True
+    except ImportError:
+        pass</code></pre>
+                
+                <aside class="notes">
+                    Seed management must cover Python, NumPy, and any deep learning frameworks.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 8: DATA INTEGRITY -->
+            <section>
+                <h2>📦 Data Integrity Verification</h2>
+                
+                <div class="two-columns">
+                    <div>
+                        <h4>SHA-256 Manifests</h4>
+                        <pre><code class="language-json">{
+  "version": "1.0",
+  "created": "2025-01-17",
+  "files": {
+    "data/train.csv": "sha256:abc...",
+    "data/test.csv": "sha256:def..."
+  }
+}</code></pre>
+                    </div>
+                    <div>
+                        <h4>Verification</h4>
+                        <pre><code class="language-python">def verify_manifest(path):
+    manifest = json.load(path)
+    for f, expected in manifest["files"].items():
+        actual = compute_sha256(f)
+        if actual != expected:
+            raise IntegrityError(f)
+    return True</code></pre>
+                    </div>
+                </div>
+                
+                <p class="small-text">Cryptographic hashes detect any modification to data files.</p>
+                <aside class="notes">
+                    Data manifests ensure data integrity across time and transfers.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 9: PART II HEADER -->
+            <section>
+                <section>
+                    <h1>PART II</h1>
+                    <h2 style="color: #58a6ff;">Testing</h2>
+                    <p class="small-text">Building confidence in research code</p>
+                </section>
+                
+                <!-- SLIDE 10: TESTING PYRAMID -->
+                <section>
+                    <h2>🔺 The Testing Pyramid</h2>
+                    
+                    <div class="diagram-box">
+<pre>
+                           /\
+                          /  \      End-to-End Tests (10%)
+                         /    \     Few, expensive, full workflow
+                        /──────\
+                       /        \   Integration Tests (20%)
+                      /──────────\  Moderate number
+                     /            \
+                    /──────────────\ Unit Tests (70%)
+                   /________________\ Many, fast, isolated
+</pre>
+                    </div>
+                    
+                    <table>
+                        <tr><th>Type</th><th>Speed</th><th>Scope</th><th>Count</th></tr>
+                        <tr><td>Unit</td><td>~ms</td><td>Single function</td><td>Many</td></tr>
+                        <tr><td>Integration</td><td>~sec</td><td>Components</td><td>Medium</td></tr>
+                        <tr><td>E2E</td><td>~min</td><td>Full workflow</td><td>Few</td></tr>
+                    </table>
+                    <aside class="notes">
+                        The pyramid balances test coverage against execution speed.
+                    </aside>
+                </section>
+                
+                <!-- SLIDE 11: PYTEST BASICS -->
+                <section>
+                    <h2>🧪 pytest Fundamentals</h2>
+                    
+                    <pre><code class="language-python"># test_example.py
+import pytest
+import numpy as np
+
+def test_normalise_vector():
+    """Verify normalisation produces unit length."""
+    vec = np.array([3.0, 4.0])
+    result = normalise(vec)
+    
+    np.testing.assert_allclose(result, [0.6, 0.8])
+    assert np.isclose(np.linalg.norm(result), 1.0)
+
+@pytest.mark.parametrize("input,expected", [
+    ([1, 0], [1, 0]),
+    ([0, 1], [0, 1]),
+    ([3, 4], [0.6, 0.8]),
+])
+def test_normalise_parametrised(input, expected):
+    result = normalise(np.array(input))
+    np.testing.assert_allclose(result, expected)</code></pre>
+                    <aside class="notes">
+                        pytest provides powerful fixtures and parametrisation capabilities.
+                    </aside>
+                </section>
+            </section>
+            
+            <!-- SLIDE 12: FIXTURES -->
+            <section>
+                <h2>🔧 pytest Fixtures</h2>
+                
+                <pre><code class="language-python">@pytest.fixture
+def sample_dataset():
+    """Provide consistent test data."""
+    return pd.DataFrame({
+        'feature_1': [1.0, 2.0, 3.0],
+        'feature_2': [0.1, 0.2, 0.3],
+        'target': [0, 0, 1]
+    })
+
+@pytest.fixture
+def trained_model(sample_dataset):
+    """Provide a trained model for inference tests."""
+    model = SimpleClassifier()
+    model.fit(
+        sample_dataset[['feature_1', 'feature_2']],
+        sample_dataset['target']
+    )
+    return model
+
+def test_model_prediction(trained_model, sample_dataset):
+    predictions = trained_model.predict(sample_dataset)
+    assert len(predictions) == len(sample_dataset)</code></pre>
+                <aside class="notes">
+                    Fixtures can depend on other fixtures, creating a dependency graph.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 13: MOCKING -->
+            <section>
+                <h2>🎭 Mocking External Dependencies</h2>
+                
+                <pre><code class="language-python">from unittest.mock import Mock, patch
+
+def test_api_client_handles_timeout():
+    """Verify graceful handling of API timeouts."""
+    with patch('requests.get') as mock_get:
+        mock_get.side_effect = TimeoutError()
+        
+        client = APIClient()
+        result = client.fetch_data()
+        
+        assert result is None
+        assert client.retry_count == 3
+
+def test_database_query():
+    """Test with mock database connection."""
+    mock_db = Mock()
+    mock_db.query.return_value = [{'id': 1, 'value': 42}]
+    
+    processor = DataProcessor(db=mock_db)
+    result = processor.process()
+    
+    mock_db.query.assert_called_once()
+    assert result['total'] == 42</code></pre>
+                <aside class="notes">
+                    Mocking isolates tests from external systems like APIs and databases.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 14: PART III HEADER -->
+            <section>
+                <section>
+                    <h1>PART III</h1>
+                    <h2 style="color: #58a6ff;">Continuous Integration</h2>
+                    <p class="small-text">Automated quality assurance</p>
+                </section>
+                
+                <!-- SLIDE 15: CI/CD CONCEPTS -->
+                <section>
+                    <h2>⚙️ CI/CD Pipeline</h2>
+                    
+                    <div class="diagram-box">
+<pre>
+    ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
+    │  PUSH   │───>│  LINT   │───>│  TEST   │───>│ DEPLOY  │
+    │         │    │  ruff   │    │ pytest  │    │ (opt.)  │
+    └─────────┘    └─────────┘    └─────────┘    └─────────┘
+         │              │              │              │
+         │              ▼              ▼              ▼
+         │         ┌─────────┐   ┌─────────┐   ┌─────────┐
+         │         │  TYPE   │   │COVERAGE │   │ PUBLISH │
+         │         │  mypy   │   │   ≥80%  │   │  PyPI   │
+         │         └─────────┘   └─────────┘   └─────────┘
+         │
+         └─────────────────────────────────────────────────>
+                              FEEDBACK LOOP
+</pre>
+                    </div>
+                    
+                    <p>Every commit triggers automated checks.</p>
+                    <aside class="notes">
+                        CI provides immediate feedback on code quality.
+                    </aside>
+                </section>
+                
+                <!-- SLIDE 16: GITHUB ACTIONS -->
+                <section>
+                    <h2>🐙 GitHub Actions Configuration</h2>
+                    
+                    <pre><code class="language-yaml"># .github/workflows/ci.yml
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - run: pip install -e ".[dev]"
+    - run: ruff check src/
+    - run: mypy --strict src/
+    - run: pytest --cov=src --cov-report=xml</code></pre>
+                    <aside class="notes">
+                        The matrix strategy tests against multiple Python versions.
+                    </aside>
+                </section>
+            </section>
+            
+            <!-- SLIDE 17: COVERAGE -->
+            <section>
+                <h2>📊 Test Coverage</h2>
+                
+                <div class="two-columns">
+                    <div>
+                        <h4>Coverage Types</h4>
+                        <ul>
+                            <li><strong>Line:</strong> % of lines executed</li>
+                            <li><strong>Branch:</strong> % of branches taken</li>
+                            <li><strong>Mutation:</strong> % of changes detected</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Targets</h4>
+                        <table>
+                            <tr><td>Minimum</td><td>70%</td></tr>
+                            <tr><td>Good</td><td>80%</td></tr>
+                            <tr><td>Excellent</td><td>90%+</td></tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <pre><code class="language-bash"># Generate coverage report
+pytest --cov=src --cov-report=html
+
+# View HTML report
+open htmlcov/index.html</code></pre>
+                <aside class="notes">
+                    Coverage metrics are useful but do not guarantee correctness.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 18: PART IV HEADER -->
+            <section>
+                <section>
+                    <h1>PART IV</h1>
+                    <h2 style="color: #58a6ff;">Documentation</h2>
+                    <p class="small-text">Making code understandable</p>
+                </section>
+                
+                <!-- SLIDE 19: README -->
+                <section>
+                    <h2>📝 The README</h2>
+                    
+                    <div class="checklist-box">
+                        <h4>Essential Sections</h4>
+                        <ul>
+                            <li><strong>What:</strong> Brief description and purpose</li>
+                            <li><strong>Why:</strong> Motivation and problem addressed</li>
+                            <li><strong>How:</strong> Installation and basic usage</li>
+                            <li><strong>Where:</strong> Links to paper, data, docs</li>
+                        </ul>
+                    </div>
+                    
+                    <p class="small-text">
+                        A researcher should understand within 2 minutes whether this 
+                        software addresses their needs.
+                    </p>
+                    <aside class="notes">
+                        The README is often the first point of contact with your software.
+                    </aside>
+                </section>
+                
+                <!-- SLIDE 20: DOCSTRINGS -->
+                <section>
+                    <h2>📖 Docstrings</h2>
+                    
+                    <pre><code class="language-python">def compute_entropy(distribution: np.ndarray) -> float:
+    """
+    Compute Shannon entropy of a probability distribution.
+    
+    The Shannon entropy quantifies uncertainty in a discrete
+    probability distribution, measured in bits.
+    
+    Args:
+        distribution: Array of probabilities summing to 1.
+    
+    Returns:
+        Entropy in bits.
+    
+    Raises:
+        ValueError: If distribution doesn't sum to 1.
+    
+    Example:
+        >>> compute_entropy(np.array([0.5, 0.5]))
+        1.0
+    """</code></pre>
+                    <aside class="notes">
+                        Google-style docstrings provide structured documentation.
+                    </aside>
+                </section>
+            </section>
+            
+            <!-- SLIDE 21: PROJECT STRUCTURE -->
+            <section>
+                <h2>📁 Project Structure</h2>
+                
+                <div class="diagram-box">
+<pre>
+project/
+├── src/
+│   └── package_name/
+│       ├── __init__.py
+│       ├── core.py
+│       └── utils.py
+├── tests/
+│   ├── conftest.py
+│   └── test_core.py
+├── data/
+│   ├── raw/
+│   ├── processed/
+│   └── MANIFEST.json
+├── experiments/
+│   └── exp001/
+├── docs/
+├── pyproject.toml
+└── README.md
+</pre>
+                </div>
+                <aside class="notes">
+                    A well-organised structure supports reproducibility and collaboration.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 22: PYPROJECT.TOML -->
+            <section>
+                <h2>📦 pyproject.toml</h2>
+                
+                <pre><code class="language-toml">[project]
+name = "my-research-project"
+version = "0.1.0"
+description = "Reproducible research software"
+dependencies = [
+    "numpy>=1.24,<2.0",
+    "pandas>=2.0",
+    "scipy==1.11.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "mypy>=1.0",
+    "ruff>=0.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --cov=src"</code></pre>
+                <aside class="notes">
+                    pyproject.toml centralises project configuration.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 23: CAPSTONE REQUIREMENTS -->
+            <section>
+                <section>
+                    <h1>CAPSTONE</h1>
+                    <h2 style="color: #58a6ff;">Project Requirements</h2>
+                    <p class="small-text">Synthesising all course concepts</p>
+                </section>
+                
+                <!-- SLIDE 24: REQUIREMENTS TABLE -->
+                <section>
+                    <h2>📋 Capstone Checklist</h2>
+                    
+                    <table>
+                        <tr><th>Component</th><th>Requirement</th><th>Points</th></tr>
+                        <tr><td>Repository</td><td>Clean Git history, meaningful commits</td><td>10</td></tr>
+                        <tr><td>Testing</td><td>pytest suite, ≥80% coverage</td><td>20</td></tr>
+                        <tr><td>CI/CD</td><td>GitHub Actions workflow</td><td>15</td></tr>
+                        <tr><td>Documentation</td><td>README, docstrings, API docs</td><td>15</td></tr>
+                        <tr><td>Reproducibility</td><td>Seeds, manifests, instructions</td><td>20</td></tr>
+                        <tr><td>Presentation</td><td>5-minute demo</td><td>20</td></tr>
+                    </table>
+                    
+                    <p class="small-text">Total: 100 points</p>
+                    <aside class="notes">
+                        The capstone demonstrates mastery across all course concepts.
+                    </aside>
+                </section>
+                
+                <!-- SLIDE 25: INTEGRATION MATRIX -->
+                <section>
+                    <h2>🔗 Integration with Previous Units</h2>
+                    
+                    <table>
+                        <tr><th>Unit</th><th>Concept</th><th>Capstone Application</th></tr>
+                        <tr><td>01</td><td>Computation</td><td>Clear algorithmic foundation</td></tr>
+                        <tr><td>02</td><td>Design patterns</td><td>Well-structured architecture</td></tr>
+                        <tr><td>03</td><td>Complexity</td><td>Performance analysis</td></tr>
+                        <tr><td>04</td><td>Data structures</td><td>Appropriate selections</td></tr>
+                        <tr><td>05</td><td>Scientific computing</td><td>Numerical methods</td></tr>
+                        <tr><td>06</td><td>Visualisation</td><td>Publication figures</td></tr>
+                        <tr><td>07</td><td>Reproducibility</td><td>Full package</td></tr>
+                    </table>
+                    <aside class="notes">
+                        The capstone synthesises all seven units into one coherent project.
+                    </aside>
+                </section>
+            </section>
+            
+            <!-- SLIDE 26: PEER REVIEW -->
+            <section>
+                <h2>👥 Peer Review Criteria</h2>
+                
+                <div class="two-columns">
+                    <div>
+                        <h4>Technical Aspects</h4>
+                        <ul>
+                            <li>Does the code run?</li>
+                            <li>Are results reproducible?</li>
+                            <li>Is code readable?</li>
+                            <li>Are tests adequate?</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Documentation</h4>
+                        <ul>
+                            <li>Is purpose clear?</li>
+                            <li>Are instructions complete?</li>
+                            <li>Are dependencies listed?</li>
+                            <li>Is API documented?</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="warning-box" style="margin-top: 20px;">
+                    <h4>⚠️ Common Issues</h4>
+                    <p>Missing dependencies, hardcoded paths, undocumented seeds, no error handling</p>
+                </div>
+                <aside class="notes">
+                    Peer review is integral to research quality.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 27: QUIZ 1 -->
+            <section>
+                <h2>📝 Quick Check 1</h2>
+                
+                <p><strong>Question:</strong> What is the recommended proportion of unit tests in the testing pyramid?</p>
+                
+                <ol type="A">
+                    <li>10%</li>
+                    <li>20%</li>
+                    <li>50%</li>
+                    <li class="fragment highlight-green">70%</li>
+                </ol>
+                
+                <p class="fragment small-text">
+                    Unit tests should dominate because they are fast, isolated and pinpoint failures precisely.
+                </p>
+                <aside class="notes">
+                    The testing pyramid prescribes 70% unit, 20% integration, 10% E2E.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 28: QUIZ 2 -->
+            <section>
+                <h2>📝 Quick Check 2</h2>
+                
+                <p><strong>Question:</strong> Which of the following is NOT a benefit of continuous integration?</p>
+                
+                <ol type="A">
+                    <li>Immediate feedback on code changes</li>
+                    <li>Consistent quality enforcement</li>
+                    <li class="fragment highlight-red">Guaranteed bug-free code</li>
+                    <li>Documented build process</li>
+                </ol>
+                
+                <p class="fragment small-text">
+                    CI catches regressions but cannot guarantee correctness—tests can only verify what they test.
+                </p>
+                <aside class="notes">
+                    CI automates quality checks but does not eliminate all bugs.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 29: QUIZ 3 -->
+            <section>
+                <h2>📝 Quick Check 3</h2>
+                
+                <p><strong>Question:</strong> When configuring reproducibility, why set <code>PYTHONHASHSEED</code>?</p>
+                
+                <ol type="A">
+                    <li class="fragment highlight-green">To make dictionary ordering deterministic</li>
+                    <li>To speed up hash computations</li>
+                    <li>To enable secure hashing</li>
+                    <li>To reduce memory usage</li>
+                </ol>
+                
+                <p class="fragment small-text">
+                    Python's hash randomisation (for security) affects dictionary iteration order between runs.
+                </p>
+                <aside class="notes">
+                    Hash randomisation was introduced in Python 3.3 for security.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 30: SUMMARY -->
+            <section>
+                <h2>📋 Key Takeaways</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Reproducibility</strong>: Control all sources of randomness, verify data integrity
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Testing</strong>: Follow the pyramid—70% unit, 20% integration, 10% E2E
+                    </div>
+                    <div class="timeline-item">
+                        <strong>CI/CD</strong>: Automate quality checks on every commit
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Documentation</strong>: README, docstrings, and project structure
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Capstone</strong>: Synthesise all course concepts into reproducible software
+                    </div>
+                </div>
+                <aside class="notes">
+                    These practices transform code from "runs once" to proper scientific artefacts.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 31: NEXT STEPS -->
+            <section>
+                <h2>🚀 Next Steps</h2>
+                
+                <div class="checklist-box">
+                    <h4>Before Friday</h4>
+                    <ul>
+                        <li>Complete capstone project implementation</li>
+                        <li>Ensure CI pipeline passes</li>
+                        <li>Prepare 5-minute presentation</li>
+                        <li>Submit repository link</li>
+                    </ul>
+                </div>
+                
+                <div class="checklist-box">
+                    <h4>Next Session</h4>
+                    <ul>
+                        <li>Remaining capstone presentations</li>
+                        <li>Peer review assignments</li>
+                        <li>Course wrap-up</li>
+                    </ul>
+                </div>
+                <aside class="notes">
+                    The deadline is Friday at 23:59.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 32: RESOURCES -->
+            <section>
+                <h2>📚 Resources</h2>
+                
+                <table>
+                    <tr><th>Resource</th><th>URL</th></tr>
+                    <tr><td>pytest documentation</td><td>docs.pytest.org</td></tr>
+                    <tr><td>GitHub Actions</td><td>docs.github.com/actions</td></tr>
+                    <tr><td>The Turing Way</td><td>the-turing-way.netlify.app</td></tr>
+                    <tr><td>Python Packaging</td><td>packaging.python.org</td></tr>
+                </table>
+                
+                <p class="small-text" style="margin-top: 20px;">
+                    <strong>Lab files:</strong> lab_07_01_reproducibility.py, lab_07_02_testing_cicd.py, lab_07_03_project_scaffolder.py
+                </p>
+                <aside class="notes">
+                    These resources provide deeper coverage of topics introduced today.
+                </aside>
+            </section>
+            
+            <!-- SLIDE 33: THANK YOU -->
+            <section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #161b22 100%)">
+                <h1>Thank You</h1>
+                <h2 style="color: #58a6ff;">Questions?</h2>
+                <hr style="border-color: #30363d; margin: 30px 0;">
+                <p class="small-text">
+                    07UNIT: Reproducibility and Capstone<br>
+                    The Art of Computational Thinking for Researchers<br>
+                    © 2025 Antonio Clim
+                </p>
+                <aside class="notes">
+                    Open floor for questions before workshop session.
+                </aside>
+            </section>
+            
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/highlight.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            plugins: [RevealNotes, RevealHighlight],
+            width: 1920,
+            height: 1080,
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0
+        });
+    </script>
+</body>
+</html>
