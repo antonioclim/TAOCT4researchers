@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1: The Epistemology of Computation | Computational Thinking for Researchers</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/night.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/monokai.css">
+    
+    <!-- KaTeX for mathematics -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <style>
+        :root {
+            --r-heading-color: #58a6ff;
+            --r-link-color: #79c0ff;
+            --r-selection-background-color: #264f78;
+        }
+        
+        .reveal h1, .reveal h2 { text-transform: none; }
+        
+        .reveal .slides section {
+            text-align: left;
+        }
+        
+        .hook-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-left: 4px solid #e94560;
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+        
+        .hook-box .source {
+            font-size: 0.7em;
+            color: #888;
+            margin-top: 10px;
+            font-style: normal;
+        }
+        
+        .definition-box {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            border: 1px solid #58a6ff;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .definition-box h4 {
+            color: #58a6ff;
+            margin: 0 0 10px 0;
+            font-size: 1em;
+        }
+        
+        .theorem-box {
+            background: linear-gradient(135deg, #1a472a 0%, #16213e 100%);
+            border: 1px solid #3fb950;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .theorem-box h4 {
+            color: #3fb950;
+            margin: 0 0 10px 0;
+        }
+        
+        .example-box {
+            background: linear-gradient(135deg, #3d2914 0%, #16213e 100%);
+            border: 1px solid #f0883e;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .example-box h4 {
+            color: #f0883e;
+            margin: 0 0 10px 0;
+        }
+        
+        .diagram-box {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.7em;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+        
+        .math-display {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+        
+        .highlight-text {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .small-text {
+            font-size: 0.7em;
+            color: #8b949e;
+        }
+        
+        .reveal pre code {
+            max-height: 500px;
+        }
+        
+        .two-column {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .two-column > div {
+            flex: 1;
+        }
+        
+        .katex { font-size: 1.1em; }
+        
+        table {
+            font-size: 0.85em;
+            width: 100%;
+        }
+        
+        th {
+            background: #21262d;
+            padding: 10px;
+        }
+        
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #30363d;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- TITLE SLIDE -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h1 style="font-size: 2.2em;">Week 1</h1>
+                <h2 style="color: #58a6ff; font-size: 1.6em;">The Epistemology of Computation</h2>
+                
+                <p style="margin-top: 40px; font-size: 1.1em;">
+                    What does it mean to compute?<br>
+                    What can be computed?<br>
+                    What <em>cannot</em> be computed?
+                </p>
+                
+                <hr style="border-color: #30363d; margin: 30px 0;">
+                <p style="font-size: 0.7em; color: #8b949e;">
+                    THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS<br>
+                    Intensive Module • 4 hours
+                </p>
+                
+                <aside class="notes">
+                    Welcome to Week 1. Today we explore the philosophical foundations of computation.
+                    We'll discover that some problems are fundamentally unsolvable by any computer.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- HOOK: The Enigma Story -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>🎯 Why Does This Matter?</h2>
+                
+                <div class="hook-box">
+                    <p>
+                        In the summer of 1941, Bletchley Park received thousands of intercepted 
+                        messages daily from German U-Boot submarines. Each message was encrypted 
+                        with Enigma — a machine with <strong>158,962,555,217,826,360,000</strong> 
+                        possible configurations.
+                    </p>
+                    <p>
+                        Alan Turing didn't try to guess the key. He thought differently: 
+                        <em>"What structure does the problem have? What patterns repeat?"</em>
+                    </p>
+                    <p class="source">
+                        — Modern estimates suggest work at Bletchley Park shortened the war by 
+                        2-4 years, saving approximately 14-21 million lives.
+                    </p>
+                </div>
+                
+                <p class="fragment">
+                    Turing wasn't the best mathematician. He was the best 
+                    <span class="highlight-text">computational thinker</span>.
+                </p>
+                
+                <aside class="notes">
+                    This is the power of computational thinking — recognising structure in problems.
+                    Today we'll learn the foundations that made this breakthrough possible.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- AGENDA -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>📋 Agenda</h2>
+                
+                <table>
+                    <tr>
+                        <th>Time</th>
+                        <th>Module</th>
+                        <th>Content</th>
+                    </tr>
+                    <tr>
+                        <td>0:00 - 0:45</td>
+                        <td>Theory I</td>
+                        <td>Foundations: Turing Machines, Computability</td>
+                    </tr>
+                    <tr>
+                        <td>0:45 - 1:30</td>
+                        <td>Theory II</td>
+                        <td>Lambda Calculus, Church-Turing Thesis</td>
+                    </tr>
+                    <tr>
+                        <td>1:30 - 1:45</td>
+                        <td colspan="2" style="text-align: center;">☕ Break</td>
+                    </tr>
+                    <tr>
+                        <td>1:45 - 2:30</td>
+                        <td>Theory III</td>
+                        <td>ASTs, Interpreters, Evaluation</td>
+                    </tr>
+                    <tr>
+                        <td>2:30 - 3:15</td>
+                        <td>Lab</td>
+                        <td>Implementing Computation Models</td>
+                    </tr>
+                    <tr>
+                        <td>3:15 - 4:00</td>
+                        <td>Synthesis</td>
+                        <td>Research Connections, Discussion</td>
+                    </tr>
+                </table>
+                
+                <aside class="notes">
+                    We'll alternate between theory and practice throughout the session.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART I: THEORETICAL FOUNDATIONS -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h1>PART I</h1>
+                <h2 style="color: #58a6ff;">Theoretical Foundations</h2>
+                <p class="small-text">45 minutes</p>
+            </section>
+            
+            <!-- HILBERT'S DREAM -->
+            <section>
+                <h2>Hilbert's Dream (1928)</h2>
+                
+                <div class="hook-box">
+                    <p>
+                        <em>"Is there an algorithm that can decide, for any mathematical statement, 
+                        whether it is true or false?"</em>
+                    </p>
+                    <p class="source">
+                        — David Hilbert, International Congress of Mathematicians, Bologna, 1928
+                    </p>
+                </div>
+                
+                <div class="fragment">
+                    <p>Hilbert believed the answer was <strong>yes</strong>.</p>
+                    <p class="fragment">In 1936, Turing proved the answer is <strong style="color: #f85149;">no</strong>.</p>
+                    <p class="fragment">But to prove this, he first had to rigorously define 
+                    what <em>"algorithm"</em> means.</p>
+                </div>
+                
+                <aside class="notes">
+                    This is the Entscheidungsproblem — the decision problem.
+                    Turing's negative answer was profound and created computer science.
+                </aside>
+            </section>
+            
+            <!-- TURING MACHINE DEFINITION -->
+            <section>
+                <h2>The Turing Machine</h2>
+                
+                <div class="definition-box">
+                    <h4>Formal Definition</h4>
+                    <p>A <strong>Turing machine</strong> is a 7-tuple 
+                    <span class="katex">M = (Q, Σ, Γ, δ, q_0, q_{accept}, q_{reject})</span> where:</p>
+                    <ul style="font-size: 0.85em;">
+                        <li><span class="katex">Q</span> — finite set of states</li>
+                        <li><span class="katex">Σ</span> — input alphabet (excluding blank symbol □)</li>
+                        <li><span class="katex">Γ</span> — tape alphabet (<span class="katex">Σ ⊆ Γ</span>, □ ∈ Γ)</li>
+                        <li><span class="katex">δ: Q × Γ → Q × Γ × {L, R}</span> — transition function</li>
+                        <li><span class="katex">q_0 ∈ Q</span> — initial state</li>
+                        <li><span class="katex">q_{accept}, q_{reject} ∈ Q</span> — terminal states</li>
+                    </ul>
+                </div>
+                
+                <aside class="notes">
+                    The transition function is the "program" — it says what to do for each state and symbol.
+                </aside>
+            </section>
+            
+            <!-- TURING MACHINE DIAGRAM -->
+            <section>
+                <h2>Turing Machine — Visualisation</h2>
+                
+                <div class="diagram-box">
+<pre>
+              Infinite tape (in both directions)
+    ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+... │ □ │ 1 │ 0 │ 1 │ 1 │ 0 │ □ │ □ │ □ │ □ │ □ │ □ │ ...
+    └───┴───┴───┴─▲─┴───┴───┴───┴───┴───┴───┴───┴───┘
+                  │
+              ┌───┴───┐
+              │ HEAD  │  ← Reads/Writes one symbol
+              └───┬───┘
+                  │
+            ┌─────┴─────┐
+            │  CONTROL  │  ← Current state q ∈ Q
+            │   UNIT    │
+            │  q = q₃   │
+            └───────────┘
+
+    At each step:
+    1. Read symbol under head
+    2. Based on (state, symbol), the transition function δ gives:
+       • New state to enter
+       • Symbol to write
+       • Direction to move (L or R)
+</pre>
+                </div>
+                
+                <aside class="notes">
+                    The infinite tape is key — it provides unbounded memory.
+                    This is what separates Turing machines from finite automata.
+                </aside>
+            </section>
+            
+            <!-- EXAMPLE: UNARY INCREMENT -->
+            <section>
+                <h2>Example: Unary Increment</h2>
+                
+                <div class="example-box">
+                    <h4>Problem</h4>
+                    <p>Add 1 to a number represented in unary (e.g., "111" = 3)</p>
+                </div>
+                
+                <p><strong>Machine Definition:</strong></p>
+                <ul style="font-size: 0.9em;">
+                    <li>States: Q = {q₀, accept}</li>
+                    <li>Input alphabet: Σ = {1}</li>
+                    <li>Tape alphabet: Γ = {1, □}</li>
+                </ul>
+                
+                <p><strong>Transitions:</strong></p>
+                <ul style="font-size: 0.9em;">
+                    <li>δ(q₀, 1) = (q₀, 1, R) — scan past all 1s</li>
+                    <li>δ(q₀, □) = (accept, 1, S) — write new 1 at end</li>
+                </ul>
+                
+                <p class="fragment"><strong>Trace:</strong> Input "111" → Output "1111" ✓</p>
+                
+                <aside class="notes">
+                    This is one of the simplest possible Turing machines.
+                    We'll implement it in the lab.
+                </aside>
+            </section>
+            
+            <!-- COMPUTATION AS CONFIGURATION SEQUENCE -->
+            <section>
+                <h2>Computation as Configuration Sequence</h2>
+                
+                <div class="definition-box">
+                    <h4>Configuration</h4>
+                    <p>A <strong>configuration</strong> is a snapshot of the machine at one moment:</p>
+                    <ul>
+                        <li>Tape contents</li>
+                        <li>Head position</li>
+                        <li>Current state</li>
+                    </ul>
+                </div>
+                
+                <p>A <strong>computation</strong> is a sequence of configurations:</p>
+                
+                <div class="math-display">
+                    C₀ → C₁ → C₂ → ... → Cₙ
+                </div>
+                
+                <p>The machine <strong>halts</strong> when it enters q<sub>accept</sub> or q<sub>reject</sub>.</p>
+                
+                <aside class="notes">
+                    This gives us a mathematical definition of what "running a program" means.
+                </aside>
+            </section>
+            
+            <!-- CHURCH-TURING THESIS -->
+            <section>
+                <h2>The Church-Turing Thesis</h2>
+                
+                <div class="theorem-box">
+                    <h4>Church-Turing Thesis (1936)</h4>
+                    <p>
+                        Any function that can be computed by an <em>effective procedure</em> 
+                        (an intuitive algorithm) can be computed by a Turing machine.
+                    </p>
+                </div>
+                
+                <div class="fragment">
+                    <p><strong>Important:</strong> This is not a theorem — it's a <em>definition</em>.</p>
+                    <p>It says: "Turing machines capture exactly what we mean by computation."</p>
+                </div>
+                
+                <div class="fragment">
+                    <p><strong>Evidence:</strong></p>
+                    <ul style="font-size: 0.9em;">
+                        <li>Lambda calculus (Church, 1936) — equivalent</li>
+                        <li>Recursive functions (Kleene, 1936) — equivalent</li>
+                        <li>Every programming language — equivalent</li>
+                    </ul>
+                </div>
+                
+                <aside class="notes">
+                    This is why we can prove things about "all possible algorithms" — 
+                    we just need to prove them about Turing machines.
+                </aside>
+            </section>
+            
+            <!-- THE HALTING PROBLEM -->
+            <section>
+                <h2>The Halting Problem</h2>
+                
+                <div class="definition-box">
+                    <h4>The Halting Problem</h4>
+                    <p>Given a program P and input I, does P halt on I?</p>
+                </div>
+                
+                <div class="theorem-box fragment">
+                    <h4>Theorem (Turing, 1936)</h4>
+                    <p>The Halting Problem is <strong>undecidable</strong>.</p>
+                    <p>No algorithm can correctly determine, for all P and I, whether P halts on I.</p>
+                </div>
+                
+                <p class="fragment">This was the first proof that some problems <em>cannot be solved</em> by any computer.</p>
+                
+                <aside class="notes">
+                    This is one of the most important results in computer science.
+                    It sets fundamental limits on what algorithms can achieve.
+                </aside>
+            </section>
+            
+            <!-- HALTING PROBLEM PROOF SKETCH -->
+            <section>
+                <h2>Why the Halting Problem is Undecidable</h2>
+                
+                <p><strong>Proof by contradiction (diagonalisation):</strong></p>
+                
+                <ol style="font-size: 0.9em;">
+                    <li class="fragment">Assume H(P, I) exists and decides halting</li>
+                    <li class="fragment">Build a new program D:
+                        <pre><code class="python">def D(M):
+    if H(M, M):  # If M halts on itself
+        loop_forever()
+    else:
+        return  # Halt</code></pre>
+                    </li>
+                    <li class="fragment">What happens when we run D(D)?
+                        <ul>
+                            <li>If D(D) halts → H(D,D) = true → D loops forever ⚡</li>
+                            <li>If D(D) loops → H(D,D) = false → D halts ⚡</li>
+                        </ul>
+                    </li>
+                    <li class="fragment">Contradiction! Therefore H cannot exist. ∎</li>
+                </ol>
+                
+                <aside class="notes">
+                    This is the same technique Cantor used to prove there are 
+                    different sizes of infinity. It's called diagonalisation.
+                </aside>
+            </section>
+            
+            <!-- PRACTICAL IMPLICATIONS -->
+            <section>
+                <h2>Practical Implications</h2>
+                
+                <p>Because the Halting Problem is undecidable:</p>
+                
+                <ul>
+                    <li class="fragment"><strong>No perfect debugger</strong> — Cannot detect all infinite loops</li>
+                    <li class="fragment"><strong>No perfect optimiser</strong> — Cannot always determine if code is dead</li>
+                    <li class="fragment"><strong>No perfect verifier</strong> — Cannot prove all programs correct</li>
+                    <li class="fragment"><strong>No perfect virus scanner</strong> — Cannot detect all malware</li>
+                </ul>
+                
+                <p class="fragment">But we can build <em>good enough</em> tools that work in practice!</p>
+                
+                <aside class="notes">
+                    This is why software engineering is hard — we're working at the edge of what's possible.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART II: LAMBDA CALCULUS -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h1>PART II</h1>
+                <h2 style="color: #58a6ff;">Lambda Calculus</h2>
+                <p class="small-text">45 minutes</p>
+            </section>
+            
+            <!-- CHURCH'S APPROACH -->
+            <section>
+                <h2>Church's Approach (1936)</h2>
+                
+                <p>While Turing built machines, Alonzo Church asked:</p>
+                
+                <div class="hook-box">
+                    <p><em>"What if we define computation as function application?"</em></p>
+                </div>
+                
+                <p class="fragment">The lambda calculus has just three constructs:</p>
+                
+                <div class="fragment">
+                    <table>
+                        <tr>
+                            <th>Construct</th>
+                            <th>Syntax</th>
+                            <th>Meaning</th>
+                        </tr>
+                        <tr>
+                            <td>Variable</td>
+                            <td>x</td>
+                            <td>A name</td>
+                        </tr>
+                        <tr>
+                            <td>Abstraction</td>
+                            <td>λx.M</td>
+                            <td>A function with parameter x and body M</td>
+                        </tr>
+                        <tr>
+                            <td>Application</td>
+                            <td>M N</td>
+                            <td>Apply function M to argument N</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <aside class="notes">
+                    That's it! Three constructs, and yet this is equivalent in power to Turing machines.
+                </aside>
+            </section>
+            
+            <!-- BETA REDUCTION -->
+            <section>
+                <h2>Beta Reduction</h2>
+                
+                <div class="definition-box">
+                    <h4>Beta Reduction (β-reduction)</h4>
+                    <p>The fundamental computation rule:</p>
+                    <div class="math-display">
+                        (λx.M) N → M[x := N]
+                    </div>
+                    <p>Substitute N for all free occurrences of x in M.</p>
+                </div>
+                
+                <div class="example-box fragment">
+                    <h4>Example</h4>
+                    <p>(λx.x + 1) 5 → 5 + 1 → 6</p>
+                </div>
+                
+                <p class="fragment">This is like calling a function!</p>
+                
+                <aside class="notes">
+                    Beta reduction is the only computation rule we need.
+                    Everything else is derived from this.
+                </aside>
+            </section>
+            
+            <!-- CHURCH BOOLEANS -->
+            <section>
+                <h2>Church Booleans</h2>
+                
+                <p>We can encode booleans as functions:</p>
+                
+                <div class="definition-box">
+                    <table>
+                        <tr>
+                            <th>Boolean</th>
+                            <th>Encoding</th>
+                            <th>Behaviour</th>
+                        </tr>
+                        <tr>
+                            <td>TRUE</td>
+                            <td>λx.λy.x</td>
+                            <td>Select first argument</td>
+                        </tr>
+                        <tr>
+                            <td>FALSE</td>
+                            <td>λx.λy.y</td>
+                            <td>Select second argument</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="fragment">
+                    <p><strong>Verification:</strong></p>
+                    <p>TRUE a b = (λx.λy.x) a b → (λy.a) b → a ✓</p>
+                    <p>FALSE a b = (λx.λy.y) a b → (λy.y) b → b ✓</p>
+                </div>
+                
+                <aside class="notes">
+                    TRUE selects its first argument, FALSE selects its second.
+                    This gives us conditional expressions!
+                </aside>
+            </section>
+            
+            <!-- CHURCH NUMERALS -->
+            <section>
+                <h2>Church Numerals</h2>
+                
+                <p>Numbers as repeated function application:</p>
+                
+                <div class="definition-box">
+                    <table>
+                        <tr>
+                            <th>Number</th>
+                            <th>Encoding</th>
+                            <th>Pattern</th>
+                        </tr>
+                        <tr>
+                            <td>0</td>
+                            <td>λf.λx.x</td>
+                            <td>f⁰(x)</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>λf.λx.f x</td>
+                            <td>f¹(x)</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>λf.λx.f (f x)</td>
+                            <td>f²(x)</td>
+                        </tr>
+                        <tr>
+                            <td>n</td>
+                            <td>λf.λx.fⁿ(x)</td>
+                            <td>Apply f n times</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <p class="fragment">The number n applies a function n times!</p>
+                
+                <aside class="notes">
+                    This is a beautiful encoding — the structure of the number 
+                    directly tells you how many times to iterate.
+                </aside>
+            </section>
+            
+            <!-- CHURCH ARITHMETIC -->
+            <section>
+                <h2>Church Arithmetic</h2>
+                
+                <div class="definition-box">
+                    <p><strong>SUCC</strong> = λn.λf.λx.f (n f x)</p>
+                    <p>Add one more application of f</p>
+                </div>
+                
+                <div class="fragment">
+                    <p><strong>ADD</strong> = λm.λn.λf.λx.m f (n f x)</p>
+                    <p>Apply f m times, then n times</p>
+                </div>
+                
+                <div class="fragment">
+                    <p><strong>MULT</strong> = λm.λn.λf.m (n f)</p>
+                    <p>Apply (n f) m times</p>
+                </div>
+                
+                <p class="fragment">We can do arithmetic purely with functions!</p>
+                
+                <aside class="notes">
+                    This is what "computation as function application" really means — 
+                    even numbers are just functions.
+                </aside>
+            </section>
+            
+            <!-- FAMOUS COMBINATORS -->
+            <section>
+                <h2>Famous Combinators</h2>
+                
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Definition</th>
+                        <th>Purpose</th>
+                    </tr>
+                    <tr>
+                        <td>I (Identity)</td>
+                        <td>λx.x</td>
+                        <td>Return input unchanged</td>
+                    </tr>
+                    <tr>
+                        <td>K (Constant)</td>
+                        <td>λx.λy.x</td>
+                        <td>Return first, ignore second (= TRUE)</td>
+                    </tr>
+                    <tr>
+                        <td>S (Substitution)</td>
+                        <td>λx.λy.λz.x z (y z)</td>
+                        <td>Distribute z to both x and y</td>
+                    </tr>
+                    <tr>
+                        <td>Y (Fixed point)</td>
+                        <td>λf.(λx.f(x x))(λx.f(x x))</td>
+                        <td>Enable recursion</td>
+                    </tr>
+                </table>
+                
+                <p class="fragment">Fun fact: S and K alone can express any computable function!</p>
+                
+                <aside class="notes">
+                    The Y combinator is how we get recursion without naming functions.
+                    It's used in many functional programming techniques.
+                </aside>
+            </section>
+            
+            <!-- THE OMEGA COMBINATOR -->
+            <section>
+                <h2>The Omega Combinator</h2>
+                
+                <div class="definition-box">
+                    <p><strong>Ω</strong> = (λx.x x)(λx.x x)</p>
+                </div>
+                
+                <p>What happens when we reduce Ω?</p>
+                
+                <div class="fragment">
+                    <p>(λx.x x)(λx.x x) →</p>
+                    <p>(λx.x x)(λx.x x) →</p>
+                    <p>(λx.x x)(λx.x x) → ...</p>
+                </div>
+                
+                <p class="fragment highlight-text">It loops forever!</p>
+                
+                <p class="fragment">Not all lambda expressions have a normal form (final value).</p>
+                
+                <aside class="notes">
+                    This is the lambda calculus equivalent of an infinite loop.
+                    It shows that non-termination exists in this model too.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PART III: AST AND INTERPRETERS -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h1>PART III</h1>
+                <h2 style="color: #58a6ff;">From Theory to Practice</h2>
+                <p class="small-text">ASTs and Interpreters</p>
+            </section>
+            
+            <!-- FROM THEORY TO PRACTICE -->
+            <section>
+                <h2>From Theory to Practice</h2>
+                
+                <p>How do real programming languages work?</p>
+                
+                <div class="two-column fragment">
+                    <div>
+                        <p><strong>Source Code</strong></p>
+                        <pre><code class="plaintext">let x = 5 in x + 1</code></pre>
+                    </div>
+                    <div>
+                        <p><strong>Result</strong></p>
+                        <pre><code class="plaintext">6</code></pre>
+                    </div>
+                </div>
+                
+                <p class="fragment">Between these, we need:</p>
+                <ol class="fragment">
+                    <li><strong>Lexer</strong> — Break text into tokens</li>
+                    <li><strong>Parser</strong> — Build a tree structure (AST)</li>
+                    <li><strong>Evaluator</strong> — Compute the result</li>
+                </ol>
+                
+                <aside class="notes">
+                    This is the architecture of every programming language implementation.
+                </aside>
+            </section>
+            
+            <!-- LEXER -->
+            <section>
+                <h2>The Lexer (Tokeniser)</h2>
+                
+                <p>Converts character stream to token stream:</p>
+                
+                <pre><code class="plaintext">"let x = 5 in x + 1"
+    ↓
+[LET, ID("x"), EQUALS, NUM(5), IN, ID("x"), PLUS, NUM(1)]</code></pre>
+                
+                <div class="fragment">
+                    <p>Token types include:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li>Keywords: let, in, if, then, else, fun</li>
+                        <li>Identifiers: variable names</li>
+                        <li>Numbers: integer and floating-point literals</li>
+                        <li>Operators: +, -, *, /, ==, etc.</li>
+                    </ul>
+                </div>
+                
+                <aside class="notes">
+                    The lexer handles whitespace and comments, leaving clean tokens for the parser.
+                </aside>
+            </section>
+            
+            <!-- PARSER -->
+            <section>
+                <h2>The Parser</h2>
+                
+                <p>Builds an Abstract Syntax Tree (AST):</p>
+                
+                <div class="diagram-box">
+<pre>
+"let x = 5 in x + 1"
+
+            Let
+           / | \
+         'x' |  \
+             |   \
+          Num(5)  BinOp(+)
+                 /        \
+             Var('x')    Num(1)
+</pre>
+                </div>
+                
+                <p class="fragment">The tree structure makes evaluation order explicit.</p>
+                
+                <aside class="notes">
+                    The AST eliminates ambiguity — there's only one way to read it.
+                </aside>
+            </section>
+            
+            <!-- OPERATOR PRECEDENCE -->
+            <section>
+                <h2>Operator Precedence</h2>
+                
+                <p>How is "2 + 3 * 4" parsed?</p>
+                
+                <div class="two-column">
+                    <div>
+                        <p style="color: #f85149;">Wrong (14 + 4 = 18)</p>
+                        <pre>    BinOp(*)
+   /        \
+BinOp(+)    Num(4)
+/      \
+Num(2) Num(3)</pre>
+                    </div>
+                    <div>
+                        <p style="color: #3fb950;">Correct (2 + 12 = 14)</p>
+                        <pre>    BinOp(+)
+   /        \
+Num(2)    BinOp(*)
+          /      \
+       Num(3)  Num(4)</pre>
+                    </div>
+                </div>
+                
+                <p class="fragment">Higher precedence operators go <em>deeper</em> in the tree.</p>
+                
+                <aside class="notes">
+                    Precedence is handled by the parser's grammar rules.
+                    This is why recursive descent parsers are hierarchical.
+                </aside>
+            </section>
+            
+            <!-- THE EVALUATOR -->
+            <section>
+                <h2>The Evaluator</h2>
+                
+                <p>Recursively computes the value of an AST node:</p>
+                
+                <pre><code class="python">def evaluate(node, env):
+    match node:
+        case Num(value):
+            return value
+        
+        case Var(name):
+            return env[name]
+        
+        case BinOp(left, '+', right):
+            return evaluate(left, env) + evaluate(right, env)
+        
+        case Let(name, value, body):
+            new_env = {**env, name: evaluate(value, env)}
+            return evaluate(body, new_env)</code></pre>
+                
+                <aside class="notes">
+                    Pattern matching makes this elegant and easy to extend.
+                </aside>
+            </section>
+            
+            <!-- ENVIRONMENTS AND CLOSURES -->
+            <section>
+                <h2>Environments and Closures</h2>
+                
+                <div class="definition-box">
+                    <h4>Environment</h4>
+                    <p>A mapping from variable names to their values.</p>
+                    <pre><code class="python">env = {'x': 5, 'y': 10}</code></pre>
+                </div>
+                
+                <div class="definition-box fragment">
+                    <h4>Closure</h4>
+                    <p>A function bundled with its defining environment.</p>
+                    <pre><code class="python">@dataclass
+class Closure:
+    param: str
+    body: Expr
+    env: dict  # Captured environment</code></pre>
+                </div>
+                
+                <p class="fragment">Closures enable functions to "remember" their context.</p>
+                
+                <aside class="notes">
+                    Without closures, functions couldn't reference outer variables.
+                    This is essential for functional programming.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- RESEARCH CONNECTIONS -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h1>Research Connections</h1>
+                <h2 style="color: #58a6ff;">Applying These Ideas</h2>
+            </section>
+            
+            <!-- BIOINFORMATICS -->
+            <section>
+                <h2>🧬 Bioinformatics</h2>
+                
+                <p><strong>Finite State Machines</strong> in sequence analysis:</p>
+                
+                <ul>
+                    <li>DNA pattern matching uses deterministic finite automata</li>
+                    <li>Hidden Markov Models extend FSMs with probabilities</li>
+                    <li>Regular expressions are just FSM notation</li>
+                </ul>
+                
+                <div class="example-box fragment">
+                    <h4>Example: Gene Finder</h4>
+                    <p>States: start_codon → coding → stop_codon</p>
+                    <p>Transitions: based on nucleotide sequences</p>
+                </div>
+                
+                <aside class="notes">
+                    The same abstractions we studied apply directly to biological data analysis.
+                </aside>
+            </section>
+            
+            <!-- COMPUTATIONAL LINGUISTICS -->
+            <section>
+                <h2>📚 Computational Linguistics</h2>
+                
+                <p><strong>Parsers</strong> in natural language processing:</p>
+                
+                <ul>
+                    <li>Syntax trees for sentences (just like ASTs!)</li>
+                    <li>Context-free grammars for language structure</li>
+                    <li>Semantic interpretation via tree traversal</li>
+                </ul>
+                
+                <div class="example-box fragment">
+                    <h4>Example: Sentence Parsing</h4>
+                    <p>"The cat sat on the mat" →</p>
+                    <p>S → NP VP → (Det N) (V PP) → ...</p>
+                </div>
+                
+                <aside class="notes">
+                    The parser we built is a simplified version of what powers chatbots and translators.
+                </aside>
+            </section>
+            
+            <!-- PHYSICS -->
+            <section>
+                <h2>⚛️ Physics</h2>
+                
+                <p><strong>Cellular Automata</strong> as computation models:</p>
+                
+                <ul>
+                    <li>Conway's Game of Life is Turing-complete</li>
+                    <li>Models physical processes (crystal growth, fluid dynamics)</li>
+                    <li>Rule 110 is a universal computer</li>
+                </ul>
+                
+                <div class="example-box fragment">
+                    <h4>Insight</h4>
+                    <p>Physical systems can be viewed as computational processes.</p>
+                    <p>This connects physics to the limits of computation!</p>
+                </div>
+                
+                <aside class="notes">
+                    Stephen Wolfram explored this extensively in "A New Kind of Science".
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- SUMMARY -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>📝 Key Takeaways</h2>
+                
+                <ol>
+                    <li class="fragment"><strong>Turing machines</strong> formalise what "computation" means</li>
+                    <li class="fragment"><strong>Lambda calculus</strong> shows computation = function application</li>
+                    <li class="fragment"><strong>Church-Turing thesis</strong> — both models are equivalent</li>
+                    <li class="fragment"><strong>Halting Problem</strong> — some problems are fundamentally unsolvable</li>
+                    <li class="fragment"><strong>ASTs and interpreters</strong> — how real languages work</li>
+                    <li class="fragment"><strong>Closures</strong> — functions that remember their environment</li>
+                </ol>
+                
+                <aside class="notes">
+                    These foundations will appear throughout the course.
+                </aside>
+            </section>
+            
+            <!-- LOOKING AHEAD -->
+            <section>
+                <h2>🔜 Looking Ahead</h2>
+                
+                <p><strong>Week 2: Design Patterns</strong></p>
+                
+                <ul>
+                    <li>State pattern — managing state machines</li>
+                    <li>Visitor pattern — traversing ASTs</li>
+                    <li>Strategy pattern — interchangeable algorithms</li>
+                    <li>Factory pattern — creating objects flexibly</li>
+                </ul>
+                
+                <p class="fragment">The patterns we learn will build on today's foundations.</p>
+                
+                <aside class="notes">
+                    Design patterns are computational thinking applied to software architecture.
+                </aside>
+            </section>
+            
+            <!-- LAB PREVIEW -->
+            <section>
+                <h2>🧪 Lab Preview</h2>
+                
+                <p>In today's lab, you will:</p>
+                
+                <ol>
+                    <li><strong>Implement a Turing machine simulator</strong> in Python</li>
+                    <li><strong>Explore lambda calculus</strong> with Church encodings</li>
+                    <li><strong>Build a mini-interpreter</strong> with lexer, parser, and evaluator</li>
+                </ol>
+                
+                <p class="fragment">All code includes type hints and follows established conventions.</p>
+                
+                <aside class="notes">
+                    The lab reinforces theory through hands-on implementation.
+                </aside>
+            </section>
+            
+            <!-- QUESTIONS -->
+            <section>
+                <h1>❓ Questions?</h1>
+                
+                <hr style="border-color: #30363d; margin: 40px 0;">
+                
+                <p style="color: #8b949e;">
+                    THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS<br>
+                    Week 1: The Epistemology of Computation
+                </p>
+                
+                <p style="font-size: 0.8em; color: #666; margin-top: 30px;">
+                    © 2025 Antonio Clim. All rights reserved.
+                </p>
+                
+                <aside class="notes">
+                    Take questions before moving to the lab session.
+                </aside>
+            </section>
+            
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/math/math.js"></script>
+    
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            showNotes: false,
+            transition: 'slide',
+            plugins: [RevealNotes, RevealHighlight, RevealMath.KaTeX]
+        });
+    </script>
+</body>
+</html>

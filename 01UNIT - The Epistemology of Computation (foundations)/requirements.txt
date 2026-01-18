@@ -1,0 +1,15 @@
+# 01UNIT: The Epistemology of Computation
+# Requirements for foundational computation theory laboratory
+#
+# © 2025 Antonio Clim. All rights reserved.
+
+# Core testing and quality assurance
+pytest>=7.0
+pytest-cov>=4.0
+ruff>=0.1
+mypy>=1.0
+
+# Note: This UNIT focuses on foundational theory and requires
+# only the core testing infrastructure. No additional numerical
+# or scientific dependencies are necessary for the Turing machine,
+# lambda calculus and AST interpreter implementations.
