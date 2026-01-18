@@ -1,0 +1,50 @@
+@startuml cross_validation
+!theme plain
+skinparam backgroundColor #1a1a2e
+skinparam defaultFontColor #eaeaea
+
+title 5-Fold Cross-Validation
+
+rectangle "Dataset" as D #2d2d44 {
+    rectangle "Fold 1" as F1 #4a9eff
+    rectangle "Fold 2" as F2 #4a9eff
+    rectangle "Fold 3" as F3 #4a9eff
+    rectangle "Fold 4" as F4 #4a9eff
+    rectangle "Fold 5" as F5 #4a9eff
+}
+
+rectangle "Iteration 1" as I1 {
+    note "Test: Fold 1\nTrain: Folds 2-5" as N1
+}
+
+rectangle "Iteration 2" as I2 {
+    note "Test: Fold 2\nTrain: Folds 1,3-5" as N2
+}
+
+rectangle "Iteration 3" as I3 {
+    note "Test: Fold 3\nTrain: Folds 1-2,4-5" as N3
+}
+
+rectangle "Iteration 4" as I4 {
+    note "Test: Fold 4\nTrain: Folds 1-3,5" as N4
+}
+
+rectangle "Iteration 5" as I5 {
+    note "Test: Fold 5\nTrain: Folds 1-4" as N5
+}
+
+D -down-> I1
+D -down-> I2
+D -down-> I3
+D -down-> I4
+D -down-> I5
+
+rectangle "Final Score = Mean of 5 iterations" as Final #4a9eff
+
+I1 -down-> Final
+I2 -down-> Final
+I3 -down-> Final
+I4 -down-> Final
+I5 -down-> Final
+
+@enduml

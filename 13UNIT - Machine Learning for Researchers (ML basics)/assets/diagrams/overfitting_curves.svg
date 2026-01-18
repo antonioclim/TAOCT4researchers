@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <defs>
+    <style>
+      .title { font: bold 16px sans-serif; fill: #333; }
+      .label { font: 12px sans-serif; fill: #666; }
+      .train { stroke: #2196F3; stroke-width: 2; fill: none; }
+      .test { stroke: #FF9800; stroke-width: 2; fill: none; }
+    </style>
+  </defs>
+  
+  <rect width="600" height="400" fill="#fafafa"/>
+  
+  <text x="300" y="30" class="title" text-anchor="middle">Learning Curves: Detecting Overfitting</text>
+  
+  <!-- Axes -->
+  <line x1="80" y1="320" x2="550" y2="320" stroke="#333" stroke-width="1"/>
+  <line x1="80" y1="320" x2="80" y2="60" stroke="#333" stroke-width="1"/>
+  
+  <text x="315" y="360" class="label" text-anchor="middle">Model Complexity →</text>
+  <text x="40" y="190" class="label" text-anchor="middle" transform="rotate(-90 40 190)">Score</text>
+  
+  <!-- Training curve (high, stays high) -->
+  <path class="train" d="M 100 280 Q 200 200 300 120 T 520 80"/>
+  
+  <!-- Test curve (rises then falls) -->
+  <path class="test" d="M 100 300 Q 200 220 300 180 Q 400 200 520 260"/>
+  
+  <!-- Optimal point -->
+  <circle cx="300" cy="180" r="8" fill="#4CAF50"/>
+  <text x="310" y="175" class="label">Optimal</text>
+  
+  <!-- Regions -->
+  <text x="150" y="350" class="label" text-anchor="middle">Underfitting</text>
+  <text x="450" y="350" class="label" text-anchor="middle">Overfitting</text>
+  
+  <!-- Legend -->
+  <line x1="420" y1="50" x2="460" y2="50" class="train"/>
+  <text x="470" y="55" class="label">Training</text>
+  <line x1="420" y1="70" x2="460" y2="70" class="test"/>
+  <text x="470" y="75" class="label">Validation</text>
+</svg>
