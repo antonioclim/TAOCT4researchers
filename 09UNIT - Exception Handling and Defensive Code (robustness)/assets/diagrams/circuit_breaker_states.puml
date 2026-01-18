@@ -1,0 +1,63 @@
+@startuml circuit_breaker_states
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam stateBackgroundColor #F8F9FA
+skinparam stateBorderColor #6C757D
+skinparam arrowColor #0D6EFD
+skinparam noteFontSize 11
+
+title Circuit Breaker State Machine
+
+[*] --> CLOSED : initialise
+
+state CLOSED {
+    state "Normal Operation" as normal
+    normal : Requests pass through
+    normal : Failures counted
+}
+
+state OPEN {
+    state "Failing Fast" as failing
+    failing : Requests rejected
+    failing : Timer running
+}
+
+state HALF_OPEN {
+    state "Testing Recovery" as testing
+    testing : Limited requests allowed
+    testing : Success/failure monitored
+}
+
+CLOSED --> OPEN : failures >= threshold
+note on link
+  Failure threshold
+  exceeded
+end note
+
+OPEN --> HALF_OPEN : reset_timeout elapsed
+note on link
+  Timeout expired,
+  test recovery
+end note
+
+HALF_OPEN --> CLOSED : successes >= success_threshold
+note on link
+  Service recovered,
+  resume normal
+end note
+
+HALF_OPEN --> OPEN : any failure
+note on link
+  Still failing,
+  back to open
+end note
+
+legend right
+  | State | Behaviour |
+  | CLOSED | Normal operation, count failures |
+  | OPEN | Fail fast, reject all calls |
+  | HALF_OPEN | Test with limited calls |
+endlegend
+
+@enduml

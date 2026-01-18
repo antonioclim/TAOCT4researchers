@@ -1,0 +1,78 @@
+@startuml defensive_programming_flow
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam activityBackgroundColor #F8F9FA
+skinparam activityBorderColor #6C757D
+skinparam arrowColor #0D6EFD
+
+title Defensive Programming: Input Processing Flow
+
+start
+
+:Receive Input;
+
+partition "Precondition Checks" {
+    :Validate type;
+    if (correct type?) then (yes)
+    else (no)
+        :raise TypeError;
+        stop
+    endif
+    
+    :Validate range/bounds;
+    if (within bounds?) then (yes)
+    else (no)
+        :raise ValueError;
+        stop
+    endif
+    
+    :Validate format/pattern;
+    if (matches pattern?) then (yes)
+    else (no)
+        :raise ValueError;
+        stop
+    endif
+}
+
+partition "Processing" {
+    :Sanitise input;
+    note right
+      Remove/escape
+      dangerous content
+    end note
+    
+    :Transform data;
+    
+    if (transformation valid?) then (yes)
+    else (no)
+        :raise TransformationError;
+        stop
+    endif
+}
+
+partition "Postcondition Checks" {
+    :Validate output;
+    
+    if (output satisfies contract?) then (yes)
+        :Return result;
+    else (no)
+        :raise AssertionError;
+        note right
+          Bug in implementation
+          if postcondition fails
+        end note
+        stop
+    endif
+}
+
+stop
+
+legend bottom
+  | Phase | Responsibility |
+  | Precondition | Caller provides valid input |
+  | Processing | Function transforms correctly |
+  | Postcondition | Function delivers promised result |
+endlegend
+
+@enduml
