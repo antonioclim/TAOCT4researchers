@@ -8,7 +8,6 @@ Run with: pytest tests/test_lab_1_03.py -v
 """
 
 import pytest
-import math
 
 
 class TestLexer:

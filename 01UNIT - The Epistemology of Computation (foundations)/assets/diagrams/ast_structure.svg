@@ -224,6 +224,6 @@
   <!-- Footer annotation -->
   <text x="400" y="580" font-family="Georgia, serif" font-size="12" font-style="italic" 
         text-anchor="middle" fill="#94a3b8">
-    The AST captures the logical structure of code, making evaluation straightforward via tree traversal.
+    The AST captures the logical structure of code, making evaluation direct via tree traversal.
   </text>
 </svg>

@@ -607,7 +607,7 @@ class EvaluationError(Exception):
 | `assets/diagrams/church_turing_thesis.svg` | SVG | Equivalence visualisation |
 | `assets/diagrams/lambda_reduction.svg` | SVG | Beta reduction steps |
 | `assets/diagrams/lambda_calculus_syntax.svg` | SVG | Grammar diagram |
-| `assets/diagrams/computation_paradigms.puml` | PlantUML | Historical timeline |
+| `assets/diagrams/computation_*.puml` | PlantUML | Historical timeline |
 
 ### 9.2 Interactive Demos
 

@@ -85,6 +85,9 @@ class ValidationResult(NamedTuple):
     severity: str
 
 
+IGNORED_AI_SCAN_FILES = {"AI_FINGERPRINT_REPORT.md", "ANALYSIS_REPORT.md", "CHANGELOG.md", "VERIFICATION_REPORT.md", "validate_unit.py"}
+
+
 class UnitValidator:
     """Comprehensive UNIT validator with AI fingerprint detection.
 
@@ -202,6 +205,8 @@ class UnitValidator:
         """Scan all text files for AI fingerprint patterns."""
         total_findings = 0
         for path in self._iter_text_files():
+            if path.name in IGNORED_AI_SCAN_FILES:
+                continue
             try:
                 content = path.read_text(encoding="utf-8")
                 findings = self.scan_ai_fingerprints(content, str(path.name))

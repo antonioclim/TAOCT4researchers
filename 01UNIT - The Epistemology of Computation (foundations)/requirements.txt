@@ -13,3 +13,7 @@ mypy>=1.0
 # only the core testing infrastructure. No additional numerical
 # or scientific dependencies are necessary for the Turing machine,
 # lambda calculus and AST interpreter implementations.
+
+# Typing support for mypy
+mypy-extensions>=1.0.0
+typing-extensions>=4.7.0

@@ -20,7 +20,7 @@ See README.md for full licence terms.
 ═══════════════════════════════════════════════════════════════════════════════
 """
 
-from .lab_1_01_turing_machine import (
+from .lab_01_01_turing_machine import (
     TuringMachine,
     TuringSimulator,
     Configuration,
@@ -32,7 +32,7 @@ from .lab_1_01_turing_machine import (
     create_binary_successor_machine,
 )
 
-from .lab_1_02_lambda_calculus import (
+from .lab_01_02_lambda_calculus import (
     LambdaExpr,
     Var as LambdaVar,
     Abs,

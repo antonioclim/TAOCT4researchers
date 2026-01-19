@@ -279,28 +279,27 @@ def beta_reduce_once(expr: LambdaExpr) -> tuple[LambdaExpr, bool]:
 
 
 def beta_reduce(expr: LambdaExpr, max_steps: int = 100) -> LambdaExpr:
-    """Fully beta-reduce an expression to normal form.
-    
-    Repeatedly applies beta reduction until no more reductions are possible
-    or the step limit is reached.
-    
+    """Reduce an expression by repeated beta-reduction.
+
+    The function applies a single-step reducer until the expression reaches
+    a normal form (no beta redex remains) or a maximum number of steps is
+    reached. The step bound is interpreted as an upper bound on performed
+    reductions; if the expression becomes stable on the final step, the
+    stable form is returned.
+
     Args:
-        expr: The expression to reduce.
+        expr: Expression to reduce.
         max_steps: Maximum number of reduction steps.
-    
+
     Returns:
-        The fully reduced expression (normal form if reached).
-    
+        The reduced expression. If normal form is reached within the bound,
+        the returned value is the normal form.
+
     Raises:
-        RuntimeError: If reduction does not terminate within max_steps.
-    
-    Example:
-        >>> expr = App(Abs("x", App(Var("x"), Var("x"))), Var("y"))
-        >>> str(beta_reduce(expr))
-        'y y'
+        RuntimeError: If the expression still reduces after ``max_steps`` steps.
     """
     logger.debug("Starting reduction of: %s", expr)
-    
+
     for step in range(max_steps):
         reduced, did_reduce = beta_reduce_once(expr)
         if not did_reduce:
@@ -308,7 +307,12 @@ def beta_reduce(expr: LambdaExpr, max_steps: int = 100) -> LambdaExpr:
             return reduced
         expr = reduced
         logger.debug("Step %d: %s", step + 1, expr)
-    
+
+    # If the bound is exhausted, confirm whether the last reduced term is already stable.
+    reduced, did_reduce = beta_reduce_once(expr)
+    if not did_reduce:
+        return reduced
+
     raise RuntimeError(
         f"Reduction did not terminate within {max_steps} steps. "
         f"Expression may diverge."
@@ -522,7 +526,7 @@ def church_iszero() -> LambdaExpr:
     Returns:
         The IS_ZERO combinator as a LambdaExpr.
     """
-    n, x = Var("n"), Var("x")
+    n = Var("n")
     const_false = Abs("x", FALSE)
     return Abs("n", App(App(n, const_false), TRUE))
 
@@ -764,15 +768,15 @@ def demo_basic_reduction() -> None:
     # Identity applied to y
     identity = Abs("x", Var("x"))
     expr = App(identity, Var("y"))
-    print(f"\n1. Identity application:")
-    print(f"   (λx.x) y")
+    print("\n1. Identity application:")
+    print("   (λx.x) y")
     print(f"   → {beta_reduce(expr)}")
     
     # Nested reduction
     k = Abs("x", Abs("y", Var("x")))
     expr2 = App(App(k, Var("a")), Var("b"))
-    print(f"\n2. K combinator:")
-    print(f"   K a b = (λx.λy.x) a b")
+    print("\n2. K combinator:")
+    print("   K a b = (λx.λy.x) a b")
     trace = trace_reduction(expr2)
     for i, step in enumerate(trace):
         prefix = "   " if i == 0 else "   → "
@@ -861,7 +865,8 @@ def demo_python_church() -> None:
     print("DEMO: Church Encodings in Python")
     print("=" * 60)
     
-    inc = lambda x: x + 1
+    def inc(x: int) -> int:
+        return x + 1
     
     print("\nChurch numerals as Python functions:")
     for i in range(5):
@@ -906,7 +911,7 @@ def demo_combinators() -> None:
     skk_applied = App(skk, Var("z"))
     reduced = beta_reduce(skk_applied)
     
-    print(f"\nVerifying I = S K K:")
+    print("\nVerifying I = S K K:")
     print(f"  S K K z → {reduced}")
     print(f"  I z     → {beta_reduce(App(i_combinator(), Var('z')))}")
     

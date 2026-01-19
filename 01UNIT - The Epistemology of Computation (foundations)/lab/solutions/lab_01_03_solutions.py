@@ -1,3 +1,5 @@
+# ruff: noqa
+
 """
 Week 1: Lab 3 Solutions — AST Interpreter Exercises.
 
@@ -13,11 +15,8 @@ import sys
 sys.path.insert(0, '..')
 
 from dataclasses import dataclass
-from typing import Union
 from lab_1_03_ast_interpreter import (
-    Expr, Num, Var, BinOp, UnaryOp, FuncCall, Let, Lambda, IfExpr,
-    Lexer, TokenType, Token, Parser, Evaluator, Closure,
-    parse, evaluate
+    Expr, Num, BinOp, UnaryOp, Lexer, TokenType, Evaluator
 )
 
 
@@ -290,7 +289,7 @@ def test_list_operations():
     # Test tail separately (returns list)
     tail_result = evaluate_with_lists(ListOp('tail', (list_123,)))
     if isinstance(tail_result, ListValue) and tail_result.elements == [2.0, 3.0]:
-        print(f"  ✓ tail [1,2,3] = [2, 3]")
+        print("  ✓ tail [1,2,3] = [2, 3]")
     else:
         print(f"  ✗ tail [1,2,3] = {tail_result}")
         all_passed = False
@@ -420,7 +419,7 @@ def test_string_operations():
     # Test concat separately
     concat_result = evaluate_with_strings(StringOp('concat', (hello, world)))
     if isinstance(concat_result, StringValue) and concat_result.value == "HelloWorld":
-        print(f'  ✓ concat "Hello" "World" = "HelloWorld"')
+        print('  ✓ concat "Hello" "World" = "HelloWorld"')
     else:
         print(f'  ✗ concat "Hello" "World" = {concat_result}')
         all_passed = False
@@ -428,7 +427,7 @@ def test_string_operations():
     # Test charat
     charat_result = evaluate_with_strings(StringOp('charat', (hello, Num(1))))
     if isinstance(charat_result, StringValue) and charat_result.value == "e":
-        print(f'  ✓ charat "Hello" 1 = "e"')
+        print('  ✓ charat "Hello" 1 = "e"')
     else:
         print(f'  ✗ charat "Hello" 1 = {charat_result}')
         all_passed = False

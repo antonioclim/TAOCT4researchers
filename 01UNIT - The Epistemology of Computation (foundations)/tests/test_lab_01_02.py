@@ -137,7 +137,7 @@ class TestChurchBooleans:
     
     def test_church_not(self, church_true, church_false):
         """Test the NOT operation."""
-        from lab_1_02_lambda_calculus import church_not, beta_reduce, church_to_bool
+        from lab_1_02_lambda_calculus import church_not, church_to_bool
         from lab_1_02_lambda_calculus import App
         
         not_true = App(church_not(), church_true)

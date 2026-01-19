@@ -14,9 +14,9 @@ sys.path.insert(0, '..')
 
 from lab_1_02_lambda_calculus import (
     LambdaExpr, Var, Abs, App,
-    beta_reduce, trace_reduction, church_to_int, church_to_bool,
-    TRUE, FALSE, church_numeral, church_succ, church_add,
-    python_church_numeral
+    church_to_int, church_to_bool,
+    TRUE, FALSE, church_numeral, church_succ,
+    python_church_numeral,
 )
 
 
@@ -34,6 +34,8 @@ def church_pair() -> LambdaExpr:
     Returns:
         The PAIR combinator as a lambda expression.
     """
+    x = Var("x")
+    x = Var("x")
     x = Var("x")
     y = Var("y")
     f = Var("f")
@@ -207,7 +209,6 @@ def church_iszero() -> LambdaExpr:
     Returns TRUE if n is 0, FALSE otherwise.
     """
     n = Var("n")
-    x = Var("x")
     always_false = Abs("x", FALSE)
     return Abs("n", App(App(n, always_false), TRUE))
 
