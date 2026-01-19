@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Pattern Visualiser | 02UNIT</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --border: #30363d;
+            --text-primary: #ffffff;
+            --text-secondary: #8b949e;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-purple: #a371f7;
+            --accent-orange: #d29922;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--accent-blue);
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+        
+        .pattern-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .pattern-btn {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .pattern-btn:hover {
+            border-color: var(--accent-blue);
+        }
+        
+        .pattern-btn.active {
+            border-color: var(--accent-blue);
+            background: rgba(88, 166, 255, 0.1);
+        }
+        
+        .visualisation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .visualisation {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .panel h2 {
+            color: var(--accent-blue);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .code-block {
+            background: var(--bg-primary);
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+        
+        .code-block .keyword { color: var(--accent-purple); }
+        .code-block .class-name { color: var(--accent-green); }
+        .code-block .method { color: var(--accent-blue); }
+        .code-block .string { color: var(--accent-orange); }
+        .code-block .comment { color: var(--text-secondary); }
+        
+        .animation-area {
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .component {
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 15px 25px;
+            text-align: center;
+            transition: all 0.5s ease;
+            min-width: 150px;
+        }
+        
+        .component.active {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 20px rgba(63, 185, 80, 0.3);
+        }
+        
+        .component.highlight {
+            border-color: var(--accent-blue);
+            transform: scale(1.05);
+        }
+        
+        .component-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+        
+        .component-name {
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        .arrow {
+            width: 2px;
+            height: 30px;
+            background: var(--accent-blue);
+            position: relative;
+        }
+        
+        .arrow::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid var(--accent-blue);
+        }
+        
+        .horizontal-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .message {
+            background: rgba(88, 166, 255, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-size: 13px;
+            color: var(--accent-blue);
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .control-btn {
+            background: var(--accent-blue);
+            border: none;
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+        
+        .control-btn:hover {
+            opacity: 0.8;
+        }
+        
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .step-indicator {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-top: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔮 Design Pattern Visualiser</h1>
+        
+        <div class="pattern-selector">
+            <button class="pattern-btn active" data-pattern="strategy">Strategy Pattern</button>
+            <button class="pattern-btn" data-pattern="observer">Observer Pattern</button>
+            <button class="pattern-btn" data-pattern="factory">Factory Pattern</button>
+        </div>
+        
+        <div class="visualisation">
+            <div class="panel">
+                <h2>Animation</h2>
+                <div id="animation-container" class="animation-area">
+                    <!-- Dynamic content -->
+                </div>
+                <div class="controls">
+                    <button class="control-btn" id="prev-btn">← Previous</button>
+                    <button class="control-btn" id="play-btn">▶ Play</button>
+                    <button class="control-btn" id="next-btn">Next →</button>
+                </div>
+                <div class="step-indicator" id="step-indicator">Step 1 of 4</div>
+            </div>
+            
+            <div class="panel">
+                <h2>Code</h2>
+                <div class="code-block" id="code-display">
+                    <!-- Dynamic code -->
+                </div>
+                <div class="message" id="explanation">
+                    Select a pattern to see how it works
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            © 2025 Antonio Clim. All rights reserved.<br>
+            02UNIT: Abstraction and Encapsulation
+        </footer>
+    </div>
+    
+    <script>
+        // Pattern definitions
+        const patterns = {
+            strategy: {
+                name: 'Strategy Pattern',
+                steps: [
+                    {
+                        components: [
+                            { id: 'context', label: 'Context', name: 'NumericalIntegrator', active: true },
+                            { id: 'strategy', label: 'Strategy Interface', name: 'IntegrationStrategy', active: false },
+                            { id: 'concrete', label: 'Concrete Strategy', name: 'SimpsonRule', active: false }
+                        ],
+                        code: `<span class="keyword">class</span> <span class="class-name">NumericalIntegrator</span>:
+    <span class="keyword">def</span> <span class="method">__init__</span>(self, strategy):
+        self._strategy = strategy  <span class="comment"># ← Context holds a strategy</span>`,
+                        explanation: 'The Context (NumericalIntegrator) holds a reference to a Strategy object.'
+                    },
+                    {
+                        components: [
+                            { id: 'context', label: 'Context', name: 'NumericalIntegrator', active: false },
+                            { id: 'strategy', label: 'Strategy Interface', name: 'IntegrationStrategy', active: true, highlight: true },
+                            { id: 'concrete', label: 'Concrete Strategy', name: 'SimpsonRule', active: false }
+                        ],
+                        code: `<span class="keyword">class</span> <span class="class-name">IntegrationStrategy</span>(Protocol):
+    <span class="keyword">def</span> <span class="method">integrate</span>(self, f, a, b, n) -> float:
+        ...  <span class="comment"># ← Abstract interface</span>`,
+                        explanation: 'The Strategy Protocol defines the interface that all concrete strategies must implement.'
+                    },
+                    {
+                        components: [
+                            { id: 'context', label: 'Context', name: 'NumericalIntegrator', active: false },
+                            { id: 'strategy', label: 'Strategy Interface', name: 'IntegrationStrategy', active: false },
+                            { id: 'concrete', label: 'Concrete Strategy', name: 'SimpsonRule', active: true, highlight: true }
+                        ],
+                        code: `<span class="keyword">class</span> <span class="class-name">SimpsonRule</span>:
+    <span class="keyword">def</span> <span class="method">integrate</span>(self, f, a, b, n) -> float:
+        <span class="comment"># Simpson's 1/3 rule implementation</span>
+        h = (b - a) / n
+        <span class="keyword">return</span> h/3 * (f(a) + 4*sum(...) + f(b))`,
+                        explanation: 'Concrete strategies implement the algorithm. We can swap SimpsonRule for TrapezoidRule without changing the Context.'
+                    },
+                    {
+                        components: [
+                            { id: 'context', label: 'Context', name: 'NumericalIntegrator', active: true, highlight: true },
+                            { id: 'strategy', label: 'Strategy Interface', name: 'IntegrationStrategy', active: true },
+                            { id: 'concrete', label: 'Concrete Strategy', name: 'SimpsonRule', active: true }
+                        ],
+                        code: `integrator = NumericalIntegrator(SimpsonRule())
+result = integrator.integrate(f, 0, 1, n=100)
+
+<span class="comment"># Swap strategy at runtime!</span>
+integrator.strategy = TrapezoidRule()
+result2 = integrator.integrate(f, 0, 1, n=100)`,
+                        explanation: '✨ The Strategy pattern allows algorithms to be selected at runtime. The Context delegates work to the Strategy.'
+                    }
+                ]
+            },
+            observer: {
+                name: 'Observer Pattern',
+                steps: [
+                    {
+                        components: [
+                            { id: 'subject', label: 'Subject', name: 'Observable[T]', active: true },
+                            { id: 'obs1', label: 'Observer 1', name: 'ConsoleLogger', active: false },
+                            { id: 'obs2', label: 'Observer 2', name: 'MetricsCollector', active: false }
+                        ],
+                        code: `<span class="keyword">class</span> <span class="class-name">Observable</span>[T]:
+    <span class="keyword">def</span> <span class="method">__init__</span>(self):
+        self._observers = []  <span class="comment"># ← Maintains list of observers</span>`,
+                        explanation: 'The Subject (Observable) maintains a list of observers that are interested in its state changes.'
+                    },
+                    {
+                        components: [
+                            { id: 'subject', label: 'Subject', name: 'Observable[T]', active: true },
+                            { id: 'obs1', label: 'Observer 1', name: 'ConsoleLogger', active: true, highlight: true },
+                            { id: 'obs2', label: 'Observer 2', name: 'MetricsCollector', active: true, highlight: true }
+                        ],
+                        code: `observable = Observable()
+observable.subscribe(console_logger.update)
+observable.subscribe(metrics_collector.update)
+<span class="comment"># ← Both observers are now subscribed</span>`,
+                        explanation: 'Observers subscribe to the Subject. They will be notified when state changes.'
+                    },
+                    {
+                        components: [
+                            { id: 'subject', label: 'Subject', name: 'Observable[T]', active: true, highlight: true },
+                            { id: 'obs1', label: 'Observer 1', name: 'ConsoleLogger', active: true },
+                            { id: 'obs2', label: 'Observer 2', name: 'MetricsCollector', active: true }
+                        ],
+                        code: `<span class="comment"># State changes in the simulation...</span>
+simulation.step(dt)
+new_state = simulation.state()
+
+<span class="comment"># Notify all observers</span>
+observable.notify(new_state)  <span class="comment"># ← Triggers notifications</span>`,
+                        explanation: 'When state changes, the Subject notifies all registered observers.'
+                    },
+                    {
+                        components: [
+                            { id: 'subject', label: 'Subject', name: 'Observable[T]', active: false },
+                            { id: 'obs1', label: 'Observer 1', name: 'ConsoleLogger', active: true, highlight: true },
+                            { id: 'obs2', label: 'Observer 2', name: 'MetricsCollector', active: true, highlight: true }
+                        ],
+                        code: `<span class="keyword">class</span> <span class="class-name">ConsoleLogger</span>:
+    <span class="keyword">def</span> <span class="method">update</span>(self, value):
+        print(f<span class="string">"[LOG] {value}"</span>)  <span class="comment"># ← Each observer reacts</span>
+
+<span class="keyword">class</span> <span class="class-name">MetricsCollector</span>:
+    <span class="keyword">def</span> <span class="method">update</span>(self, value):
+        self._values.append(value)  <span class="comment"># ← Independently</span>`,
+                        explanation: '✨ Each Observer handles the notification independently. Loose coupling between Subject and Observers!'
+                    }
+                ]
+            },
+            factory: {
+                name: 'Factory Pattern',
+                steps: [
+                    {
+                        components: [
+                            { id: 'client', label: 'Client', name: 'Simulation', active: true },
+                            { id: 'factory', label: 'Factory', name: 'AgentFactory', active: false },
+                            { id: 'product', label: 'Product', name: 'Agent', active: false }
+                        ],
+                        code: `<span class="keyword">class</span> <span class="class-name">Simulation</span>:
+    <span class="keyword">def</span> <span class="method">__init__</span>(self, factory: AgentFactory):
+        self._factory = factory  <span class="comment"># ← Client uses factory</span>`,
+                        explanation: 'The Client (Simulation) needs to create objects but doesn\'t know their concrete types.'
+                    },
+                    {
+                        components: [
+                            { id: 'client', label: 'Client', name: 'Simulation', active: false },
+                            { id: 'factory', label: 'Factory', name: 'AgentFactory', active: true, highlight: true },
+                            { id: 'product', label: 'Product', name: 'Agent', active: false }
+                        ],
+                        code: `<span class="keyword">class</span> <span class="class-name">AgentFactory</span>(Protocol):
+    <span class="keyword">def</span> <span class="method">create</span>(self, agent_id: str) -> Agent:
+        ...  <span class="comment"># ← Factory interface</span>
+
+<span class="keyword">class</span> <span class="class-name">CooperativeAgentFactory</span>:
+    <span class="keyword">def</span> <span class="method">create</span>(self, agent_id):
+        <span class="keyword">return</span> CooperativeAgent(agent_id)`,
+                        explanation: 'The Factory encapsulates object creation logic. Different factories create different product types.'
+                    },
+                    {
+                        components: [
+                            { id: 'client', label: 'Client', name: 'Simulation', active: true },
+                            { id: 'factory', label: 'Factory', name: 'CooperativeFactory', active: true, highlight: true },
+                            { id: 'product', label: 'Product', name: 'CooperativeAgent', active: true }
+                        ],
+                        code: `<span class="comment"># Client requests object from factory</span>
+agent = self._factory.create(<span class="string">"agent_001"</span>)
+
+<span class="comment"># Client doesn't know concrete type!</span>
+agent.act(environment)  <span class="comment"># ← Works with any Agent</span>`,
+                        explanation: 'The Client requests objects through the Factory interface. It remains decoupled from concrete types.'
+                    },
+                    {
+                        components: [
+                            { id: 'client', label: 'Client', name: 'Simulation', active: true },
+                            { id: 'factory', label: 'Factory', name: 'CompetitiveFactory', active: true, highlight: true },
+                            { id: 'product', label: 'Product', name: 'CompetitiveAgent', active: true, highlight: true }
+                        ],
+                        code: `<span class="comment"># Swap factory to create different agents!</span>
+sim_coop = Simulation(CooperativeAgentFactory())
+sim_comp = Simulation(CompetitiveAgentFactory())
+
+<span class="comment"># Same client code, different products</span>`,
+                        explanation: '✨ By swapping factories, we can create entirely different product families without changing client code!'
+                    }
+                ]
+            }
+        };
+        
+        let currentPattern = 'strategy';
+        let currentStep = 0;
+        let isPlaying = false;
+        let playInterval = null;
+        
+        function renderAnimation(pattern, step) {
+            const container = document.getElementById('animation-container');
+            const stepData = patterns[pattern].steps[step];
+            
+            let html = '';
+            stepData.components.forEach((comp, i) => {
+                let classes = 'component';
+                if (comp.active) classes += ' active';
+                if (comp.highlight) classes += ' highlight';
+                
+                html += `
+                    <div class="${classes}">
+                        <div class="component-label">${comp.label}</div>
+                        <div class="component-name">${comp.name}</div>
+                    </div>
+                `;
+                
+                if (i < stepData.components.length - 1) {
+                    html += '<div class="arrow"></div>';
+                }
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function renderCode(pattern, step) {
+            const codeDisplay = document.getElementById('code-display');
+            const explanation = document.getElementById('explanation');
+            const stepData = patterns[pattern].steps[step];
+            
+            codeDisplay.innerHTML = stepData.code;
+            explanation.textContent = stepData.explanation;
+        }
+        
+        function updateStepIndicator() {
+            const total = patterns[currentPattern].steps.length;
+            document.getElementById('step-indicator').textContent = 
+                `Step ${currentStep + 1} of ${total}`;
+        }
+        
+        function render() {
+            renderAnimation(currentPattern, currentStep);
+            renderCode(currentPattern, currentStep);
+            updateStepIndicator();
+            
+            document.getElementById('prev-btn').disabled = currentStep === 0;
+            document.getElementById('next-btn').disabled = 
+                currentStep === patterns[currentPattern].steps.length - 1;
+        }
+        
+        function nextStep() {
+            if (currentStep < patterns[currentPattern].steps.length - 1) {
+                currentStep++;
+                render();
+            } else if (isPlaying) {
+                stopPlay();
+            }
+        }
+        
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                render();
+            }
+        }
+        
+        function startPlay() {
+            isPlaying = true;
+            document.getElementById('play-btn').textContent = '⏸ Pause';
+            playInterval = setInterval(nextStep, 2000);
+        }
+        
+        function stopPlay() {
+            isPlaying = false;
+            document.getElementById('play-btn').textContent = '▶ Play';
+            if (playInterval) {
+                clearInterval(playInterval);
+                playInterval = null;
+            }
+        }
+        
+        function togglePlay() {
+            if (isPlaying) {
+                stopPlay();
+            } else {
+                if (currentStep === patterns[currentPattern].steps.length - 1) {
+                    currentStep = 0;
+                }
+                startPlay();
+            }
+        }
+        
+        // Event listeners
+        document.querySelectorAll('.pattern-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.pattern-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentPattern = btn.dataset.pattern;
+                currentStep = 0;
+                stopPlay();
+                render();
+            });
+        });
+        
+        document.getElementById('prev-btn').addEventListener('click', prevStep);
+        document.getElementById('next-btn').addEventListener('click', nextStep);
+        document.getElementById('play-btn').addEventListener('click', togglePlay);
+        
+        // Initial render
+        render();
+    </script>
+</body>
+</html>
