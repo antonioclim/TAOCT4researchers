@@ -1,0 +1,59 @@
+@startuml recursion_call_tree
+skinparam backgroundColor #1a1a2e
+skinparam defaultFontColor white
+skinparam roundcorner 10
+
+skinparam rectangle {
+    BackgroundColor #0f3460
+    BorderColor #58a6ff
+}
+
+title Fibonacci(5) Call Tree - Naive Recursion
+
+rectangle "fib(5)\n**return 5**" as f5 #4a9eff
+rectangle "fib(4)\n**return 3**" as f4
+rectangle "fib(3)\n**return 2**" as f3a
+rectangle "fib(3)\n**return 2**" as f3b #f0883e
+rectangle "fib(2)\n**return 1**" as f2a
+rectangle "fib(2)\n**return 1**" as f2b #f0883e
+rectangle "fib(2)\n**return 1**" as f2c #f0883e
+rectangle "fib(1)\n**return 1**" as f1a #3fb950
+rectangle "fib(1)\n**return 1**" as f1b #3fb950
+rectangle "fib(1)\n**return 1**" as f1c #3fb950
+rectangle "fib(0)\n**return 0**" as f0a #3fb950
+rectangle "fib(0)\n**return 0**" as f0b #3fb950
+rectangle "fib(0)\n**return 0**" as f0c #3fb950
+
+f5 --> f4 : +
+f5 --> f3a : +
+f4 --> f3b : +
+f4 --> f2a : +
+f3a --> f2b : +
+f3a --> f1a : +
+f3b --> f2c : +
+f3b --> f1b : +
+f2a --> f1c : +
+f2a --> f0a : +
+f2b --> f1a : +
+f2b --> f0b : +
+f2c --> f1b : +
+f2c --> f0c : +
+
+note right of f3b
+  **Redundant!**
+  fib(3) computed twice
+end note
+
+note right of f2c
+  **Redundant!**
+  fib(2) computed 3 times
+end note
+
+legend bottom
+  |= Color |= Meaning |
+  | <#4a9eff> | Root call |
+  | <#0f3460> | Recursive calls |
+  | <#f0883e> | Redundant computation |
+  | <#3fb950> | Base cases |
+endlegend
+@enduml

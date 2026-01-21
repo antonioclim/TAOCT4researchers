@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursion Visualiser | Unit 8</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --accent: #4a9eff;
+            --success: #3fb950;
+            --warning: #f0883e;
+            --danger: #ff6b6b;
+            --text: #e6e6e6;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--accent);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        label {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        
+        select, input {
+            padding: 10px 15px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background: var(--bg-primary);
+            color: var(--text);
+            font-size: 1rem;
+        }
+        
+        button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3d8de0;
+        }
+        
+        .btn-secondary {
+            background: #444;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #555;
+        }
+        
+        .visualisation {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+        
+        @media (max-width: 900px) {
+            .visualisation {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .tree-container {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 400px;
+            overflow: auto;
+        }
+        
+        .stats-container {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .stat:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-label {
+            color: #888;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .stat-value.warning {
+            color: var(--warning);
+        }
+        
+        .stat-value.danger {
+            color: var(--danger);
+        }
+        
+        .stat-value.success {
+            color: var(--success);
+        }
+        
+        .tree-node {
+            display: inline-block;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .node-computing {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .node-cached {
+            background: var(--success);
+            color: white;
+        }
+        
+        .node-base {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .node-redundant {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+        
+        .output-log {
+            margin-top: 20px;
+            padding: 15px;
+            background: #0d0d15;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            margin: 3px 0;
+            padding: 3px 0;
+        }
+        
+        .log-call {
+            color: var(--accent);
+        }
+        
+        .log-return {
+            color: var(--success);
+        }
+        
+        .log-cache {
+            color: var(--warning);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔄 Recursion Visualiser</h1>
+            <p class="subtitle">Unit 8: Recursion and Dynamic Programming</p>
+        </header>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label>Algorithm</label>
+                <select id="algorithm">
+                    <option value="fibonacci">Fibonacci</option>
+                    <option value="factorial">Factorial</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>Input (n)</label>
+                <input type="number" id="inputN" value="6" min="0" max="15">
+            </div>
+            
+            <div class="control-group">
+                <label>Mode</label>
+                <select id="mode">
+                    <option value="naive">Naive (no memoisation)</option>
+                    <option value="memoised">Memoised</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>Speed</label>
+                <select id="speed">
+                    <option value="500">Slow</option>
+                    <option value="200" selected>Normal</option>
+                    <option value="50">Fast</option>
+                </select>
+            </div>
+            
+            <div class="control-group" style="justify-content: flex-end;">
+                <button class="btn-primary" onclick="startVisualization()">▶ Run</button>
+            </div>
+            
+            <div class="control-group" style="justify-content: flex-end;">
+                <button class="btn-secondary" onclick="resetVisualization()">↺ Reset</button>
+            </div>
+        </div>
+        
+        <div class="visualisation">
+            <div class="tree-container">
+                <h3 style="margin-bottom: 15px;">Call Tree</h3>
+                <div id="treeOutput"></div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--accent);"></div>
+                        <span>Computing</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--warning);"></div>
+                        <span>Base Case</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--success);"></div>
+                        <span>Cache Hit</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--danger);"></div>
+                        <span>Redundant</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-container">
+                <h3 style="margin-bottom: 15px;">Statistics</h3>
+                
+                <div class="stat">
+                    <span class="stat-label">Total Calls</span>
+                    <span class="stat-value" id="totalCalls">0</span>
+                </div>
+                
+                <div class="stat">
+                    <span class="stat-label">Unique Calls</span>
+                    <span class="stat-value" id="uniqueCalls">0</span>
+                </div>
+                
+                <div class="stat">
+                    <span class="stat-label">Cache Hits</span>
+                    <span class="stat-value success" id="cacheHits">0</span>
+                </div>
+                
+                <div class="stat">
+                    <span class="stat-label">Redundant Calls</span>
+                    <span class="stat-value danger" id="redundantCalls">0</span>
+                </div>
+                
+                <div class="stat">
+                    <span class="stat-label">Max Depth</span>
+                    <span class="stat-value" id="maxDepth">0</span>
+                </div>
+                
+                <div class="stat">
+                    <span class="stat-label">Result</span>
+                    <span class="stat-value" id="result">—</span>
+                </div>
+                
+                <div class="output-log" id="outputLog">
+                    <div class="log-entry" style="color: #666;">Execution log will appear here...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let stats = {
+            totalCalls: 0,
+            uniqueCalls: new Set(),
+            cacheHits: 0,
+            redundantCalls: 0,
+            maxDepth: 0,
+            currentDepth: 0
+        };
+        
+        let memo = {};
+        let running = false;
+        
+        function resetStats() {
+            stats = {
+                totalCalls: 0,
+                uniqueCalls: new Set(),
+                cacheHits: 0,
+                redundantCalls: 0,
+                maxDepth: 0,
+                currentDepth: 0
+            };
+            memo = {};
+            updateStatsDisplay();
+        }
+        
+        function updateStatsDisplay() {
+            document.getElementById('totalCalls').textContent = stats.totalCalls;
+            document.getElementById('uniqueCalls').textContent = stats.uniqueCalls.size;
+            document.getElementById('cacheHits').textContent = stats.cacheHits;
+            document.getElementById('redundantCalls').textContent = stats.redundantCalls;
+            document.getElementById('maxDepth').textContent = stats.maxDepth;
+        }
+        
+        function addNode(text, type) {
+            const tree = document.getElementById('treeOutput');
+            const node = document.createElement('span');
+            node.className = `tree-node node-${type}`;
+            node.textContent = text;
+            tree.appendChild(node);
+        }
+        
+        function log(message, type = 'call') {
+            const logDiv = document.getElementById('outputLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = message;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        
+        async function fibonacciNaive(n, speed) {
+            stats.totalCalls++;
+            stats.currentDepth++;
+            stats.maxDepth = Math.max(stats.maxDepth, stats.currentDepth);
+            
+            const isRedundant = stats.uniqueCalls.has(n);
+            stats.uniqueCalls.add(n);
+            
+            if (isRedundant) {
+                stats.redundantCalls++;
+                addNode(`fib(${n})`, 'redundant');
+                log(`fib(${n}) — REDUNDANT computation`, 'call');
+            } else if (n <= 1) {
+                addNode(`fib(${n})=${n}`, 'base');
+                log(`fib(${n}) = ${n} (base case)`, 'return');
+            } else {
+                addNode(`fib(${n})`, 'computing');
+                log(`fib(${n}) — computing...`, 'call');
+            }
+            
+            updateStatsDisplay();
+            await sleep(speed);
+            
+            let result;
+            if (n <= 1) {
+                result = n;
+            } else {
+                const left = await fibonacciNaive(n - 1, speed);
+                const right = await fibonacciNaive(n - 2, speed);
+                result = left + right;
+                log(`fib(${n}) = ${result}`, 'return');
+            }
+            
+            stats.currentDepth--;
+            return result;
+        }
+        
+        async function fibonacciMemoised(n, speed) {
+            stats.totalCalls++;
+            stats.currentDepth++;
+            stats.maxDepth = Math.max(stats.maxDepth, stats.currentDepth);
+            
+            if (n in memo) {
+                stats.cacheHits++;
+                addNode(`fib(${n})=${memo[n]}`, 'cached');
+                log(`fib(${n}) = ${memo[n]} (CACHE HIT)`, 'cache');
+                updateStatsDisplay();
+                await sleep(speed);
+                stats.currentDepth--;
+                return memo[n];
+            }
+            
+            stats.uniqueCalls.add(n);
+            
+            if (n <= 1) {
+                addNode(`fib(${n})=${n}`, 'base');
+                log(`fib(${n}) = ${n} (base case)`, 'return');
+            } else {
+                addNode(`fib(${n})`, 'computing');
+                log(`fib(${n}) — computing...`, 'call');
+            }
+            
+            updateStatsDisplay();
+            await sleep(speed);
+            
+            let result;
+            if (n <= 1) {
+                result = n;
+            } else {
+                const left = await fibonacciMemoised(n - 1, speed);
+                const right = await fibonacciMemoised(n - 2, speed);
+                result = left + right;
+                log(`fib(${n}) = ${result} (stored in cache)`, 'return');
+            }
+            
+            memo[n] = result;
+            stats.currentDepth--;
+            return result;
+        }
+        
+        async function factorialNaive(n, speed) {
+            stats.totalCalls++;
+            stats.currentDepth++;
+            stats.maxDepth = Math.max(stats.maxDepth, stats.currentDepth);
+            stats.uniqueCalls.add(n);
+            
+            if (n <= 1) {
+                addNode(`fact(${n})=1`, 'base');
+                log(`fact(${n}) = 1 (base case)`, 'return');
+            } else {
+                addNode(`fact(${n})`, 'computing');
+                log(`fact(${n}) — computing...`, 'call');
+            }
+            
+            updateStatsDisplay();
+            await sleep(speed);
+            
+            let result;
+            if (n <= 1) {
+                result = 1;
+            } else {
+                const sub = await factorialNaive(n - 1, speed);
+                result = n * sub;
+                log(`fact(${n}) = ${result}`, 'return');
+            }
+            
+            stats.currentDepth--;
+            return result;
+        }
+        
+        async function startVisualization() {
+            if (running) return;
+            running = true;
+            
+            resetVisualization();
+            
+            const algorithm = document.getElementById('algorithm').value;
+            const n = parseInt(document.getElementById('inputN').value);
+            const mode = document.getElementById('mode').value;
+            const speed = parseInt(document.getElementById('speed').value);
+            
+            let result;
+            
+            try {
+                if (algorithm === 'fibonacci') {
+                    if (mode === 'naive') {
+                        result = await fibonacciNaive(n, speed);
+                    } else {
+                        result = await fibonacciMemoised(n, speed);
+                    }
+                } else {
+                    result = await factorialNaive(n, speed);
+                }
+                
+                document.getElementById('result').textContent = result;
+                log(`✓ Final result: ${result}`, 'return');
+            } catch (e) {
+                log(`Error: ${e.message}`, 'call');
+            }
+            
+            running = false;
+        }
+        
+        function resetVisualization() {
+            document.getElementById('treeOutput').innerHTML = '';
+            document.getElementById('outputLog').innerHTML = 
+                '<div class="log-entry" style="color: #666;">Execution log will appear here...</div>';
+            document.getElementById('result').textContent = '—';
+            resetStats();
+        }
+    </script>
+</body>
+</html>
