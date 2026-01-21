@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<!--
+═══════════════════════════════════════════════════════════════════════════════
+COMPUTATIONAL THINKING FOR RESEARCHERS
+03UNIT: Algorithmic Complexity — Lecture Slides
+═══════════════════════════════════════════════════════════════════════════════
+
+This presentation covers asymptotic notation, complexity classes, the Master
+Theorem, profiling techniques and practical optimisation strategies across
+Python, C++ and JavaScript.
+
+© 2025 Antonio Clim. All rights reserved.
+See README.md for full licence terms.
+═══════════════════════════════════════════════════════════════════════════════
+-->
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03UNIT: Algorithmic Complexity | Computational Thinking for Researchers</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/night.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <style>
+        /* === RESPONSIVE BREAKPOINTS === */
+        :root {
+            --r-heading-color: #58a6ff;
+            --mobile: 480px;
+            --tablet: 768px;
+            --desktop: 1024px;
+        }
+        
+        .reveal h1, .reveal h2 { text-transform: none; }
+        .reveal .slides section { text-align: left; }
+        
+        /* === CONTENT BOXES === */
+        .hook-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-left: 4px solid #e94560;
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+        .hook-box .source {
+            font-size: 0.7em; color: #888;
+            margin-top: 10px; font-style: normal;
+        }
+        
+        .definition-box {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            border: 1px solid #58a6ff;
+            padding: 20px; margin: 15px 0; border-radius: 8px;
+        }
+        .definition-box h4 { color: #58a6ff; margin: 0 0 10px 0; font-size: 1em; }
+        
+        .theorem-box {
+            background: linear-gradient(135deg, #1a472a 0%, #16213e 100%);
+            border: 1px solid #3fb950;
+            padding: 20px; margin: 15px 0; border-radius: 8px;
+        }
+        .theorem-box h4 { color: #3fb950; margin: 0 0 10px 0; }
+        
+        .proof-box {
+            background: linear-gradient(135deg, #2d1b4e 0%, #16213e 100%);
+            border: 1px solid #a371f7;
+            padding: 20px; margin: 15px 0; border-radius: 8px;
+            font-size: 0.9em;
+        }
+        .proof-box h4 { color: #a371f7; margin: 0 0 10px 0; }
+        
+        .diagram-box {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            padding: 20px; border-radius: 8px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+            font-size: 0.6em; line-height: 1.4;
+            overflow-x: auto;
+        }
+        
+        /* === LAYOUT === */
+        .two-columns { display: flex; gap: 40px; }
+        .two-columns > div { flex: 1; }
+        .three-columns { display: flex; gap: 20px; }
+        .three-columns > div { flex: 1; }
+        
+        /* === TYPOGRAPHY === */
+        .highlight-text { color: #ffa657; font-weight: bold; }
+        .small-text { font-size: 0.75em; color: #8b949e; }
+        
+        /* === TABLES === */
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.75em; }
+        th, td { border: 1px solid #30363d; padding: 8px; text-align: left; }
+        th { background: #161b22; color: #58a6ff; }
+        tr:nth-child(even) { background: #0d1117; }
+        
+        .math-box {
+            background: #0d1117;
+            border: 1px solid #58a6ff;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .complexity-table td:nth-child(2),
+        .complexity-table td:nth-child(3),
+        .complexity-table td:nth-child(4) {
+            text-align: right;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+        }
+        
+        /* === RESPONSIVE CODE === */
+        pre, code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: clamp(0.6rem, 1.5vw, 0.85rem);
+        }
+        
+        /* === RESPONSIVE MEDIA QUERIES === */
+        @media (max-width: 768px) {
+            .two-columns { flex-direction: column; gap: 20px; }
+            .three-columns { flex-direction: column; gap: 15px; }
+            .diagram-box { font-size: 0.5em; }
+            table { font-size: 0.65em; }
+        }
+        
+        @media (max-width: 480px) {
+            .hook-box { padding: 15px; }
+            .definition-box, .theorem-box, .proof-box { padding: 15px; }
+        }
+        
+        /* === SPEAKER NOTES === */
+        .reveal .speaker-notes {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- ═══════════════════════════════════════════════════════════════
+                 TITLE SLIDE
+                 ═══════════════════════════════════════════════════════════════ -->
+            <section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #161b22 100%)">
+                <h1 style="font-size: 2em;">⏱️ 03UNIT</h1>
+                <h2 style="color: #58a6ff; font-size: 1.5em;">ALGORITHMIC COMPLEXITY</h2>
+                <p style="color: #8b949e; font-size: 0.9em;">
+                    From Theoretical Analysis to Empirical Profiling
+                </p>
+                <hr style="border-color: #30363d; margin: 30px 0;">
+                <p style="font-size: 0.7em; color: #8b949e;">
+                    THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS
+                </p>
+                <aside class="notes">
+                    Welcome to 03UNIT on Algorithmic Complexity. This unit bridges theoretical foundations with practical profiling techniques. We shall examine asymptotic notation, complexity classes and empirical estimation methods.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════
+                 HOOK 1: THE MILLION-DOLLAR QUESTION
+                 ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>💰 The Million-Dollar Question</h2>
+                
+                <div class="hook-box">
+                    <p>
+                        In 2000, the Clay Mathematics Institute published seven problems, 
+                        offering <strong>$1,000,000</strong> for solving each one.
+                    </p>
+                    <p>
+                        One of them: <strong>P vs NP</strong> — the most important 
+                        unsolved question in computer science.
+                    </p>
+                    <p class="source">
+                        — As of 2026, the problem remains open. The consequences of a 
+                        resolution would be revolutionary for cryptography, optimisation 
+                        and artificial intelligence.
+                    </p>
+                </div>
+                
+                <p class="fragment">
+                    Why is this so important? Because it tells us 
+                    <span class="highlight-text">what we can and CANNOT compute efficiently</span>.
+                </p>
+                <aside class="notes">
+                    The P vs NP problem asks whether every problem whose solution can be quickly verified can also be quickly solved. If P equals NP, modern cryptography would collapse. Most researchers believe P does not equal NP.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════
+                 AGENDA
+                 ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>📋 Agenda</h2>
+                
+                <table>
+                    <tr><th>Time</th><th>Module</th><th>Content</th></tr>
+                    <tr><td>0:00-0:50</td><td>Theory</td><td>Asymptotic notation, complexity classes</td></tr>
+                    <tr><td>0:50-1:35</td><td>Python</td><td>Profiling, optimisation, Numba</td></tr>
+                    <tr><td>1:35-1:50</td><td colspan="2" style="text-align:center;">☕ Break</td></tr>
+                    <tr><td>1:50-2:35</td><td>C++</td><td>Cache optimisation, SIMD, benchmarking</td></tr>
+                    <tr><td>2:35-3:20</td><td>JavaScript</td><td>V8 optimisation, Web Workers</td></tr>
+                    <tr><td>3:20-4:00</td><td>Lab</td><td>Polyglot Benchmark Suite</td></tr>
+                </table>
+                <aside class="notes">
+                    The session spans four hours covering theory and three programming languages. Each language demonstrates different optimisation paradigms: Python with JIT compilation, C++ with low-level cache control and JavaScript with asynchronous patterns.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════
+                 PART I: THEORETICAL FOUNDATIONS
+                 ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <section>
+                    <h1>PART I</h1>
+                    <h2 style="color: #58a6ff;">Theoretical Foundations</h2>
+                    <p class="small-text">50 minutes</p>
+                </section>
+                
+                <!-- HOOK 2: Google's Index -->
+                <section>
+                    <h2>Why Does Complexity Matter?</h2>
+                    
+                    <div class="hook-box">
+                        <p>
+                            Google indexes approximately <strong>100 billion web pages</strong>.
+                            When you search, you receive a response in <strong>0.5 seconds</strong>.
+                        </p>
+                        <p>
+                            If Google used linear search, each query would take 
+                            <strong>3 years</strong>.
+                        </p>
+                        <p class="source">
+                            — With proper indexing (B-trees, hashing), the time is logarithmic: 
+                            ~37 operations for 100 billion elements.
+                        </p>
+                    </div>
+                    <aside class="notes">
+                        This example illustrates the practical difference between O(n) and O(log n). Binary search over 100 billion elements requires only log₂(10¹¹) ≈ 37 comparisons. Linear search would require 10¹¹ comparisons.
+                    </aside>
+                </section>
+                
+                <!-- BIG-O DEFINITION -->
+                <section>
+                    <h2>Big-O Notation: Formal Definition</h2>
+                    
+                    <div class="definition-box">
+                        <h4>Definition (Big-O)</h4>
+                        <p>
+                            Let f, g: ℕ → ℝ⁺. We say that <strong>f(n) = O(g(n))</strong> if and only if:
+                        </p>
+                        <div class="math-box">
+                            ∃ c > 0, ∃ n₀ ∈ ℕ : ∀ n ≥ n₀, f(n) ≤ c · g(n)
+                        </div>
+                        <p>
+                            Intuitively: f grows no faster than g (up to a constant factor).
+                        </p>
+                    </div>
+                    
+                    <div class="fragment proof-box">
+                        <h4>Example: 3n² + 5n + 7 = O(n²)</h4>
+                        <p>
+                            Proof: For n ≥ 1:<br>
+                            3n² + 5n + 7 ≤ 3n² + 5n² + 7n² = 15n²<br>
+                            Choose c = 15, n₀ = 1. ∎
+                        </p>
+                    </div>
+                    <aside class="notes">
+                        The proof technique is to bound each lower-order term by the highest-order term. Since 5n ≤ 5n² and 7 ≤ 7n² for n ≥ 1, we obtain the desired bound.
+                    </aside>
+                </section>
+                
+                <!-- OTHER NOTATIONS -->
+                <section>
+                    <h2>The Complete Notation Family</h2>
+                    
+                    <table style="font-size: 0.7em;">
+                        <tr>
+                            <th>Notation</th>
+                            <th>Definition</th>
+                            <th>Analogue</th>
+                            <th>Meaning</th>
+                        </tr>
+                        <tr>
+                            <td><strong>O(g)</strong></td>
+                            <td>f(n) ≤ c·g(n)</td>
+                            <td>≤</td>
+                            <td>Upper bound (at most)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ω(g)</strong></td>
+                            <td>f(n) ≥ c·g(n)</td>
+                            <td>≥</td>
+                            <td>Lower bound (at least)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Θ(g)</strong></td>
+                            <td>c₁·g(n) ≤ f(n) ≤ c₂·g(n)</td>
+                            <td>=</td>
+                            <td>Tight bound (exact order)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>o(g)</strong></td>
+                            <td>lim f(n)/g(n) = 0</td>
+                            <td>&lt;</td>
+                            <td>Strictly smaller</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ω(g)</strong></td>
+                            <td>lim f(n)/g(n) = ∞</td>
+                            <td>&gt;</td>
+                            <td>Strictly greater</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="fragment">
+                        <p><strong>Useful relations:</strong></p>
+                        <ul style="font-size: 0.8em;">
+                            <li>f(n) = Θ(g(n)) ⟺ f(n) = O(g(n)) ∧ f(n) = Ω(g(n))</li>
+                            <li>f(n) = o(g(n)) ⟹ f(n) = O(g(n)) (but not conversely)</li>
+                        </ul>
+                    </div>
+                    <aside class="notes">
+                        Big-Θ provides the tightest characterisation. Little-o and little-ω are useful for comparing growth rates more precisely—f(n) = o(g(n)) means f grows strictly slower than g.
+                    </aside>
+                </section>
+                
+                <!-- COMPLEXITY HIERARCHY -->
+                <section>
+                    <h2>The Complexity Hierarchy</h2>
+                    
+                    <div class="diagram-box">
+<pre>
+    Time for n = 1,000,000 (at 10⁹ operations/second)
+    
+    ┌─────────────────────────────────────────────────────────────────┐
+    │  O(1)         │ 1 ns                      │ constant            │
+    │  O(log n)     │ 20 ns                     │ logarithmic         │
+    │  O(√n)        │ 1 μs                      │ square root         │
+    │  O(n)         │ 1 ms                      │ linear              │
+    │  O(n log n)   │ 20 ms                     │ linearithmic        │
+    │  O(n²)        │ 16.7 minutes              │ quadratic           │
+    │  O(n³)        │ 31.7 years                │ cubic               │
+    │  O(2ⁿ)        │ 10³⁰¹⁰²⁷ years            │ exponential         │
+    │  O(n!)        │ ∞                         │ factorial           │
+    └─────────────────────────────────────────────────────────────────┘
+    
+    Graph (log-log scale):
+    
+    time │                                              /
+    (log)│                                           / n!
+         │                                        /2ⁿ
+         │                                    n³/
+         │                              n²  /
+         │                         n log n
+         │                    n  /
+         │            √n    /
+         │      log n    /
+         │    ─────────/─────────────────────────────────────
+         └─────────────────────────────────────────────────── n (log)
+</pre>
+                    </div>
+                    <aside class="notes">
+                        The exponential classes become infeasible almost immediately. For n=50, 2⁵⁰ exceeds 10¹⁵—more operations than a modern computer can perform in a year.
+                    </aside>
+                </section>
+                
+                <!-- PRACTICAL IMPLICATIONS -->
+                <section>
+                    <h2>Practical Implications</h2>
+                    
+                    <table class="complexity-table" style="font-size: 0.65em;">
+                        <tr>
+                            <th>Complexity</th>
+                            <th>n=10</th>
+                            <th>n=100</th>
+                            <th>n=1000</th>
+                            <th>n=10⁶</th>
+                            <th>Typical Algorithm</th>
+                        </tr>
+                        <tr>
+                            <td>O(1)</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>Hash lookup</td>
+                        </tr>
+                        <tr>
+                            <td>O(log n)</td>
+                            <td>3</td>
+                            <td>7</td>
+                            <td>10</td>
+                            <td>20</td>
+                            <td>Binary search</td>
+                        </tr>
+                        <tr>
+                            <td>O(n)</td>
+                            <td>10</td>
+                            <td>100</td>
+                            <td>1,000</td>
+                            <td>10⁶</td>
+                            <td>Linear scan</td>
+                        </tr>
+                        <tr>
+                            <td>O(n log n)</td>
+                            <td>33</td>
+                            <td>664</td>
+                            <td>9,966</td>
+                            <td>2×10⁷</td>
+                            <td>Merge sort</td>
+                        </tr>
+                        <tr>
+                            <td>O(n²)</td>
+                            <td>100</td>
+                            <td>10,000</td>
+                            <td>10⁶</td>
+                            <td>10¹²</td>
+                            <td>Bubble sort</td>
+                        </tr>
+                        <tr>
+                            <td>O(2ⁿ)</td>
+                            <td>1,024</td>
+                            <td>10³⁰</td>
+                            <td>🔥</td>
+                            <td>🔥</td>
+                            <td>Subset enumeration</td>
+                        </tr>
+                    </table>
+                    
+                    <p class="fragment" style="font-size: 0.8em;">
+                        <strong>Practical rule:</strong> 10⁸–10⁹ operations/second on modern hardware.<br>
+                        For n=10⁶: O(n²) = timeout, O(n log n) = acceptable, O(n) = fast.
+                    </p>
+                    <aside class="notes">
+                        Modern competitive programming typically assumes 10⁸ operations per second as a baseline. For n=10⁶, O(n²) would require 10¹² operations—approximately 11.5 days.
+                    </aside>
+                </section>
+                
+                <!-- MASTER THEOREM -->
+                <section>
+                    <h2>The Master Theorem</h2>
+                    
+                    <div class="theorem-box">
+                        <h4>Master Theorem (Simplified)</h4>
+                        <p>
+                            For recurrences of the form <strong>T(n) = a·T(n/b) + f(n)</strong> where a ≥ 1, b > 1:
+                        </p>
+                        <ol style="font-size: 0.85em;">
+                            <li>If f(n) = O(n<sup>log<sub>b</sub>a - ε</sup>) ⟹ T(n) = Θ(n<sup>log<sub>b</sub>a</sup>)</li>
+                            <li>If f(n) = Θ(n<sup>log<sub>b</sub>a</sup>) ⟹ T(n) = Θ(n<sup>log<sub>b</sub>a</sup> log n)</li>
+                            <li>If f(n) = Ω(n<sup>log<sub>b</sub>a + ε</sup>) ⟹ T(n) = Θ(f(n))</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="fragment" style="font-size: 0.85em;">
+                        <p><strong>Examples:</strong></p>
+                        <ul>
+                            <li><strong>Merge Sort:</strong> T(n) = 2T(n/2) + Θ(n) → a=2, b=2, f(n)=n, log₂2=1 → Case 2 → <span class="highlight-text">Θ(n log n)</span></li>
+                            <li><strong>Binary Search:</strong> T(n) = T(n/2) + Θ(1) → a=1, b=2, log₂1=0 → Case 2 → <span class="highlight-text">Θ(log n)</span></li>
+                        </ul>
+                    </div>
+                    <aside class="notes">
+                        The Master Theorem compares f(n) to n^(log_b a). Case 1 occurs when the recursive work dominates; Case 3 when the combine work dominates; Case 2 when they balance.
+                    </aside>
+                </section>
+                
+                <!-- P VS NP -->
+                <section>
+                    <h2>P vs NP: The Essence of the Problem</h2>
+                    
+                    <div class="two-columns">
+                        <div>
+                            <div class="definition-box" style="font-size: 0.85em;">
+                                <h4>Class P</h4>
+                                <p>Problems that can be <strong>solved</strong> in polynomial time.</p>
+                                <p>Examples: sorting, searching, shortest path</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="definition-box" style="font-size: 0.85em;">
+                                <h4>Class NP</h4>
+                                <p>Problems whose solutions can be <strong>verified</strong> in polynomial time.</p>
+                                <p>Examples: SAT, clique, TSP</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="diagram-box fragment" style="font-size: 0.55em; margin-top: 20px;">
+<pre>
+           If P ≠ NP (almost certain):          If P = NP (improbable):
+           
+           ┌─────────────────────┐               ┌─────────────────────┐
+           │         NP          │               │                     │
+           │   ┌─────────────┐   │               │     P = NP          │
+           │   │ NP-complete │   │               │                     │
+           │   └─────────────┘   │               │  All problems in    │
+           │  ┌───┐              │               │  NP have efficient  │
+           │  │ P │              │               │  solutions!         │
+           │  └───┘              │               │                     │
+           └─────────────────────┘               └─────────────────────┘
+           
+           Cryptography works                   Cryptography is broken
+           Optimisation is hard                 AI can solve everything
+</pre>
+                    </div>
+                    <aside class="notes">
+                        If P equals NP, then any problem whose solution can be verified quickly can also be solved quickly. This would break RSA encryption and enable perfect optimisation—but virtually all researchers believe P does not equal NP.
+                    </aside>
+                </section>
+                
+                <!-- HOOK 3: Exponential Growth -->
+                <section>
+                    <h2>When Exponential Becomes Personal</h2>
+                    
+                    <div class="hook-box">
+                        <p>
+                            Researchers at DeepMind demonstrated that AlphaFold predicts 
+                            protein structures in <strong>minutes</strong>. The previous method 
+                            (X-ray crystallography) took <strong>months or years</strong>.
+                        </p>
+                        <p>
+                            But AlphaFold did not solve the problem—it circumvented it. Protein 
+                            folding remains NP-hard. The AI finds <em>good approximations</em>, 
+                            not guaranteed optimal solutions.
+                        </p>
+                        <p class="source">
+                            — Jumper et al., "Highly accurate protein structure prediction 
+                            with AlphaFold", Nature 2021
+                        </p>
+                    </div>
+                    <aside class="notes">
+                        AlphaFold exemplifies how heuristics and machine learning can provide practical solutions to theoretically intractable problems. The exact protein folding problem remains NP-hard, but approximate solutions suffice for biological research.
+                    </aside>
+                </section>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════
+                 PART II: PYTHON
+                 ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <section>
+                    <h1>PART II</h1>
+                    <h2 style="color: #3572A5;">🐍 Python</h2>
+                    <p>Profiling, Optimisation, Numba</p>
+                </section>
+                
+                <!-- PROFILING -->
+                <section>
+                    <h2>Profiling: Measure Before Optimising</h2>
+                    
+                    <div class="hook-box" style="font-size: 0.9em;">
+                        <p>
+                            <em>"Premature optimisation is the root of all evil."</em>
+                        </p>
+                        <p class="source">— Donald Knuth</p>
+                    </div>
+                    
+                    <pre><code class="language-python" data-trim data-line-numbers>
+import cProfile
+import pstats
+
+def analyse_data(data):
+    result = []
+    for item in data:
+        if expensive_check(item):
+            result.append(transform(item))
+    return aggregate(result)
+
+# Simple profiling
+cProfile.run('analyse_data(large_dataset)', 'profile_output')
+
+# Detailed analysis
+stats = pstats.Stats('profile_output')
+stats.sort_stats('cumulative')
+stats.print_stats(10)  # Top 10 functions
+
+# Output:
+#    ncalls  tottime  cumtime  filename:lineno(function)
+#    10000    0.523    5.234   expensive_check
+#    10000    0.134    0.134   transform
+#        1    0.001    5.489   analyse_data
+                    </code></pre>
+                    <aside class="notes">
+                        cProfile provides function-level timing with minimal overhead. The cumulative time column reveals which functions consume the most wall-clock time, guiding optimisation efforts.
+                    </aside>
+                </section>
+                
+                <!-- LINE PROFILER -->
+                <section>
+                    <h2>Line Profiler: Where Exactly Is the Problem?</h2>
+                    
+                    <pre><code class="language-python" data-trim data-line-numbers>
+# pip install line_profiler
+# kernprof -l -v script.py
+
+@profile  # Special decorator for line_profiler
+def find_duplicates(items):
+    seen = set()
+    duplicates = []
+    for item in items:            # Line 5
+        if item in seen:           # Line 6 - O(1) average
+            duplicates.append(item) # Line 7
+        seen.add(item)             # Line 8 - O(1)
+    return duplicates
+
+# Output:
+# Line #  Hits    Time   Per Hit  % Time  Line Contents
+#      5  10000   1234.0    0.1     5.2%  for item in items:
+#      6  10000   2345.0    0.2    10.1%  if item in seen:
+#      7    523    456.0    0.9     2.0%  duplicates.append(item)
+#      8  10000  19234.0    1.9    82.7%  seen.add(item)  # ← BOTTLENECK
+                    </code></pre>
+                    
+                    <p class="fragment" style="font-size: 0.85em;">
+                        <strong>Surprise!</strong> <code>set.add()</code> is O(1) but the constant 
+                        factor can be large due to hashing and collision resolution.
+                    </p>
+                    <aside class="notes">
+                        Line profiling reveals that theoretical O(1) operations can still dominate runtime. Hash function computation and memory allocation contribute to the constant factor.
+                    </aside>
+                </section>
+                
+                <!-- NUMBA -->
+                <section>
+                    <h2>Numba: JIT Compilation for Python</h2>
+                    
+                    <pre><code class="language-python" data-trim data-line-numbers>
+import numpy as np
+from numba import jit, prange
+
+# Pure Python version
+def distance_matrix_python(points):
+    n = len(points)
+    result = np.zeros((n, n))
+    for i in range(n):
+        for j in range(n):
+            diff = points[i] - points[j]
+            result[i, j] = np.sqrt(np.sum(diff ** 2))
+    return result
+
+# Numba version (just add decorator!)
+@jit(nopython=True, parallel=True)
+def distance_matrix_numba(points):
+    n = len(points)
+    result = np.zeros((n, n))
+    for i in prange(n):  # prange for parallelism
+        for j in range(n):
+            diff = points[i] - points[j]
+            result[i, j] = np.sqrt(np.sum(diff ** 2))
+    return result
+
+# Benchmark: n=1000, Numba is ~100× faster!
+                    </code></pre>
+                    <aside class="notes">
+                        Numba compiles Python to machine code using LLVM. The nopython mode ensures no Python interpreter involvement. prange enables automatic parallelisation across CPU cores.
+                    </aside>
+                </section>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════
+                 PART III: C++
+                 ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <section>
+                    <h1>PART III</h1>
+                    <h2 style="color: #f34b7d;">⚡ C++</h2>
+                    <p>Cache Optimisation, SIMD</p>
+                </section>
+                
+                <!-- CACHE HIERARCHY -->
+                <section>
+                    <h2>The Memory Hierarchy</h2>
+                    
+                    <div class="diagram-box">
+<pre>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    MEMORY HIERARCHY                              │
+    ├─────────────────────────────────────────────────────────────────┤
+    │                                                                  │
+    │   ┌─────────┐                                                    │
+    │   │Registers│  ~1 cycle     │ ~1 KB     │ Fastest               │
+    │   └────┬────┘                                                    │
+    │        │                                                         │
+    │   ┌────▼────┐                                                    │
+    │   │ L1 Cache│  ~4 cycles    │ ~64 KB    │ Per core              │
+    │   └────┬────┘                                                    │
+    │        │                                                         │
+    │   ┌────▼────┐                                                    │
+    │   │ L2 Cache│  ~12 cycles   │ ~256 KB   │ Per core              │
+    │   └────┬────┘                                                    │
+    │        │                                                         │
+    │   ┌────▼────┐                                                    │
+    │   │ L3 Cache│  ~40 cycles   │ ~8-32 MB  │ Shared                │
+    │   └────┬────┘                                                    │
+    │        │                                                         │
+    │   ┌────▼────┐                                                    │
+    │   │  RAM    │  ~200 cycles  │ ~16-64 GB │ Main memory           │
+    │   └────┬────┘                                                    │
+    │        │                                                         │
+    │   ┌────▼────┐                                                    │
+    │   │  SSD    │  ~50,000 cycles│ ~1 TB    │ Storage               │
+    │   └─────────┘                                                    │
+    │                                                                  │
+    └─────────────────────────────────────────────────────────────────┘
+    
+    Cache miss = 50-200× penalty!
+</pre>
+                    </div>
+                    <aside class="notes">
+                        A cache miss to RAM incurs approximately 200 cycles of latency. Sequential memory access enables cache prefetching; random access defeats it. This explains why linked lists often perform worse than arrays despite equivalent theoretical complexity.
+                    </aside>
+                </section>
+                
+                <!-- CACHE-FRIENDLY CODE -->
+                <section>
+                    <h2>Cache-Friendly Code</h2>
+                    
+                    <div class="two-columns">
+                        <div>
+                            <h4 style="color: #f85149;">Cache-Unfriendly</h4>
+                            <pre><code class="language-cpp" style="font-size: 0.65em;">
+// Column-major traversal
+for (int j = 0; j < N; j++) {
+    for (int i = 0; i < N; i++) {
+        sum += matrix[i][j];
+        // Jump of N*sizeof(double)
+        // between consecutive accesses!
+    }
+}
+
+// Cache misses: O(N²)
+                            </code></pre>
+                        </div>
+                        <div>
+                            <h4 style="color: #3fb950;">Cache-Friendly</h4>
+                            <pre><code class="language-cpp" style="font-size: 0.65em;">
+// Row-major traversal
+for (int i = 0; i < N; i++) {
+    for (int j = 0; j < N; j++) {
+        sum += matrix[i][j];
+        // Sequential access!
+        // Cache line prefetch works
+    }
+}
+
+// Cache misses: O(N²/64)
+                            </code></pre>
+                        </div>
+                    </div>
+                    
+                    <p class="fragment" style="font-size: 0.85em;">
+                        <strong>Result:</strong> For N=10000, the difference can be <span class="highlight-text">10-50×</span>!
+                    </p>
+                    <aside class="notes">
+                        C arrays are row-major: consecutive elements in the same row are adjacent in memory. Column-major traversal strides by N elements, defeating cache prefetching. This is a common source of performance issues in matrix operations.
+                    </aside>
+                </section>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════
+                 LAB SECTION
+                 ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>🔬 Laboratory: Benchmark Suite</h2>
+                
+                <div class="diagram-box">
+<pre>
+┌─────────────────────────────────────────────────────────────────────────┐
+│                       BENCHMARK FRAMEWORK                                │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│   ALGORITHMS TO BENCHMARK:                                              │
+│   ├── Sorting: bubble, insertion, merge, quick, heap, tim              │
+│   ├── Searching: linear, binary, hash, interpolation                   │
+│   ├── Matrix: naïve multiplication, blocked, Strassen                  │
+│   └── Graph: BFS, DFS, Dijkstra, A*                                    │
+│                                                                         │
+│   METRICS:                                                              │
+│   ├── Wall time (real elapsed)                                         │
+│   ├── CPU time (user + system)                                         │
+│   ├── Memory peak                                                      │
+│   ├── Cache misses (performance counters)                              │
+│   └── Operations count                                                 │
+│                                                                         │
+│   OUTPUT:                                                               │
+│   ├── CSV with raw data                                                │
+│   ├── Plots: time vs n, log-log scaling                                │
+│   ├── Complexity estimation via curve fitting                          │
+│   └── Comparison table across languages                                │
+│                                                                         │
+│   LANGUAGES: Python (+ Numba) | C++ | JavaScript                       │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+</pre>
+                </div>
+                <aside class="notes">
+                    The laboratory implements a polyglot benchmark suite comparing algorithm performance across three languages. This demonstrates how language choice affects constant factors whilst complexity class remains invariant.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════
+                 SUMMARY
+                 ═══════════════════════════════════════════════════════════════ -->
+            <section>
+                <h2>📋 Key Takeaways</h2>
+                
+                <ul style="font-size: 0.85em;">
+                    <li><strong>Asymptotic notation</strong> characterises growth rates independent of hardware</li>
+                    <li>The <strong>Master Theorem</strong> solves divide-and-conquer recurrences</li>
+                    <li><strong>P vs NP</strong> determines what we can compute efficiently</li>
+                    <li><strong>Profiling</strong> identifies actual bottlenecks—measure before optimising</li>
+                    <li><strong>Cache effects</strong> can dominate theoretical complexity in practice</li>
+                    <li><strong>JIT compilation</strong> (Numba) bridges the Python-C performance gap</li>
+                </ul>
+                <aside class="notes">
+                    The synthesis of theoretical analysis and empirical profiling enables informed algorithm selection. Theory provides asymptotic bounds; practice reveals constant factors and cache effects.
+                </aside>
+            </section>
+            
+            <!-- ═══════════════════════════════════════════════════════════════
+                 END SLIDE
+                 ═══════════════════════════════════════════════════════════════ -->
+            <section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #161b22 100%)">
+                <h1>Questions?</h1>
+                <p style="color: #8b949e;">
+                    Next unit: <strong>04UNIT — Advanced Data Structures</strong>
+                </p>
+                <hr style="border-color: #30363d; margin: 30px 0;">
+                <p style="font-size: 0.7em; color: #8b949e;">
+                    📧 antonio.clim@csie.ase.ro<br>
+                    🔗 github.com/ase-csie/computational-thinking
+                </p>
+                <aside class="notes">
+                    The next unit examines graphs, trees and probabilistic data structures. The complexity analysis skills from this unit will guide structure selection based on operation requirements.
+                </aside>
+            </section>
+            
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/math/math.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/notes/notes.js"></script>
+    
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            width: 1920,
+            height: 1080,
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+            plugins: [ RevealHighlight, RevealMath.KaTeX, RevealNotes ]
+        });
+    </script>
+</body>
+</html>
