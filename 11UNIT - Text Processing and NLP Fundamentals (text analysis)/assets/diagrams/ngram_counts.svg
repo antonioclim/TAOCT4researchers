@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="160">
+<rect x="0" y="0" width="640" height="160" fill="white" stroke="black"/>
+<text x="20" y="80" font-family="Arial" font-size="18">ngram_counts.svg</text>
+</svg>

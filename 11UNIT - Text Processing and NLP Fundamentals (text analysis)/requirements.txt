@@ -1,0 +1,15 @@
+# 11UNIT: Text Processing and NLP Fundamentals
+# Requirements for 11UNIT
+
+# Core testing and quality
+pytest>=7.0
+pytest-cov>=4.0
+ruff>=0.1
+mypy>=1.0
+
+# Unit-specific dependencies
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+nltk>=3.8
+scikit-learn>=1.3

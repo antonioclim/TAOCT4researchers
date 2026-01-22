@@ -1,0 +1,10 @@
+@startuml
+skinparam monochrome true
+state Pipeline {
+[*] --> Normalise
+Normalise --> Tokenise
+Tokenise --> Extract
+Extract --> Evaluate
+Evaluate --> [*]
+}
+@enduml

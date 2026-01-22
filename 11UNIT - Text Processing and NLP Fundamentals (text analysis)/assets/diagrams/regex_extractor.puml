@@ -1,0 +1,4 @@
+@startuml
+skinparam monochrome true
+class RegexExtractor
+@enduml

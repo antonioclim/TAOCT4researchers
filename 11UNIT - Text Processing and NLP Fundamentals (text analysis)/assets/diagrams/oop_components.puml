@@ -1,0 +1,6 @@
+@startuml
+skinparam monochrome true
+class Tokeniser
+class Vectoriser
+Tokeniser --> Vectoriser
+@enduml
