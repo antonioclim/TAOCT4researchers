@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>09UNIT: Exception Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-tertiary: #252540;
+            --accent-blue: #5c7cfa;
+            --accent-purple: #9775fa;
+            --accent-orange: #ffa94d;
+            --accent-red: #ff6b6b;
+            --accent-green: #51cf66;
+            --accent-cyan: #22b8cf;
+            --text-primary: #f8f9fa;
+            --text-secondary: #adb5bd;
+            --text-muted: #6c757d;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --glow-blue: rgba(92, 124, 250, 0.3);
+            --glow-purple: rgba(151, 117, 250, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Outfit', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(92, 124, 250, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(92, 124, 250, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header */
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .unit-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            padding: 0.5rem 1.25rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px var(--glow-blue); }
+            50% { box-shadow: 0 0 40px var(--glow-purple); }
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.75rem;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Main layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 30px rgba(92, 124, 250, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        .card-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            border-radius: 0.5rem;
+            font-size: 1.25rem;
+        }
+        
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        
+        /* Exception Hierarchy Tree */
+        .tree-container {
+            max-height: 500px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-blue) var(--bg-tertiary);
+        }
+        
+        .tree-node {
+            position: relative;
+            padding-left: 1.5rem;
+            margin: 0.25rem 0;
+        }
+        
+        .tree-node::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            background: var(--border-subtle);
+        }
+        
+        .tree-node::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.875rem;
+            width: 1rem;
+            height: 1px;
+            background: var(--border-subtle);
+        }
+        
+        .tree-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            background: var(--bg-tertiary);
+            border: 1px solid transparent;
+            border-radius: 0.375rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .tree-item:hover {
+            background: var(--accent-blue);
+            color: white;
+            transform: translateX(4px);
+        }
+        
+        .tree-item.base {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-red));
+            color: white;
+        }
+        
+        .tree-item.exception {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+        }
+        
+        .tree-item.selected {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(34, 184, 207, 0.3);
+        }
+        
+        /* Code Editor */
+        .code-editor {
+            background: #1e1e2e;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        
+        .editor-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .editor-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .editor-dot.red { background: #ff5f56; }
+        .editor-dot.yellow { background: #ffbd2e; }
+        .editor-dot.green { background: #27c93f; }
+        
+        .editor-title {
+            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .editor-content {
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .line {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .line-number {
+            color: var(--text-muted);
+            user-select: none;
+            min-width: 2rem;
+            text-align: right;
+        }
+        
+        .line-content {
+            flex: 1;
+        }
+        
+        .keyword { color: #c678dd; }
+        .function { color: #61afef; }
+        .string { color: #98c379; }
+        .comment { color: #5c6370; font-style: italic; }
+        .class-name { color: #e5c07b; }
+        .exception { color: #e06c75; }
+        .decorator { color: #d19a66; }
+        
+        /* Execution Visualiser */
+        .execution-panel {
+            margin-top: 1.5rem;
+        }
+        
+        .execution-flow {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+        
+        .flow-step.active {
+            background: var(--accent-blue);
+            color: white;
+            animation: step-pulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes step-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .flow-step.success {
+            background: var(--accent-green);
+            color: white;
+        }
+        
+        .flow-step.error {
+            background: var(--accent-red);
+            color: white;
+        }
+        
+        .flow-arrow {
+            color: var(--text-muted);
+            font-size: 1.25rem;
+        }
+        
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px var(--glow-blue);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--accent-blue);
+        }
+        
+        /* Scenario selector */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .scenario-card {
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-subtle);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .scenario-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-4px);
+        }
+        
+        .scenario-card.active {
+            border-color: var(--accent-cyan);
+            background: linear-gradient(135deg, rgba(92, 124, 250, 0.1), rgba(151, 117, 250, 0.1));
+        }
+        
+        .scenario-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .scenario-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .scenario-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Output console */
+        .console {
+            background: #0d0d14;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .console-line {
+            display: flex;
+            gap: 0.5rem;
+            margin: 0.25rem 0;
+        }
+        
+        .console-prompt {
+            color: var(--accent-green);
+        }
+        
+        .console-output {
+            color: var(--text-secondary);
+        }
+        
+        .console-error {
+            color: var(--accent-red);
+        }
+        
+        .console-success {
+            color: var(--accent-green);
+        }
+        
+        /* Info panel */
+        .info-panel {
+            background: linear-gradient(135deg, rgba(92, 124, 250, 0.1), rgba(151, 117, 250, 0.05));
+            border: 1px solid var(--border-subtle);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-top: 1rem;
+        }
+        
+        .info-title {
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-content {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+        
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease forwards;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    
+    <div class="container">
+        <header>
+            <div class="unit-badge">
+                <span>⚡</span>
+                <span>UNIT 09</span>
+            </div>
+            <h1>Exception Explorer</h1>
+            <p class="subtitle">Interactive visualisation of Python's exception handling mechanisms</p>
+        </header>
+        
+        <!-- Scenario Selection -->
+        <div class="scenario-grid">
+            <div class="scenario-card active" data-scenario="basic">
+                <div class="scenario-icon">🎯</div>
+                <div class="scenario-title">Basic Try/Except</div>
+                <div class="scenario-desc">Fundamental exception catching</div>
+            </div>
+            <div class="scenario-card" data-scenario="hierarchy">
+                <div class="scenario-icon">🌳</div>
+                <div class="scenario-title">Exception Hierarchy</div>
+                <div class="scenario-desc">Catch by base class</div>
+            </div>
+            <div class="scenario-card" data-scenario="finally">
+                <div class="scenario-icon">🔒</div>
+                <div class="scenario-title">Finally Clause</div>
+                <div class="scenario-desc">Guaranteed cleanup</div>
+            </div>
+            <div class="scenario-card" data-scenario="context">
+                <div class="scenario-icon">📦</div>
+                <div class="scenario-title">Context Manager</div>
+                <div class="scenario-desc">Resource management</div>
+            </div>
+            <div class="scenario-card" data-scenario="chaining">
+                <div class="scenario-icon">🔗</div>
+                <div class="scenario-title">Exception Chaining</div>
+                <div class="scenario-desc">Preserving cause</div>
+            </div>
+        </div>
+        
+        <div class="main-grid">
+            <!-- Left Panel: Exception Hierarchy -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🌲</div>
+                    <div class="card-title">Exception Hierarchy</div>
+                </div>
+                <div class="tree-container" id="exception-tree">
+                    <!-- Tree populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Right Panel: Code and Execution -->
+            <div>
+                <div class="code-editor">
+                    <div class="editor-header">
+                        <div class="editor-dot red"></div>
+                        <div class="editor-dot yellow"></div>
+                        <div class="editor-dot green"></div>
+                        <div class="editor-title" id="filename">example.py</div>
+                    </div>
+                    <div class="editor-content" id="code-display">
+                        <!-- Code populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="execution-panel">
+                    <div class="card-header">
+                        <div class="card-icon">▶️</div>
+                        <div class="card-title">Execution Flow</div>
+                    </div>
+                    <div class="execution-flow" id="execution-flow">
+                        <!-- Flow steps populated by JavaScript -->
+                    </div>
+                    <div class="controls">
+                        <button class="btn btn-primary" id="run-btn">
+                            <span>▶</span> Run Code
+                        </button>
+                        <button class="btn btn-secondary" id="step-btn">
+                            <span>⏭</span> Step Through
+                        </button>
+                        <button class="btn btn-secondary" id="reset-btn">
+                            <span>↺</span> Reset
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="console" id="console">
+                    <div class="console-line">
+                        <span class="console-prompt">$</span>
+                        <span class="console-output">Ready to run code...</span>
+                    </div>
+                </div>
+                
+                <div class="info-panel" id="info-panel">
+                    <div class="info-title">💡 Concept</div>
+                    <div class="info-content" id="info-content">
+                        Select a scenario above to explore different exception handling patterns.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Exception hierarchy data
+        const exceptionHierarchy = {
+            'BaseException': {
+                children: ['SystemExit', 'KeyboardInterrupt', 'GeneratorExit', 'Exception'],
+                description: 'Root of all exceptions. Rarely caught directly.'
+            },
+            'Exception': {
+                children: ['ArithmeticError', 'LookupError', 'OSError', 'ValueError', 'TypeError', 'RuntimeError'],
+                description: 'Base for user-catchable exceptions.'
+            },
+            'ArithmeticError': {
+                children: ['ZeroDivisionError', 'OverflowError', 'FloatingPointError'],
+                description: 'Base for numeric errors.'
+            },
+            'LookupError': {
+                children: ['IndexError', 'KeyError'],
+                description: 'Base for lookup failures.'
+            },
+            'OSError': {
+                children: ['FileNotFoundError', 'PermissionError', 'ConnectionError'],
+                description: 'Base for OS-related errors.'
+            }
+        };
+        
+        // Scenarios
+        const scenarios = {
+            basic: {
+                title: 'Basic Try/Except',
+                filename: 'basic_handling.py',
+                code: `<span class="keyword">def</span> <span class="function">divide</span>(a, b):
+    <span class="keyword">try</span>:
+        result = a / b
+        <span class="keyword">return</span> result
+    <span class="keyword">except</span> <span class="exception">ZeroDivisionError</span> <span class="keyword">as</span> e:
+        <span class="keyword">print</span>(<span class="string">f"Cannot divide by zero: {e}"</span>)
+        <span class="keyword">return</span> <span class="keyword">None</span>
+
+<span class="comment"># Usage</span>
+result = <span class="function">divide</span>(<span class="string">10</span>, <span class="string">0</span>)`,
+                steps: ['Enter try block', 'Attempt division', 'Exception raised!', 'Catch ZeroDivisionError', 'Handle error', 'Return None'],
+                info: 'The try/except pattern catches specific exceptions. When division by zero occurs, Python raises ZeroDivisionError which is caught and handled gracefully.'
+            },
+            hierarchy: {
+                title: 'Exception Hierarchy',
+                filename: 'hierarchy_catch.py',
+                code: `<span class="keyword">def</span> <span class="function">process_data</span>(data, index):
+    <span class="keyword">try</span>:
+        value = data[index]  <span class="comment"># May raise IndexError or KeyError</span>
+        result = <span class="string">10</span> / value  <span class="comment"># May raise ZeroDivisionError</span>
+        <span class="keyword">return</span> result
+    <span class="keyword">except</span> <span class="exception">LookupError</span> <span class="keyword">as</span> e:
+        <span class="comment"># Catches both IndexError and KeyError</span>
+        <span class="keyword">print</span>(<span class="string">f"Lookup failed: {type(e).__name__}"</span>)
+    <span class="keyword">except</span> <span class="exception">ArithmeticError</span> <span class="keyword">as</span> e:
+        <span class="comment"># Catches ZeroDivisionError and others</span>
+        <span class="keyword">print</span>(<span class="string">f"Math error: {type(e).__name__}"</span>)`,
+                steps: ['Enter try block', 'Access data', 'Check hierarchy', 'Match LookupError', 'Handle error'],
+                info: 'Catching a base exception class (like LookupError) catches all its subclasses (IndexError, KeyError). This enables handling related errors uniformly.'
+            },
+            finally: {
+                title: 'Finally Clause',
+                filename: 'finally_cleanup.py',
+                code: `<span class="keyword">def</span> <span class="function">read_file</span>(path):
+    file = <span class="keyword">None</span>
+    <span class="keyword">try</span>:
+        file = <span class="function">open</span>(path, <span class="string">'r'</span>)
+        data = file.read()
+        <span class="keyword">return</span> data
+    <span class="keyword">except</span> <span class="exception">FileNotFoundError</span>:
+        <span class="keyword">print</span>(<span class="string">"File not found"</span>)
+        <span class="keyword">return</span> <span class="keyword">None</span>
+    <span class="keyword">finally</span>:
+        <span class="comment"># Always executed, even if return or exception</span>
+        <span class="keyword">if</span> file:
+            file.close()
+            <span class="keyword">print</span>(<span class="string">"File closed"</span>)`,
+                steps: ['Enter try block', 'Open file', 'Exception raised!', 'Catch FileNotFoundError', 'Enter finally', 'Cleanup complete'],
+                info: 'The finally clause ALWAYS executes, regardless of whether an exception occurred or a return statement was reached. necessary for resource cleanup.'
+            },
+            context: {
+                title: 'Context Manager',
+                filename: 'context_manager.py',
+                code: `<span class="keyword">class</span> <span class="class-name">ManagedFile</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, path):
+        self.path = path
+    
+    <span class="keyword">def</span> <span class="function">__enter__</span>(self):
+        self.file = <span class="function">open</span>(self.path, <span class="string">'r'</span>)
+        <span class="keyword">return</span> self.file
+    
+    <span class="keyword">def</span> <span class="function">__exit__</span>(self, exc_type, exc_val, exc_tb):
+        self.file.close()
+        <span class="keyword">return</span> <span class="keyword">False</span>  <span class="comment"># Don't suppress exceptions</span>
+
+<span class="comment"># Usage</span>
+<span class="keyword">with</span> <span class="class-name">ManagedFile</span>(<span class="string">'data.txt'</span>) <span class="keyword">as</span> f:
+    content = f.read()`,
+                steps: ['Call __enter__', 'Acquire resource', 'Execute body', 'Call __exit__', 'Release resource'],
+                info: 'Context managers guarantee cleanup via the __exit__ method, which is called regardless of how the with block exits. This is the Pythonic way to manage resources.'
+            },
+            chaining: {
+                title: 'Exception Chaining',
+                filename: 'exception_chain.py',
+                code: `<span class="keyword">class</span> <span class="class-name">DataError</span>(<span class="exception">Exception</span>):
+    <span class="keyword">pass</span>
+
+<span class="keyword">def</span> <span class="function">load_config</span>(path):
+    <span class="keyword">try</span>:
+        <span class="keyword">with</span> <span class="function">open</span>(path) <span class="keyword">as</span> f:
+            <span class="keyword">return</span> json.load(f)
+    <span class="keyword">except</span> <span class="exception">FileNotFoundError</span> <span class="keyword">as</span> e:
+        <span class="comment"># Chain: preserve original cause</span>
+        <span class="keyword">raise</span> <span class="class-name">DataError</span>(<span class="string">f"Config missing: {path}"</span>) <span class="keyword">from</span> e
+    <span class="keyword">except</span> <span class="exception">json.JSONDecodeError</span> <span class="keyword">as</span> e:
+        <span class="comment"># Chain: preserve parse error details</span>
+        <span class="keyword">raise</span> <span class="class-name">DataError</span>(<span class="string">"Invalid config format"</span>) <span class="keyword">from</span> e`,
+                steps: ['Try open file', 'FileNotFoundError!', 'Catch original', 'Create DataError', 'Chain with "from"', 'Raise new exception'],
+                info: 'Exception chaining with "raise ... from ..." preserves the original exception as the __cause__. This maintains full diagnostic information while providing domain-appropriate error types.'
+            }
+        };
+        
+        // Current state
+        let currentScenario = 'basic';
+        let currentStep = -1;
+        let isRunning = false;
+        
+        // DOM Elements
+        const codeDisplay = document.getElementById('code-display');
+        const executionFlow = document.getElementById('execution-flow');
+        const consoleEl = document.getElementById('console');
+        const infoContent = document.getElementById('info-content');
+        const filenameEl = document.getElementById('filename');
+        const treeContainer = document.getElementById('exception-tree');
+        
+        // Render exception tree
+        function renderTree(parent, exceptions, level = 0) {
+            exceptions.forEach(exc => {
+                const node = document.createElement('div');
+                node.className = 'tree-node';
+                
+                const item = document.createElement('div');
+                item.className = `tree-item ${level === 0 ? 'base' : ''} ${exc === 'Exception' ? 'exception' : ''}`;
+                item.textContent = exc;
+                item.addEventListener('click', () => showExceptionInfo(exc));
+                
+                node.appendChild(item);
+                
+                if (exceptionHierarchy[exc]?.children) {
+                    renderTree(node, exceptionHierarchy[exc].children, level + 1);
+                }
+                
+                parent.appendChild(node);
+            });
+        }
+        
+        function showExceptionInfo(exc) {
+            document.querySelectorAll('.tree-item').forEach(el => el.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            const info = exceptionHierarchy[exc];
+            if (info) {
+                infoContent.innerHTML = `<strong>${exc}</strong>: ${info.description}`;
+            }
+        }
+        
+        // Render code with line numbers
+        function renderCode(scenario) {
+            const lines = scenario.code.split('\n');
+            codeDisplay.innerHTML = lines.map((line, i) => `
+                <div class="line">
+                    <span class="line-number">${i + 1}</span>
+                    <span class="line-content">${line || '&nbsp;'}</span>
+                </div>
+            `).join('');
+            filenameEl.textContent = scenario.filename;
+        }
+        
+        // Render execution flow
+        function renderFlow(steps) {
+            executionFlow.innerHTML = steps.map((step, i) => `
+                <div class="flow-step" data-step="${i}">${step}</div>
+                ${i < steps.length - 1 ? '<span class="flow-arrow">→</span>' : ''}
+            `).join('');
+        }
+        
+        // Update console
+        function addConsoleOutput(text, type = 'output') {
+            const line = document.createElement('div');
+            line.className = 'console-line slide-in';
+            line.innerHTML = `
+                <span class="console-prompt">${type === 'error' ? '!' : '$'}</span>
+                <span class="console-${type}">${text}</span>
+            `;
+            consoleEl.appendChild(line);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+        
+        function clearConsole() {
+            consoleEl.innerHTML = '<div class="console-line"><span class="console-prompt">$</span><span class="console-output">Executing...</span></div>';
+        }
+        
+        // Scenario selection
+        document.querySelectorAll('.scenario-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                
+                currentScenario = card.dataset.scenario;
+                const scenario = scenarios[currentScenario];
+                
+                renderCode(scenario);
+                renderFlow(scenario.steps);
+                infoContent.textContent = scenario.info;
+                currentStep = -1;
+                isRunning = false;
+                
+                document.querySelectorAll('.flow-step').forEach(s => {
+                    s.classList.remove('active', 'success', 'error');
+                });
+            });
+        });
+        
+        // Run button
+        document.getElementById('run-btn').addEventListener('click', async () => {
+            if (isRunning) return;
+            isRunning = true;
+            
+            clearConsole();
+            const scenario = scenarios[currentScenario];
+            
+            for (let i = 0; i < scenario.steps.length; i++) {
+                currentStep = i;
+                
+                document.querySelectorAll('.flow-step').forEach((s, idx) => {
+                    s.classList.remove('active');
+                    if (idx < i) s.classList.add('success');
+                });
+                
+                const currentStepEl = document.querySelector(`[data-step="${i}"]`);
+                currentStepEl.classList.add('active');
+                
+                const stepText = scenario.steps[i];
+                if (stepText.includes('Exception') || stepText.includes('Error')) {
+                    addConsoleOutput(stepText, 'error');
+                } else {
+                    addConsoleOutput(stepText);
+                }
+                
+                await new Promise(r => setTimeout(r, 800));
+            }
+            
+            document.querySelectorAll('.flow-step').forEach(s => {
+                s.classList.remove('active');
+                s.classList.add('success');
+            });
+            
+            addConsoleOutput('Execution complete', 'success');
+            isRunning = false;
+        });
+        
+        // Step button
+        document.getElementById('step-btn').addEventListener('click', () => {
+            const scenario = scenarios[currentScenario];
+            
+            if (currentStep < scenario.steps.length - 1) {
+                currentStep++;
+                
+                document.querySelectorAll('.flow-step').forEach((s, idx) => {
+                    s.classList.remove('active', 'success', 'error');
+                    if (idx < currentStep) s.classList.add('success');
+                    if (idx === currentStep) s.classList.add('active');
+                });
+                
+                const stepText = scenario.steps[currentStep];
+                if (stepText.includes('Exception') || stepText.includes('Error')) {
+                    addConsoleOutput(stepText, 'error');
+                } else {
+                    addConsoleOutput(stepText);
+                }
+            }
+        });
+        
+        // Reset button
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            currentStep = -1;
+            isRunning = false;
+            document.querySelectorAll('.flow-step').forEach(s => {
+                s.classList.remove('active', 'success', 'error');
+            });
+            consoleEl.innerHTML = '<div class="console-line"><span class="console-prompt">$</span><span class="console-output">Ready to run code...</span></div>';
+        });
+        
+        // Initialise
+        renderTree(treeContainer, ['BaseException']);
+        const initialScenario = scenarios[currentScenario];
+        renderCode(initialScenario);
+        renderFlow(initialScenario.steps);
+        infoContent.textContent = initialScenario.info;
+    </script>
+</body>
+</html>

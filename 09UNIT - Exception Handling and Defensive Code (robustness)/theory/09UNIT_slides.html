@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 09: Exception Handling and Defensive Programming</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-slide: #161b22;
+            --bg-code: #1c2128;
+            --accent-blue: #58a6ff;
+            --accent-purple: #a371f7;
+            --accent-green: #3fb950;
+            --accent-orange: #d29922;
+            --accent-red: #f85149;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Source Sans 3', system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+        
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .slide-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+        
+        .slide {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            max-height: 100%;
+            padding: 3rem;
+            background: var(--bg-slide);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .slide.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Slide types */
+        .slide.title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .slide.title-slide.active { display: flex; }
+        
+        /* Content slides */
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--accent-purple);
+        }
+        
+        p, li {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+        
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        li { margin-bottom: 0.5rem; }
+        
+        .highlight {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+        
+        .warning {
+            color: var(--accent-orange);
+            font-weight: 600;
+        }
+        
+        .error {
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+        
+        /* Code blocks */
+        pre {
+            background: var(--bg-code);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        code {
+            font-family: 'Fira Code', monospace;
+            background: var(--bg-code);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+        }
+        
+        .keyword { color: #ff7b72; }
+        .function { color: #d2a8ff; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; }
+        .class { color: #ffa657; }
+        .number { color: #79c0ff; }
+        
+        /* Two-column layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        /* Quote blocks */
+        blockquote {
+            border-left: 4px solid var(--accent-purple);
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            background: rgba(163, 113, 247, 0.1);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+        }
+        
+        blockquote cite {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-style: normal;
+        }
+        
+        /* Diagram placeholders */
+        .diagram {
+            background: var(--bg-code);
+            border: 2px dashed var(--border-color);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: var(--bg-slide);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            background: var(--bg-code);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .nav-btn:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .slide-counter {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            transition: width 0.3s ease;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+        
+        th {
+            background: var(--bg-code);
+            color: var(--accent-blue);
+        }
+        
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .card {
+            background: var(--bg-code);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+        }
+        
+        .card h4 {
+            color: var(--accent-green);
+            margin-bottom: 0.5rem;
+        }
+        
+        .card p { font-size: 1rem; margin-bottom: 0; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progress"></div>
+    
+    <div class="presentation">
+        <div class="slide-container">
+            <!-- Slide 1: Title -->
+            <div class="slide title-slide active" data-slide="1">
+                <div class="unit-badge" style="margin-bottom: 2rem; font-size: 1.25rem; color: var(--accent-purple);">Unit 09</div>
+                <h1>Exception Handling and Defensive Programming</h1>
+                <p class="subtitle">Building consistent and consistent Software Systems</p>
+                <p style="margin-top: 3rem; color: var(--text-secondary); font-size: 1rem;">
+                    Computational Thinking for Doctoral Research<br>
+                    ASE-CSIE • 2024-2025
+                </p>
+            </div>
+            
+            <!-- Slide 2: Learning Objectives -->
+            <div class="slide" data-slide="2">
+                <h2>Learning Objectives</h2>
+                <p>By the end of this unit, you will be able to:</p>
+                <ol>
+                    <li><span class="highlight">Design</span> custom exception hierarchies for domain-specific error handling</li>
+                    <li><span class="highlight">Implement</span> defensive programming patterns with preconditions and postconditions</li>
+                    <li><span class="highlight">Apply</span> context managers for consistent resource management</li>
+                    <li><span class="highlight">Construct</span> resilience patterns: retry mechanisms and circuit breakers</li>
+                    <li><span class="highlight">Evaluate</span> trade-offs between fail-fast and graceful degradation</li>
+                </ol>
+            </div>
+            
+            <!-- Slide 3: Why Exception Handling Matters -->
+            <div class="slide" data-slide="3">
+                <h2>Why Exception Handling Matters</h2>
+                <blockquote>
+                    "Program testing can be used to show the presence of bugs, but never to show their absence."
+                    <cite>— Edsger W. Dijkstra (1970)</cite>
+                </blockquote>
+                <p>Research software faces unique challenges:</p>
+                <ul>
+                    <li><span class="warning">Unpredictable data</span> from sensors, simulations, and user input</li>
+                    <li><span class="warning">Long-running computations</span> that may fail hours into execution</li>
+                    <li><span class="warning">External dependencies</span> (databases, APIs, file systems)</li>
+                    <li><span class="warning">Numerical edge cases</span> causing overflow, underflow, or instability</li>
+                </ul>
+            </div>
+            
+            <!-- Slide 4: The Exception Mechanism -->
+            <div class="slide" data-slide="4">
+                <h2>The Exception Mechanism</h2>
+                <p>Exceptions provide <span class="highlight">structured error handling</span> that separates error detection from error handling:</p>
+                <pre><span class="keyword">try</span>:
+    <span class="comment"># Code that might raise an exception</span>
+    result = risky_operation()
+<span class="keyword">except</span> <span class="class">SomeError</span> <span class="keyword">as</span> e:
+    <span class="comment"># Handle the specific error</span>
+    handle_error(e)
+<span class="keyword">else</span>:
+    <span class="comment"># Runs only if no exception occurred</span>
+    process_result(result)
+<span class="keyword">finally</span>:
+    <span class="comment"># Always runs (cleanup)</span>
+    cleanup()</pre>
+            </div>
+            
+            <!-- Slide 5: Exception Hierarchy Overview -->
+            <div class="slide" data-slide="5">
+                <h2>Python Exception Hierarchy</h2>
+                <div class="two-col">
+                    <div>
+                        <pre style="font-size: 0.9rem;">BaseException
+├── SystemExit
+├── KeyboardInterrupt
+├── GeneratorExit
+└── Exception
+    ├── ArithmeticError
+    │   ├── ZeroDivisionError
+    │   └── OverflowError
+    ├── LookupError
+    │   ├── IndexError
+    │   └── KeyError
+    ├── OSError
+    │   ├── FileNotFoundError
+    │   └── PermissionError
+    └── ValueError
+        └── ...</pre>
+                    </div>
+                    <div>
+                        <h3>Key Points</h3>
+                        <ul>
+                            <li>Catch <code>Exception</code>, not <code>BaseException</code></li>
+                            <li>Be <span class="highlight">specific</span> when catching</li>
+                            <li>Hierarchy enables catching <span class="highlight">groups</span> of related errors</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 6: Catching Exceptions -->
+            <div class="slide" data-slide="6">
+                <h2>Catching Exceptions Properly</h2>
+                <div class="two-col">
+                    <div>
+                        <h3 style="color: var(--accent-red);">❌ Anti-pattern</h3>
+                        <pre><span class="keyword">try</span>:
+    do_something()
+<span class="keyword">except</span>:  <span class="comment"># Bare except!</span>
+    <span class="keyword">pass</span>  <span class="comment"># Silently swallow</span></pre>
+                        <p class="error">Catches everything including KeyboardInterrupt!</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--accent-green);">✓ Correct approach</h3>
+                        <pre><span class="keyword">try</span>:
+    do_something()
+<span class="keyword">except</span> <span class="class">SpecificError</span> <span class="keyword">as</span> e:
+    logger.error(<span class="string">"Failed: %s"</span>, e)
+    <span class="keyword">raise</span>  <span class="comment"># Re-raise!</span></pre>
+                        <p class="highlight">Be specific, log, and re-raise when appropriate.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 7: Custom Exceptions -->
+            <div class="slide" data-slide="7">
+                <h2>Designing Custom Exceptions</h2>
+                <p>Domain-specific exceptions improve code clarity and error handling:</p>
+                <pre><span class="keyword">class</span> <span class="class">ResearchError</span>(<span class="class">Exception</span>):
+    <span class="string">"""Base exception for research domain."""</span>
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, message: <span class="class">str</span>, context: <span class="class">dict</span> = <span class="keyword">None</span>):
+        <span class="keyword">super</span>().__init__(message)
+        self.context = context <span class="keyword">or</span> {}
+
+<span class="keyword">class</span> <span class="class">DataValidationError</span>(<span class="class">ResearchError</span>):
+    <span class="string">"""Raised when data fails validation."""</span>
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, field: <span class="class">str</span>, value, constraint: <span class="class">str</span>):
+        <span class="keyword">super</span>().__init__(<span class="string">f"Validation failed for {field}"</span>)
+        self.field = field
+        self.value = value
+        self.constraint = constraint</pre>
+            </div>
+            
+            <!-- Slide 8: Exception Chaining -->
+            <div class="slide" data-slide="8">
+                <h2>Exception Chaining</h2>
+                <p>Preserve the <span class="highlight">original cause</span> whilst raising domain-appropriate exceptions:</p>
+                <pre><span class="keyword">def</span> <span class="function">load_config</span>(path: <span class="class">Path</span>) -> <span class="class">dict</span>:
+    <span class="keyword">try</span>:
+        <span class="keyword">with</span> <span class="function">open</span>(path) <span class="keyword">as</span> f:
+            <span class="keyword">return</span> json.load(f)
+    <span class="keyword">except</span> <span class="class">FileNotFoundError</span> <span class="keyword">as</span> e:
+        <span class="keyword">raise</span> <span class="class">ConfigurationError</span>(
+            <span class="string">f"Config file missing: {path}"</span>
+        ) <span class="keyword">from</span> e  <span class="comment"># Preserves original cause</span>
+    <span class="keyword">except</span> <span class="class">json.JSONDecodeError</span> <span class="keyword">as</span> e:
+        <span class="keyword">raise</span> <span class="class">ConfigurationError</span>(
+            <span class="string">f"Invalid JSON at line {e.lineno}"</span>
+        ) <span class="keyword">from</span> e</pre>
+                <p>The <code>__cause__</code> attribute preserves the full diagnostic chain.</p>
+            </div>
+            
+            <!-- Slide 9: The finally Clause -->
+            <div class="slide" data-slide="9">
+                <h2>The <code>finally</code> Clause</h2>
+                <p>Code in <code>finally</code> <span class="highlight">always executes</span>, even if:</p>
+                <ul>
+                    <li>An exception is raised and not caught</li>
+                    <li>A <code>return</code> statement is encountered</li>
+                    <li>A <code>break</code> or <code>continue</code> in a loop</li>
+                </ul>
+                <pre><span class="keyword">def</span> <span class="function">process_file</span>(path):
+    file = <span class="keyword">None</span>
+    <span class="keyword">try</span>:
+        file = <span class="function">open</span>(path)
+        <span class="keyword">return</span> file.read()  <span class="comment"># finally still runs!</span>
+    <span class="keyword">finally</span>:
+        <span class="keyword">if</span> file:
+            file.close()  <span class="comment"># Guaranteed cleanup</span></pre>
+            </div>
+            
+            <!-- Slide 10: Context Managers Introduction -->
+            <div class="slide" data-slide="10">
+                <h2>Context Managers: The Pythonic Way</h2>
+                <blockquote>
+                    "Context managers provide a convenient way to factor out common setup and cleanup code."
+                    <cite>— PEP 343</cite>
+                </blockquote>
+                <p>The <code>with</code> statement ensures <span class="highlight">deterministic cleanup</span>:</p>
+                <pre><span class="keyword">with</span> <span class="function">open</span>(<span class="string">'data.csv'</span>) <span class="keyword">as</span> f:
+    data = f.read()
+<span class="comment"># File is automatically closed here, even if exception occurred</span></pre>
+            </div>
+            
+            <!-- Slide 11: Context Manager Protocol -->
+            <div class="slide" data-slide="11">
+                <h2>Context Manager Protocol</h2>
+                <p>Implement <code>__enter__</code> and <code>__exit__</code> methods:</p>
+                <pre><span class="keyword">class</span> <span class="class">DatabaseConnection</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, connection_string: <span class="class">str</span>):
+        self.conn_str = connection_string
+        self.connection = <span class="keyword">None</span>
+    
+    <span class="keyword">def</span> <span class="function">__enter__</span>(self) -> <span class="string">'Connection'</span>:
+        self.connection = connect(self.conn_str)
+        <span class="keyword">return</span> self.connection
+    
+    <span class="keyword">def</span> <span class="function">__exit__</span>(self, exc_type, exc_val, exc_tb) -> <span class="class">bool</span>:
+        <span class="keyword">if</span> exc_type <span class="keyword">is not</span> <span class="keyword">None</span>:
+            self.connection.rollback()
+        <span class="keyword">else</span>:
+            self.connection.commit()
+        self.connection.close()
+        <span class="keyword">return</span> <span class="keyword">False</span>  <span class="comment"># Don't suppress exception</span></pre>
+            </div>
+            
+            <!-- Slide 12: contextlib Utilities -->
+            <div class="slide" data-slide="12">
+                <h2><code>contextlib</code> Utilities</h2>
+                <p>The <code>@contextmanager</code> decorator simplifies creation:</p>
+                <pre><span class="keyword">from</span> contextlib <span class="keyword">import</span> contextmanager
+
+<span class="decorator">@contextmanager</span>
+<span class="keyword">def</span> <span class="function">temporary_directory</span>():
+    path = Path(tempfile.mkdtemp())
+    <span class="keyword">try</span>:
+        <span class="keyword">yield</span> path  <span class="comment"># Value given to 'as' target</span>
+    <span class="keyword">finally</span>:
+        shutil.rmtree(path)  <span class="comment"># Cleanup</span>
+
+<span class="comment"># Usage</span>
+<span class="keyword">with</span> <span class="function">temporary_directory</span>() <span class="keyword">as</span> tmp:
+    (tmp / <span class="string">'data.txt'</span>).write_text(<span class="string">'...'</span>)</pre>
+            </div>
+            
+            <!-- Slide 13: ExitStack -->
+            <div class="slide" data-slide="13">
+                <h2>Managing Multiple Resources: <code>ExitStack</code></h2>
+                <p>Handle dynamic numbers of context managers:</p>
+                <pre><span class="keyword">from</span> contextlib <span class="keyword">import</span> ExitStack
+
+<span class="keyword">def</span> <span class="function">process_files</span>(paths: <span class="class">list</span>[<span class="class">Path</span>]) -> <span class="class">list</span>[<span class="class">str</span>]:
+    <span class="keyword">with</span> <span class="class">ExitStack</span>() <span class="keyword">as</span> stack:
+        <span class="comment"># Dynamically enter multiple contexts</span>
+        files = [
+            stack.enter_context(<span class="function">open</span>(p))
+            <span class="keyword">for</span> p <span class="keyword">in</span> paths
+        ]
+        <span class="comment"># All files automatically closed on exit</span>
+        <span class="keyword">return</span> [f.read() <span class="keyword">for</span> f <span class="keyword">in</span> files]</pre>
+            </div>
+            
+            <!-- Slide 14: Defensive Programming Introduction -->
+            <div class="slide" data-slide="14">
+                <h2>Defensive Programming</h2>
+                <blockquote>
+                    "Defensive programming is the practice of anticipating all possible ways that a program could be misused, and guarding against them."
+                    <cite>— Allen B. Downey (2015)</cite>
+                </blockquote>
+                <p>Core principles:</p>
+                <ul>
+                    <li><span class="highlight">Validate</span> all inputs at boundaries</li>
+                    <li><span class="highlight">Assert</span> internal invariants</li>
+                    <li><span class="highlight">Fail fast</span> with clear error messages</li>
+                    <li><span class="highlight">Never trust</span> external data</li>
+                </ul>
+            </div>
+            
+            <!-- Slide 15: Preconditions -->
+            <div class="slide" data-slide="15">
+                <h2>Preconditions</h2>
+                <p>Conditions that <span class="highlight">must be true</span> when a function is called:</p>
+                <pre><span class="keyword">def</span> <span class="function">calculate_mean</span>(values: <span class="class">list</span>[<span class="class">float</span>]) -> <span class="class">float</span>:
+    <span class="string">"""Calculate arithmetic mean.
+    
+    Preconditions:
+        - values must not be empty
+        - all elements must be finite numbers
+    """</span>
+    <span class="comment"># Validate preconditions</span>
+    <span class="keyword">if not</span> values:
+        <span class="keyword">raise</span> <span class="class">ValueError</span>(<span class="string">"Cannot calculate mean of empty sequence"</span>)
+    <span class="keyword">if not</span> <span class="function">all</span>(math.isfinite(v) <span class="keyword">for</span> v <span class="keyword">in</span> values):
+        <span class="keyword">raise</span> <span class="class">ValueError</span>(<span class="string">"All values must be finite"</span>)
+    
+    <span class="keyword">return</span> <span class="function">sum</span>(values) / <span class="function">len</span>(values)</pre>
+            </div>
+            
+            <!-- Slide 16: Postconditions -->
+            <div class="slide" data-slide="16">
+                <h2>Postconditions</h2>
+                <p>Conditions that <span class="highlight">must be true</span> after a function returns:</p>
+                <pre><span class="keyword">def</span> <span class="function">normalise</span>(values: <span class="class">list</span>[<span class="class">float</span>]) -> <span class="class">list</span>[<span class="class">float</span>]:
+    <span class="string">"""Normalise values to range [0, 1].
+    
+    Postconditions:
+        - all output values are in [0, 1]
+        - maximum output value is 1.0
+    """</span>
+    min_val, max_val = <span class="function">min</span>(values), <span class="function">max</span>(values)
+    result = [(v - min_val) / (max_val - min_val) <span class="keyword">for</span> v <span class="keyword">in</span> values]
+    
+    <span class="comment"># Verify postconditions (debug assertions)</span>
+    <span class="keyword">assert</span> <span class="function">all</span>(<span class="number">0</span> <= v <= <span class="number">1</span> <span class="keyword">for</span> v <span class="keyword">in</span> result), <span class="string">"Postcondition violated"</span>
+    <span class="keyword">assert</span> <span class="function">max</span>(result) == <span class="number">1.0</span>, <span class="string">"Max should be 1.0"</span>
+    
+    <span class="keyword">return</span> result</pre>
+            </div>
+            
+            <!-- Slide 17: Assertions vs Exceptions -->
+            <div class="slide" data-slide="17">
+                <h2>Assertions vs Exceptions</h2>
+                <table>
+                    <tr>
+                        <th>Use Assertions For</th>
+                        <th>Use Exceptions For</th>
+                    </tr>
+                    <tr>
+                        <td>Internal invariants</td>
+                        <td>External input validation</td>
+                    </tr>
+                    <tr>
+                        <td>Conditions that should never occur</td>
+                        <td>Expected error conditions</td>
+                    </tr>
+                    <tr>
+                        <td>Development-time checks</td>
+                        <td>Runtime error handling</td>
+                    </tr>
+                    <tr>
+                        <td>Documentation of assumptions</td>
+                        <td>User-facing error messages</td>
+                    </tr>
+                </table>
+                <p class="warning">Warning: Assertions can be disabled with <code>python -O</code></p>
+            </div>
+            
+            <!-- Slide 18: Input Validation -->
+            <div class="slide" data-slide="18">
+                <h2>Input Validation Strategies</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Type Validation</h4>
+                        <p>Check types with <code>isinstance()</code> or type hints</p>
+                    </div>
+                    <div class="card">
+                        <h4>Range Validation</h4>
+                        <p>Verify values are within acceptable bounds</p>
+                    </div>
+                    <div class="card">
+                        <h4>Format Validation</h4>
+                        <p>Use regex or parsing for structured data</p>
+                    </div>
+                    <div class="card">
+                        <h4>Semantic Validation</h4>
+                        <p>Check business rules and domain constraints</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 19: Fail-Fast Principle -->
+            <div class="slide" data-slide="19">
+                <h2>The Fail-Fast Principle</h2>
+                <blockquote>
+                    "Fail fast: as soon as you detect an error, raise an exception. The longer you wait, the harder it is to debug."
+                    <cite>— Adapted from Martin Fowler</cite>
+                </blockquote>
+                <div class="two-col">
+                    <div>
+                        <h3 class="error">❌ Fail slow</h3>
+                        <pre><span class="keyword">def</span> <span class="function">process</span>(data):
+    <span class="keyword">if</span> data <span class="keyword">is</span> <span class="keyword">None</span>:
+        data = []  <span class="comment"># Silent fix</span>
+    <span class="comment"># ... 100 lines later ...</span>
+    <span class="comment"># Mysterious bug!</span></pre>
+                    </div>
+                    <div>
+                        <h3 class="highlight">✓ Fail fast</h3>
+                        <pre><span class="keyword">def</span> <span class="function">process</span>(data):
+    <span class="keyword">if</span> data <span class="keyword">is</span> <span class="keyword">None</span>:
+        <span class="keyword">raise</span> <span class="class">ValueError</span>(
+            <span class="string">"data required"</span>
+        )
+    <span class="comment"># Clear error at source</span></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 20: Retry Patterns -->
+            <div class="slide" data-slide="20">
+                <h2>Resilience Pattern: Retry with Backoff</h2>
+                <p>Handle <span class="highlight">transient failures</span> with exponential backoff:</p>
+                <pre><span class="keyword">def</span> <span class="function">retry_with_backoff</span>(func, max_attempts=<span class="number">3</span>, base_delay=<span class="number">1.0</span>):
+    <span class="keyword">for</span> attempt <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1</span>, max_attempts + <span class="number">1</span>):
+        <span class="keyword">try</span>:
+            <span class="keyword">return</span> func()
+        <span class="keyword">except</span> <span class="class">TransientError</span> <span class="keyword">as</span> e:
+            <span class="keyword">if</span> attempt == max_attempts:
+                <span class="keyword">raise</span>
+            delay = base_delay * (<span class="number">2</span> ** (attempt - <span class="number">1</span>))  <span class="comment"># 1, 2, 4...</span>
+            delay *= random.uniform(<span class="number">0.5</span>, <span class="number">1.0</span>)  <span class="comment"># Add jitter</span>
+            time.sleep(delay)</pre>
+            </div>
+            
+            <!-- Slide 21: Circuit Breaker Pattern -->
+            <div class="slide" data-slide="21">
+                <h2>Resilience Pattern: Circuit Breaker</h2>
+                <p>Prevent cascading failures by <span class="highlight">failing fast</span> when a service is down:</p>
+                <div class="diagram">
+                    <p style="font-size: 1.5rem;">
+                        <span style="color: var(--accent-green);">CLOSED</span>
+                        → (failures ≥ threshold) →
+                        <span style="color: var(--accent-red);">OPEN</span>
+                        → (timeout elapsed) →
+                        <span style="color: var(--accent-orange);">HALF-OPEN</span>
+                    </p>
+                    <p style="margin-top: 1rem; color: var(--text-secondary);">
+                        HALF-OPEN: Test with limited calls, then CLOSE or OPEN
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Slide 22: Circuit Breaker Implementation -->
+            <div class="slide" data-slide="22">
+                <h2>Circuit Breaker: States</h2>
+                <table>
+                    <tr>
+                        <th>State</th>
+                        <th>Behaviour</th>
+                        <th>Transition</th>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">CLOSED</span></td>
+                        <td>Normal operation, count failures</td>
+                        <td>→ OPEN when failures ≥ threshold</td>
+                    </tr>
+                    <tr>
+                        <td><span class="error">OPEN</span></td>
+                        <td>Reject all calls immediately</td>
+                        <td>→ HALF-OPEN after timeout</td>
+                    </tr>
+                    <tr>
+                        <td><span class="warning">HALF-OPEN</span></td>
+                        <td>Allow limited test calls</td>
+                        <td>→ CLOSED on success, OPEN on failure</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- Slide 23: Graceful Degradation -->
+            <div class="slide" data-slide="23">
+                <h2>Graceful Degradation</h2>
+                <p>Provide <span class="highlight">reduced functionality</span> rather than complete failure:</p>
+                <pre><span class="keyword">def</span> <span class="function">get_user_data</span>(user_id: <span class="class">str</span>) -> <span class="class">UserData</span>:
+    <span class="keyword">try</span>:
+        <span class="comment"># Try primary source (database)</span>
+        <span class="keyword">return</span> database.get_user(user_id)
+    <span class="keyword">except</span> <span class="class">DatabaseError</span>:
+        <span class="keyword">try</span>:
+            <span class="comment"># Fallback to cache</span>
+            <span class="keyword">return</span> cache.get_user(user_id)
+        <span class="keyword">except</span> <span class="class">CacheError</span>:
+            <span class="comment"># Return default data</span>
+            <span class="keyword">return</span> <span class="class">UserData</span>.default(user_id)</pre>
+            </div>
+            
+            <!-- Slide 24: Numerical Stability -->
+            <div class="slide" data-slide="24">
+                <h2>Numerical Stability</h2>
+                <blockquote>
+                    "What every computer scientist should know about floating-point arithmetic."
+                    <cite>— David Goldberg (1991)</cite>
+                </blockquote>
+                <p>Common pitfalls:</p>
+                <ul>
+                    <li><span class="warning">Overflow</span>: Result too large to represent</li>
+                    <li><span class="warning">Underflow</span>: Result too small (rounds to zero)</li>
+                    <li><span class="warning">Catastrophic cancellation</span>: Subtraction of nearly equal values</li>
+                    <li><span class="warning">Accumulation errors</span>: Repeated operations compound error</li>
+                </ul>
+            </div>
+            
+            <!-- Slide 25: Numerical Guards -->
+            <div class="slide" data-slide="25">
+                <h2>Guarding Against Numerical Issues</h2>
+                <pre><span class="keyword">import</span> math
+
+<span class="keyword">def</span> <span class="function">safe_log</span>(x: <span class="class">float</span>, epsilon: <span class="class">float</span> = <span class="number">1e-10</span>) -> <span class="class">float</span>:
+    <span class="string">"""Compute logarithm with numerical guards."""</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> math.isfinite(x):
+        <span class="keyword">raise</span> <span class="class">NumericalInstabilityError</span>(<span class="string">"Input is not finite"</span>)
+    <span class="keyword">if</span> x <= <span class="number">0</span>:
+        <span class="keyword">raise</span> <span class="class">ValueError</span>(<span class="string">f"Cannot compute log of {x}"</span>)
+    
+    <span class="comment"># Guard against underflow</span>
+    <span class="keyword">if</span> x < epsilon:
+        <span class="keyword">return</span> math.log(epsilon)
+    
+    <span class="keyword">return</span> math.log(x)</pre>
+            </div>
+            
+            <!-- Slide 26: Logging conventions -->
+            <div class="slide" data-slide="26">
+                <h2>Logging for Diagnostics</h2>
+                <pre><span class="keyword">import</span> logging
+
+logger = logging.getLogger(__name__)
+
+<span class="keyword">def</span> <span class="function">process_batch</span>(items: <span class="class">list</span>) -> <span class="class">list</span>:
+    logger.info(<span class="string">"Starting batch processing of %d items"</span>, <span class="function">len</span>(items))
+    
+    results = []
+    <span class="keyword">for</span> i, item <span class="keyword">in</span> <span class="function">enumerate</span>(items):
+        <span class="keyword">try</span>:
+            result = process(item)
+            results.append(result)
+        <span class="keyword">except</span> <span class="class">ProcessingError</span> <span class="keyword">as</span> e:
+            logger.warning(<span class="string">"Failed item %d: %s"</span>, i, e)
+            <span class="keyword">continue</span>
+    
+    logger.info(<span class="string">"Completed: %d/%d successful"</span>, <span class="function">len</span>(results), <span class="function">len</span>(items))
+    <span class="keyword">return</span> results</pre>
+            </div>
+            
+            <!-- Slide 27: Logging Levels -->
+            <div class="slide" data-slide="27">
+                <h2>Logging Levels</h2>
+                <table>
+                    <tr>
+                        <th>Level</th>
+                        <th>Use For</th>
+                    </tr>
+                    <tr>
+                        <td><code>DEBUG</code></td>
+                        <td>Detailed information for diagnosing issues</td>
+                    </tr>
+                    <tr>
+                        <td><code>INFO</code></td>
+                        <td>Confirmation that things are working as expected</td>
+                    </tr>
+                    <tr>
+                        <td><code>WARNING</code></td>
+                        <td>Something unexpected happened, but program continues</td>
+                    </tr>
+                    <tr>
+                        <td><code>ERROR</code></td>
+                        <td>A serious problem, some functionality is broken</td>
+                    </tr>
+                    <tr>
+                        <td><code>CRITICAL</code></td>
+                        <td>Program may not be able to continue</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- Slide 28: Structured Logging -->
+            <div class="slide" data-slide="28">
+                <h2>Structured Logging</h2>
+                <p>Include <span class="highlight">machine-parseable context</span> for analysis:</p>
+                <pre><span class="keyword">import</span> json
+<span class="keyword">import</span> logging
+
+<span class="keyword">class</span> <span class="class">StructuredFormatter</span>(logging.<span class="class">Formatter</span>):
+    <span class="keyword">def</span> <span class="function">format</span>(self, record):
+        log_data = {
+            <span class="string">"timestamp"</span>: self.formatTime(record),
+            <span class="string">"level"</span>: record.levelname,
+            <span class="string">"message"</span>: record.getMessage(),
+            <span class="string">"module"</span>: record.module,
+            <span class="string">"function"</span>: record.funcName,
+        }
+        <span class="keyword">if</span> record.exc_info:
+            log_data[<span class="string">"exception"</span>] = self.formatException(record.exc_info)
+        <span class="keyword">return</span> json.dumps(log_data)</pre>
+            </div>
+            
+            <!-- Slide 29: Testing Exception Handling -->
+            <div class="slide" data-slide="29">
+                <h2>Testing Exception Handling</h2>
+                <p>Use <code>pytest.raises</code> to verify exceptions:</p>
+                <pre><span class="keyword">import</span> pytest
+
+<span class="keyword">def</span> <span class="function">test_validation_rejects_negative</span>():
+    <span class="keyword">with</span> pytest.raises(<span class="class">ValueError</span>) <span class="keyword">as</span> exc_info:
+        validate_positive(-<span class="number">5</span>)
+    
+    <span class="keyword">assert</span> <span class="string">"must be positive"</span> <span class="keyword">in</span> <span class="function">str</span>(exc_info.value)
+
+<span class="keyword">def</span> <span class="function">test_custom_exception_attributes</span>():
+    <span class="keyword">with</span> pytest.raises(<span class="class">DataValidationError</span>) <span class="keyword">as</span> exc_info:
+        validate_field(<span class="string">"age"</span>, -<span class="number">1</span>)
+    
+    error = exc_info.value
+    <span class="keyword">assert</span> error.field == <span class="string">"age"</span>
+    <span class="keyword">assert</span> error.value == -<span class="number">1</span></pre>
+            </div>
+            
+            <!-- Slide 30: Testing Context Managers -->
+            <div class="slide" data-slide="30">
+                <h2>Testing Context Managers</h2>
+                <pre><span class="keyword">def</span> <span class="function">test_managed_file_closes_on_exception</span>(tmp_path):
+    file_path = tmp_path / <span class="string">"test.txt"</span>
+    file_path.write_text(<span class="string">"content"</span>)
+    
+    <span class="keyword">try</span>:
+        <span class="keyword">with</span> <span class="class">ManagedFile</span>(file_path, <span class="string">"r"</span>) <span class="keyword">as</span> f:
+            <span class="keyword">raise</span> <span class="class">ValueError</span>(<span class="string">"test error"</span>)
+    <span class="keyword">except</span> <span class="class">ValueError</span>:
+        <span class="keyword">pass</span>
+    
+    <span class="comment"># Verify file was closed despite exception</span>
+    <span class="keyword">assert</span> f.closed</pre>
+            </div>
+            
+            <!-- Slide 31: Anti-patterns -->
+            <div class="slide" data-slide="31">
+                <h2>Exception Handling Anti-patterns</h2>
+                <div class="card-grid">
+                    <div class="card" style="border-color: var(--accent-red);">
+                        <h4 style="color: var(--accent-red);">Pokémon Exception Handling</h4>
+                        <p><code>except Exception: pass</code><br>"Gotta catch 'em all!"</p>
+                    </div>
+                    <div class="card" style="border-color: var(--accent-red);">
+                        <h4 style="color: var(--accent-red);">Exception as Flow Control</h4>
+                        <p>Using exceptions for normal program flow</p>
+                    </div>
+                    <div class="card" style="border-color: var(--accent-red);">
+                        <h4 style="color: var(--accent-red);">Swallowing Exceptions</h4>
+                        <p>Catching without logging or handling</p>
+                    </div>
+                    <div class="card" style="border-color: var(--accent-red);">
+                        <h4 style="color: var(--accent-red);">Raising Generic Exceptions</h4>
+                        <p><code>raise Exception("error")</code></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 32: conventions Summary -->
+            <div class="slide" data-slide="32">
+                <h2>conventions Summary</h2>
+                <ol>
+                    <li><span class="highlight">Be specific</span> when catching exceptions</li>
+                    <li><span class="highlight">Use context managers</span> for resource management</li>
+                    <li><span class="highlight">Fail fast</span> with clear error messages</li>
+                    <li><span class="highlight">Log exceptions</span> with sufficient context</li>
+                    <li><span class="highlight">Chain exceptions</span> to preserve diagnostic info</li>
+                    <li><span class="highlight">Test exception paths</span> explicitly</li>
+                    <li><span class="highlight">Design exception hierarchies</span> for your domain</li>
+                </ol>
+            </div>
+            
+            <!-- Slide 33: Design by Contract -->
+            <div class="slide" data-slide="33">
+                <h2>Design by Contract</h2>
+                <blockquote>
+                    "If a routine fails to fulfil its contract, the exception mechanism provides a way to respond to that failure in a controlled manner."
+                    <cite>— Bertrand Meyer (1992)</cite>
+                </blockquote>
+                <p>The contract consists of:</p>
+                <ul>
+                    <li><span class="highlight">Preconditions</span>: What the caller must guarantee</li>
+                    <li><span class="highlight">Postconditions</span>: What the routine guarantees upon return</li>
+                    <li><span class="highlight">Invariants</span>: What must remain true throughout</li>
+                </ul>
+            </div>
+            
+            <!-- Slide 34: Error Messages -->
+            <div class="slide" data-slide="34">
+                <h2>Writing Good Error Messages</h2>
+                <div class="two-col">
+                    <div>
+                        <h3 class="error">❌ Poor</h3>
+                        <pre><span class="keyword">raise</span> <span class="class">ValueError</span>(<span class="string">"invalid"</span>)
+<span class="keyword">raise</span> <span class="class">Error</span>(<span class="string">"failed"</span>)
+<span class="keyword">raise</span> <span class="class">Exception</span>()</pre>
+                    </div>
+                    <div>
+                        <h3 class="highlight">✓ Good</h3>
+                        <pre><span class="keyword">raise</span> <span class="class">ValueError</span>(
+    <span class="string">f"Age must be 0-150, "</span>
+    <span class="string">f"got {age}"</span>
+)
+<span class="keyword">raise</span> <span class="class">FileFormatError</span>(
+    <span class="string">f"Expected CSV, found "</span>
+    <span class="string">f"{actual_format} in {path}"</span>
+)</pre>
+                    </div>
+                </div>
+                <p style="margin-top: 1rem;">Include: <span class="highlight">what went wrong</span>, <span class="highlight">the invalid value</span>, and <span class="highlight">what was expected</span>.</p>
+            </div>
+            
+            <!-- Slide 35: Recovery Strategies -->
+            <div class="slide" data-slide="35">
+                <h2>Recovery Strategies</h2>
+                <table>
+                    <tr>
+                        <th>Strategy</th>
+                        <th>When to Use</th>
+                    </tr>
+                    <tr>
+                        <td>Retry</td>
+                        <td>Transient network/database errors</td>
+                    </tr>
+                    <tr>
+                        <td>Fallback</td>
+                        <td>Non-critical features with alternatives</td>
+                    </tr>
+                    <tr>
+                        <td>Cache</td>
+                        <td>Previously successful results available</td>
+                    </tr>
+                    <tr>
+                        <td>Default Value</td>
+                        <td>Safe fallback exists</td>
+                    </tr>
+                    <tr>
+                        <td>Propagate</td>
+                        <td>Caller should decide handling</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- Slide 36: Checkpoint Recovery -->
+            <div class="slide" data-slide="36">
+                <h2>Checkpoint Recovery</h2>
+                <p>For <span class="highlight">long-running computations</span>, save progress:</p>
+                <pre><span class="keyword">def</span> <span class="function">process_dataset</span>(items, checkpoint_path):
+    checkpoint = load_checkpoint(checkpoint_path)
+    start_index = checkpoint.get(<span class="string">'last_index'</span>, <span class="number">0</span>)
+    
+    <span class="keyword">for</span> i, item <span class="keyword">in</span> <span class="function">enumerate</span>(items[start_index:], start_index):
+        <span class="keyword">try</span>:
+            process(item)
+            <span class="keyword">if</span> i % <span class="number">100</span> == <span class="number">0</span>:  <span class="comment"># Checkpoint every 100</span>
+                save_checkpoint({<span class="string">'last_index'</span>: i})
+        <span class="keyword">except</span> <span class="class">ProcessingError</span>:
+            save_checkpoint({<span class="string">'last_index'</span>: i, <span class="string">'failed'</span>: item})
+            <span class="keyword">raise</span></pre>
+            </div>
+            
+            <!-- Slide 37: Bulk Operations -->
+            <div class="slide" data-slide="37">
+                <h2>Bulk Operations with Partial Failure</h2>
+                <pre><span class="keyword">def</span> <span class="function">bulk_process</span>(items: <span class="class">list</span>) -> <span class="class">tuple</span>[<span class="class">list</span>, <span class="class">list</span>]:
+    <span class="string">"""Process items, continuing on individual failures."""</span>
+    successes, failures = [], []
+    
+    <span class="keyword">for</span> item <span class="keyword">in</span> items:
+        <span class="keyword">try</span>:
+            result = process(item)
+            successes.append((item, result))
+        <span class="keyword">except</span> <span class="class">ProcessingError</span> <span class="keyword">as</span> e:
+            failures.append((item, e))
+            logger.warning(<span class="string">"Failed item %s: %s"</span>, item, e)
+    
+    <span class="keyword">if</span> failures:
+        logger.warning(<span class="string">"%d/%d items failed"</span>, <span class="function">len</span>(failures), <span class="function">len</span>(items))
+    
+    <span class="keyword">return</span> successes, failures</pre>
+            </div>
+            
+            <!-- Slide 38: LBYL vs EAFP -->
+            <div class="slide" data-slide="38">
+                <h2>LBYL vs EAFP</h2>
+                <div class="two-col">
+                    <div>
+                        <h3>Look Before You Leap</h3>
+                        <pre><span class="keyword">if</span> key <span class="keyword">in</span> dictionary:
+    value = dictionary[key]
+<span class="keyword">else</span>:
+    value = default</pre>
+                        <p>Check conditions before acting</p>
+                    </div>
+                    <div>
+                        <h3>Easier to Ask Forgiveness</h3>
+                        <pre><span class="keyword">try</span>:
+    value = dictionary[key]
+<span class="keyword">except</span> <span class="class">KeyError</span>:
+    value = default</pre>
+                        <p><span class="highlight">Pythonic</span>: Try and handle failure</p>
+                    </div>
+                </div>
+                <p style="margin-top: 1rem;">EAFP is often preferred in Python, especially for race-condition-prone operations.</p>
+            </div>
+            
+            <!-- Slide 39: Research Applications -->
+            <div class="slide" data-slide="39">
+                <h2>Applications in Research</h2>
+                <ul>
+                    <li><span class="highlight">Data pipelines</span>: Handle missing/malformed data gracefully</li>
+                    <li><span class="highlight">Simulations</span>: Checkpoint long-running experiments</li>
+                    <li><span class="highlight">API integrations</span>: Retry and circuit breaker patterns</li>
+                    <li><span class="highlight">Numerical computing</span>: Guard against overflow/instability</li>
+                    <li><span class="highlight">Batch processing</span>: Continue on individual failures</li>
+                    <li><span class="highlight">Distributed systems</span>: Graceful degradation under failure</li>
+                </ul>
+            </div>
+            
+            <!-- Slide 40: Summary -->
+            <div class="slide" data-slide="40">
+                <h2>Key Takeaways</h2>
+                <ol>
+                    <li>Exceptions separate <span class="highlight">error detection</span> from <span class="highlight">error handling</span></li>
+                    <li>Design <span class="highlight">domain-specific exception hierarchies</span></li>
+                    <li>Use <span class="highlight">context managers</span> for resource management</li>
+                    <li>Apply <span class="highlight">defensive programming</span> at system boundaries</li>
+                    <li>Implement <span class="highlight">resilience patterns</span> for resilience</li>
+                    <li><span class="highlight">Log with context</span> for effective debugging</li>
+                    <li><span class="highlight">Test exception paths</span> as thoroughly as success paths</li>
+                </ol>
+            </div>
+            
+            <!-- Slide 41: References -->
+            <div class="slide" data-slide="41">
+                <h2>References</h2>
+                <ul style="font-size: 1.1rem;">
+                    <li>Beazley, D. M. (2009). <em>Python necessary Reference</em>. 4th ed.</li>
+                    <li>Dijkstra, E. W. (1976). <em>A Discipline of Programming</em>.</li>
+                    <li>Downey, A. B. (2015). <em>Think Python</em>. 2nd ed. O'Reilly.</li>
+                    <li>Goldberg, D. (1991). What every computer scientist should know about floating-point arithmetic. <em>ACM Computing Surveys</em>.</li>
+                    <li>Meyer, B. (1992). <em>Eiffel: The Language</em>. Prentice Hall.</li>
+                    <li>Nygard, M. T. (2018). <em>Release It!</em> 2nd ed. Pragmatic Bookshelf.</li>
+                </ul>
+            </div>
+            
+            <!-- Slide 42: Thank You -->
+            <div class="slide title-slide" data-slide="42">
+                <h1>Questions?</h1>
+                <p class="subtitle">Exception Handling and Defensive Programming</p>
+                <p style="margin-top: 3rem; color: var(--text-secondary);">
+                    Unit 09 • Computational Thinking<br>
+                    Laboratory exercises available in the course repository
+                </p>
+            </div>
+        </div>
+        
+        <nav class="nav">
+            <button class="nav-btn" id="prev-btn" disabled>← Previous</button>
+            <span class="slide-counter"><span id="current">1</span> / <span id="total">42</span></span>
+            <button class="nav-btn" id="next-btn">Next →</button>
+        </nav>
+    </div>
+    
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 1;
+        
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const currentEl = document.getElementById('current');
+        const totalEl = document.getElementById('total');
+        const progressBar = document.getElementById('progress');
+        
+        totalEl.textContent = totalSlides;
+        
+        function showSlide(n) {
+            slides.forEach(s => s.classList.remove('active'));
+            slides[n - 1].classList.add('active');
+            
+            currentSlide = n;
+            currentEl.textContent = n;
+            
+            prevBtn.disabled = n === 1;
+            nextBtn.disabled = n === totalSlides;
+            
+            progressBar.style.width = ((n / totalSlides) * 100) + '%';
+        }
+        
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 1) showSlide(currentSlide - 1);
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < totalSlides) showSlide(currentSlide + 1);
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentSlide < totalSlides) showSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 1) showSlide(currentSlide - 1);
+            } else if (e.key === 'Home') {
+                showSlide(1);
+            } else if (e.key === 'End') {
+                showSlide(totalSlides);
+            }
+        });
+        
+        showSlide(1);
+    </script>
+</body>
+</html>

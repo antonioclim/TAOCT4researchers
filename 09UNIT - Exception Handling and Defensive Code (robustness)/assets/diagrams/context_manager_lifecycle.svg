@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="enterGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#48bb78"/>
+      <stop offset="100%" style="stop-color:#38a169"/>
+    </linearGradient>
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4a9eff"/>
+      <stop offset="100%" style="stop-color:#3182ce"/>
+    </linearGradient>
+    <linearGradient id="exitGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ed8936"/>
+      <stop offset="100%" style="stop-color:#dd6b20"/>
+    </linearGradient>
+    <linearGradient id="errorGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f56565"/>
+      <stop offset="100%" style="stop-color:#c53030"/>
+    </linearGradient>
+    <marker id="seqArrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#eaeaea"/>
+    </marker>
+    <marker id="seqArrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#48bb78"/>
+    </marker>
+    <marker id="seqArrowOrange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#ed8936"/>
+    </marker>
+    <marker id="seqArrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#f56565"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="500" fill="#1a1a2e"/>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" fill="#eaeaea" font-family="Arial, sans-serif" font-size="20" font-weight="bold">Context Manager Lifecycle</text>
+  <text x="400" y="50" text-anchor="middle" fill="#888" font-family="Arial, sans-serif" font-size="11">with statement execution sequence</text>
+  
+  <!-- Code snippet -->
+  <rect x="50" y="65" width="200" height="70" rx="5" fill="#2d2d44" stroke="#444"/>
+  <text x="60" y="85" fill="#888" font-family="monospace" font-size="10">with resource as r:</text>
+  <text x="60" y="100" fill="#4a9eff" font-family="monospace" font-size="10">    # body executes</text>
+  <text x="60" y="115" fill="#4a9eff" font-family="monospace" font-size="10">    process(r)</text>
+  <text x="60" y="130" fill="#888" font-family="monospace" font-size="10"># cleanup guaranteed</text>
+  
+  <!-- Lifelines -->
+  <g>
+    <!-- Code lifeline -->
+    <rect x="140" y="145" width="80" height="30" rx="5" fill="#4a9eff"/>
+    <text x="180" y="165" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="11">with block</text>
+    <line x1="180" y1="175" x2="180" y2="450" stroke="#4a9eff" stroke-width="2" stroke-dasharray="5,3"/>
+    
+    <!-- Context Manager lifeline -->
+    <rect x="360" y="145" width="80" height="30" rx="5" fill="#ed8936"/>
+    <text x="400" y="165" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="10">ContextMgr</text>
+    <line x1="400" y1="175" x2="400" y2="450" stroke="#ed8936" stroke-width="2" stroke-dasharray="5,3"/>
+    
+    <!-- Resource lifeline -->
+    <rect x="580" y="145" width="80" height="30" rx="5" fill="#48bb78"/>
+    <text x="620" y="165" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="11">Resource</text>
+    <line x1="620" y1="175" x2="620" y2="450" stroke="#48bb78" stroke-width="2" stroke-dasharray="5,3"/>
+  </g>
+  
+  <!-- Step 1: __enter__ called -->
+  <g>
+    <line x1="180" y1="200" x2="390" y2="200" stroke="#48bb78" stroke-width="2" marker-end="url(#seqArrowGreen)"/>
+    <rect x="220" y="185" width="120" height="20" rx="3" fill="#1a1a2e"/>
+    <text x="280" y="200" text-anchor="middle" fill="#48bb78" font-family="monospace" font-size="10">__enter__()</text>
+    <circle cx="165" cy="200" r="12" fill="#2d2d44" stroke="#48bb78" stroke-width="2"/>
+    <text x="165" y="204" text-anchor="middle" fill="#48bb78" font-family="Arial, sans-serif" font-size="10" font-weight="bold">1</text>
+  </g>
+  
+  <!-- Step 2: Resource acquired -->
+  <g>
+    <line x1="400" y1="230" x2="610" y2="230" stroke="#48bb78" stroke-width="2" marker-end="url(#seqArrowGreen)"/>
+    <rect x="450" y="215" width="110" height="20" rx="3" fill="#1a1a2e"/>
+    <text x="505" y="230" text-anchor="middle" fill="#48bb78" font-family="monospace" font-size="10">acquire()</text>
+    <circle cx="165" cy="230" r="12" fill="#2d2d44" stroke="#48bb78" stroke-width="2"/>
+    <text x="165" y="234" text-anchor="middle" fill="#48bb78" font-family="Arial, sans-serif" font-size="10" font-weight="bold">2</text>
+  </g>
+  
+  <!-- Step 3: Return resource (as r) -->
+  <g>
+    <line x1="390" y1="260" x2="180" y2="260" stroke="#48bb78" stroke-width="2" marker-end="url(#seqArrowGreen)"/>
+    <rect x="230" y="245" width="100" height="20" rx="3" fill="#1a1a2e"/>
+    <text x="280" y="260" text-anchor="middle" fill="#48bb78" font-family="monospace" font-size="10">return self</text>
+    <circle cx="165" cy="260" r="12" fill="#2d2d44" stroke="#48bb78" stroke-width="2"/>
+    <text x="165" y="264" text-anchor="middle" fill="#48bb78" font-family="Arial, sans-serif" font-size="10" font-weight="bold">3</text>
+  </g>
+  
+  <!-- Step 4: Body executes -->
+  <g>
+    <rect x="175" y="290" width="10" height="60" fill="url(#bodyGrad)"/>
+    <text x="195" y="320" fill="#4a9eff" font-family="Arial, sans-serif" font-size="10">body executes</text>
+    <circle cx="165" cy="320" r="12" fill="#2d2d44" stroke="#4a9eff" stroke-width="2"/>
+    <text x="165" y="324" text-anchor="middle" fill="#4a9eff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">4</text>
+  </g>
+  
+  <!-- Step 5: __exit__ called -->
+  <g>
+    <line x1="180" y1="370" x2="390" y2="370" stroke="#ed8936" stroke-width="2" marker-end="url(#seqArrowOrange)"/>
+    <rect x="210" y="355" width="150" height="20" rx="3" fill="#1a1a2e"/>
+    <text x="285" y="370" text-anchor="middle" fill="#ed8936" font-family="monospace" font-size="10">__exit__(exc_info)</text>
+    <circle cx="165" cy="370" r="12" fill="#2d2d44" stroke="#ed8936" stroke-width="2"/>
+    <text x="165" y="374" text-anchor="middle" fill="#ed8936" font-family="Arial, sans-serif" font-size="10" font-weight="bold">5</text>
+  </g>
+  
+  <!-- Step 6: Resource released -->
+  <g>
+    <line x1="400" y1="400" x2="610" y2="400" stroke="#ed8936" stroke-width="2" marker-end="url(#seqArrowOrange)"/>
+    <rect x="450" y="385" width="110" height="20" rx="3" fill="#1a1a2e"/>
+    <text x="505" y="400" text-anchor="middle" fill="#ed8936" font-family="monospace" font-size="10">release()</text>
+    <circle cx="165" cy="400" r="12" fill="#2d2d44" stroke="#ed8936" stroke-width="2"/>
+    <text x="165" y="404" text-anchor="middle" fill="#ed8936" font-family="Arial, sans-serif" font-size="10" font-weight="bold">6</text>
+  </g>
+  
+  <!-- Exception handling note -->
+  <rect x="500" y="65" width="280" height="90" rx="8" fill="#2d2d44" stroke="#f56565"/>
+  <text x="640" y="88" text-anchor="middle" fill="#f56565" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Exception Handling</text>
+  <text x="510" y="108" fill="#aaa" font-family="Arial, sans-serif" font-size="9">If exception in body:</text>
+  <text x="510" y="123" fill="#aaa" font-family="monospace" font-size="9">__exit__(exc_type, exc_val, tb)</text>
+  <text x="510" y="143" fill="#aaa" font-family="Arial, sans-serif" font-size="9">Return True to suppress exception</text>
+  
+  <!-- Guarantee box -->
+  <rect x="290" y="430" width="220" height="35" rx="5" fill="#48bb78" fill-opacity="0.15" stroke="#48bb78"/>
+  <text x="400" y="452" text-anchor="middle" fill="#48bb78" font-family="Arial, sans-serif" font-size="11" font-weight="bold">__exit__ ALWAYS called</text>
+  
+  <!-- Footer -->
+  <text x="400" y="490" text-anchor="middle" fill="#555" font-family="Arial, sans-serif" font-size="8">09UNIT: Exception Handling and Defensive Programming | © 2025 Antonio Clim</text>
+</svg>
