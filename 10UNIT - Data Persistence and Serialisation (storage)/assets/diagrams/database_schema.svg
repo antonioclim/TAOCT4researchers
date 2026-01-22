@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 450">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333">
+    Normalised Research Database Schema
+  </text>
+  
+  <!-- Experiments Table -->
+  <g transform="translate(50, 60)" filter="url(#shadow)">
+    <rect x="0" y="0" width="200" height="160" rx="8" fill="#E3F2FD" stroke="#1976D2" stroke-width="2"/>
+    <rect x="0" y="0" width="200" height="35" rx="8" fill="#1976D2"/>
+    <rect x="0" y="25" width="200" height="10" fill="#1976D2"/>
+    <text x="100" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">experiments</text>
+    
+    <text x="15" y="55" font-family="Consolas, monospace" font-size="11" fill="#333">🔑 experiment_id INT PK</text>
+    <text x="15" y="75" font-family="Consolas, monospace" font-size="11" fill="#333">   name TEXT NOT NULL</text>
+    <text x="15" y="95" font-family="Consolas, monospace" font-size="11" fill="#333">   researcher TEXT</text>
+    <text x="15" y="115" font-family="Consolas, monospace" font-size="11" fill="#333">   start_date TEXT</text>
+    <text x="15" y="135" font-family="Consolas, monospace" font-size="11" fill="#333">   status TEXT</text>
+    <text x="15" y="155" font-family="Consolas, monospace" font-size="11" fill="#333">   description TEXT</text>
+  </g>
+  
+  <!-- Sensors Table -->
+  <g transform="translate(50, 260)" filter="url(#shadow)">
+    <rect x="0" y="0" width="200" height="140" rx="8" fill="#E8F5E9" stroke="#388E3C" stroke-width="2"/>
+    <rect x="0" y="0" width="200" height="35" rx="8" fill="#388E3C"/>
+    <rect x="0" y="25" width="200" height="10" fill="#388E3C"/>
+    <text x="100" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">sensors</text>
+    
+    <text x="15" y="55" font-family="Consolas, monospace" font-size="11" fill="#333">🔑 sensor_id INT PK</text>
+    <text x="15" y="75" font-family="Consolas, monospace" font-size="11" fill="#333">   serial_number TEXT UQ</text>
+    <text x="15" y="95" font-family="Consolas, monospace" font-size="11" fill="#333">   sensor_type TEXT</text>
+    <text x="15" y="115" font-family="Consolas, monospace" font-size="11" fill="#333">   unit TEXT</text>
+    <text x="15" y="135" font-family="Consolas, monospace" font-size="11" fill="#333">   location TEXT</text>
+  </g>
+  
+  <!-- Measurements Table -->
+  <g transform="translate(350, 140)" filter="url(#shadow)">
+    <rect x="0" y="0" width="220" height="160" rx="8" fill="#FFF3E0" stroke="#F57C00" stroke-width="2"/>
+    <rect x="0" y="0" width="220" height="35" rx="8" fill="#F57C00"/>
+    <rect x="0" y="25" width="220" height="10" fill="#F57C00"/>
+    <text x="110" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">measurements</text>
+    
+    <text x="15" y="55" font-family="Consolas, monospace" font-size="11" fill="#333">🔑 measurement_id INT PK</text>
+    <text x="15" y="75" font-family="Consolas, monospace" font-size="11" fill="#1976D2">🔗 experiment_id INT FK</text>
+    <text x="15" y="95" font-family="Consolas, monospace" font-size="11" fill="#388E3C">🔗 sensor_id INT FK</text>
+    <text x="15" y="115" font-family="Consolas, monospace" font-size="11" fill="#333">   timestamp TEXT</text>
+    <text x="15" y="135" font-family="Consolas, monospace" font-size="11" fill="#333">   value REAL NOT NULL</text>
+    <text x="15" y="155" font-family="Consolas, monospace" font-size="11" fill="#333">   quality_flag TEXT</text>
+  </g>
+  
+  <!-- Relationship lines -->
+  <!-- experiments -> measurements -->
+  <path d="M 250 140 L 300 140 L 300 200 L 350 200" fill="none" stroke="#1976D2" stroke-width="2"/>
+  <circle cx="250" cy="140" r="5" fill="#1976D2"/>
+  <polygon points="345,195 355,200 345,205" fill="#1976D2"/>
+  <text x="275" y="135" font-family="Arial, sans-serif" font-size="10" fill="#1976D2">1</text>
+  <text x="325" y="195" font-family="Arial, sans-serif" font-size="10" fill="#1976D2">N</text>
+  
+  <!-- sensors -> measurements -->
+  <path d="M 250 330 L 300 330 L 300 260 L 350 260" fill="none" stroke="#388E3C" stroke-width="2"/>
+  <circle cx="250" cy="330" r="5" fill="#388E3C"/>
+  <polygon points="345,255 355,260 345,265" fill="#388E3C"/>
+  <text x="275" y="345" font-family="Arial, sans-serif" font-size="10" fill="#388E3C">1</text>
+  <text x="325" y="275" font-family="Arial, sans-serif" font-size="10" fill="#388E3C">N</text>
+  
+  <!-- Legend -->
+  <g transform="translate(580, 60)">
+    <rect x="0" y="0" width="150" height="100" rx="8" fill="#f5f5f5" stroke="#ccc"/>
+    <text x="75" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">Legend</text>
+    <text x="15" y="40" font-family="Arial, sans-serif" font-size="11" fill="#333">🔑 Primary Key</text>
+    <text x="15" y="58" font-family="Arial, sans-serif" font-size="11" fill="#333">🔗 Foreign Key</text>
+    <text x="15" y="76" font-family="Arial, sans-serif" font-size="11" fill="#333">UQ = Unique</text>
+    <text x="15" y="94" font-family="Arial, sans-serif" font-size="11" fill="#333">1─N Relationship</text>
+  </g>
+  
+  <!-- Notes -->
+  <text x="375" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#666">
+    Third Normal Form (3NF): No redundant data, referential integrity via foreign keys
+  </text>
+</svg>

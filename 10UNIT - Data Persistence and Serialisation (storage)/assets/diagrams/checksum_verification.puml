@@ -1,0 +1,53 @@
+@startuml checksum_verification
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+title Data Integrity Verification Workflow
+
+|Original Source|
+start
+:Generate Data;
+:Compute SHA-256\nChecksum;
+:Create Manifest File;
+fork
+    :Transfer Data;
+fork again
+    :Transfer Manifest;
+end fork
+
+|Destination|
+:Receive Files;
+:Recompute Checksum\nfrom received data;
+
+if (Computed == Manifest?) then (yes)
+    #90EE90:Data Integrity\nVerified ✓;
+    :Proceed with\nprocessing;
+else (no)
+    #FFB6C1:Integrity\nFailure ✗;
+    :Log error details;
+    if (Retry available?) then (yes)
+        :Request\nretransmission;
+        |Original Source|
+        :Resend data;
+        |Destination|
+    else (no)
+        :Abort operation;
+        stop
+    endif
+endif
+
+:Continue workflow;
+stop
+
+note right of |Original Source|
+    Checksum computed
+    before transmission
+end note
+
+note right of |Destination|
+    Same algorithm must
+    be used for verification
+end note
+
+@enduml

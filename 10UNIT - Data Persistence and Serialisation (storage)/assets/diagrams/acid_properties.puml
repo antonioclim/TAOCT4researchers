@@ -1,0 +1,37 @@
+@startuml acid_properties
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+title ACID Properties of Database Transactions
+
+package "ACID Transaction" {
+    
+    rectangle "Atomicity" as A #E3F2FD {
+        card "All operations\ncommit together" as a1
+        card "Or all operations\nrollback" as a2
+    }
+    
+    rectangle "Consistency" as C #E8F5E9 {
+        card "Valid state\nbefore" as c1
+        card "Valid state\nafter" as c2
+    }
+    
+    rectangle "Isolation" as I #FFF3E0 {
+        card "Transaction 1" as i1
+        card "Transaction 2" as i2
+        note bottom of i2: Concurrent transactions\ndon't see intermediate states
+    }
+    
+    rectangle "Durability" as D #F3E5F5 {
+        card "Committed data" as d1
+        database "Survives\ncrashes" as d2
+    }
+}
+
+a1 -[hidden]-> a2
+c1 -> c2 : transforms
+i1 -[hidden]-> i2
+d1 -> d2 : persists
+
+@enduml
