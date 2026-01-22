@@ -241,7 +241,7 @@ def run_experiment(
 Extend your pipeline to handle errors gracefully:
 
 ```python
-def run_pipeline_robust(
+def run_pipeline_reliable(
     n_records: int = 500_000,
     n_workers: int = 4,
     failure_rate: float = 0.001  # 0.1% of records fail

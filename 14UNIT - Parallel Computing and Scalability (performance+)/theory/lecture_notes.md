@@ -378,7 +378,7 @@ def memory_intensive():
 
 ---
 
-## §8. Monte Carlo Methods: A Parallel Paradigm
+## §8. Monte Carlo Methods: A Parallel Framework
 
 ### 8.1 Embarrassingly Parallel Computation
 

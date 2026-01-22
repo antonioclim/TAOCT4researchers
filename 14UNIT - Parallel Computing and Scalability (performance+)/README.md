@@ -1011,7 +1011,7 @@ A: Process creation and data transfer overhead may exceed the computation time. 
 
 - Gustafson, J. L. (1988). Reevaluating Amdahl's law. *Communications of the ACM*, 31(5), 532-533. — The scaled speedup perspective.
 
-- Dean, J., & Ghemawat, S. (2008). MapReduce: Simplified data processing on large clusters. *Communications of the ACM*, 51(1), 107-113. — Influential distributed computing paradigm.
+- Dean, J., & Ghemawat, S. (2008). MapReduce: Simplified data processing on large clusters. *Communications of the ACM*, 51(1), 107-113. — Influential distributed computing framework.
 
 ### 17.3 Python Resources
 
@@ -1173,8 +1173,3 @@ please contact the author to obtain written consent.</em></p>
 | D3.js | 7.8+ | Interactive visualisations |
 
 </div>
-
----
-
-*THE ART OF COMPUTATIONAL THINKING FOR RESEARCHERS*  
-*14UNIT — Parallel Computing and Scalability*

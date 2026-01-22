@@ -60,7 +60,7 @@
 
 8. **Dean, J., & Ghemawat, S. (2008). MapReduce: Simplified data processing on large clusters. *Communications of the ACM*, 51(1), 107-113.**
    
-   The influential paper introducing MapReduce paradigm at Google. Foundation for modern distributed computing frameworks.
+   The influential paper introducing MapReduce framework at Google. Foundation for modern distributed computing frameworks.
    
    *Relevance: LO5 — distributed computing concepts*
 
