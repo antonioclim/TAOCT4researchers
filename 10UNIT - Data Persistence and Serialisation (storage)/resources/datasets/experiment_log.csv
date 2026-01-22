@@ -1,6 +1,0 @@
-experiment_id,name,researcher,start_date,end_date,status,sample_count,notes
-EXP-2025-001,Temperature Calibration,Dr. Smith,2025-01-10,2025-01-12,completed,50,Initial calibration run
-EXP-2025-002,Humidity Response,Dr. Johnson,2025-01-13,2025-01-15,completed,75,Standard humidity test
-EXP-2025-003,Pressure Variance,Dr. Smith,2025-01-14,,active,100,Long-term monitoring
-EXP-2025-004,Multi-sensor Integration,Dr. Chen,2025-01-15,,active,150,Combined sensor array
-EXP-2025-005,Baseline Measurement,Dr. Johnson,2025-01-08,2025-01-09,completed,25,Control experiment
