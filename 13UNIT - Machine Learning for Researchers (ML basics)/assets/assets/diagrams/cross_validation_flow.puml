@@ -1,0 +1,10 @@
+@startuml
+start
+:Split data into K folds;
+repeat
+:Train on K-1 folds;
+:Validate on held-out fold;
+repeat while (more folds?)
+:Aggregate metrics;
+stop
+@enduml

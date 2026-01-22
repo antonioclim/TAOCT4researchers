@@ -1,0 +1,30 @@
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#4a9eff'}}}%%
+flowchart TB
+    subgraph ML["Machine Learning Paradigms"]
+        direction TB
+        
+        subgraph SUP["Supervised Learning"]
+            S1[Labelled Data]
+            S2[Learn mapping X → y]
+            S3[Classification / Regression]
+            S1 --> S2 --> S3
+        end
+        
+        subgraph UNSUP["Unsupervised Learning"]
+            U1[Unlabelled Data]
+            U2[Find structure]
+            U3[Clustering / Dimensionality Reduction]
+            U1 --> U2 --> U3
+        end
+        
+        subgraph RL["Reinforcement Learning"]
+            R1[Environment + Agent]
+            R2[Actions & Rewards]
+            R3[Learn optimal policy]
+            R1 --> R2 --> R3
+        end
+    end
+    
+    style SUP fill:#2d5a3d
+    style UNSUP fill:#5a2d3d
+    style RL fill:#3d2d5a

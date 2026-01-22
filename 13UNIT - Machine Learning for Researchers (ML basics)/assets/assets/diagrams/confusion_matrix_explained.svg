@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400">
+  <defs>
+    <style>
+      .title { font: bold 18px sans-serif; fill: #333; }
+      .label { font: 14px sans-serif; fill: #333; }
+      .value { font: bold 20px sans-serif; fill: white; }
+      .formula { font: 12px monospace; fill: #666; }
+    </style>
+  </defs>
+  
+  <rect width="500" height="400" fill="#f5f5f5"/>
+  
+  <text x="250" y="30" class="title" text-anchor="middle">Confusion Matrix Explained</text>
+  
+  <!-- Matrix -->
+  <rect x="150" y="80" width="100" height="80" fill="#4CAF50"/>
+  <text x="200" y="125" class="value" text-anchor="middle">TN</text>
+  
+  <rect x="250" y="80" width="100" height="80" fill="#f44336"/>
+  <text x="300" y="125" class="value" text-anchor="middle">FP</text>
+  
+  <rect x="150" y="160" width="100" height="80" fill="#f44336"/>
+  <text x="200" y="205" class="value" text-anchor="middle">FN</text>
+  
+  <rect x="250" y="160" width="100" height="80" fill="#4CAF50"/>
+  <text x="300" y="205" class="value" text-anchor="middle">TP</text>
+  
+  <!-- Labels -->
+  <text x="200" y="70" class="label" text-anchor="middle">Predicted 0</text>
+  <text x="300" y="70" class="label" text-anchor="middle">Predicted 1</text>
+  <text x="130" y="125" class="label" text-anchor="end">Actual 0</text>
+  <text x="130" y="205" class="label" text-anchor="end">Actual 1</text>
+  
+  <!-- Formulas -->
+  <text x="50" y="280" class="formula">Accuracy = (TP + TN) / (TP + TN + FP + FN)</text>
+  <text x="50" y="305" class="formula">Precision = TP / (TP + FP)</text>
+  <text x="50" y="330" class="formula">Recall = TP / (TP + FN)</text>
+  <text x="50" y="355" class="formula">F1 = 2 × (Precision × Recall) / (Precision + Recall)</text>
+</svg>

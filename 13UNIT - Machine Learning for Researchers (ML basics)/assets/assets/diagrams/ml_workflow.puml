@@ -1,0 +1,44 @@
+@startuml ml_workflow
+!theme plain
+skinparam backgroundColor #1a1a2e
+skinparam defaultFontColor #eaeaea
+skinparam ArrowColor #4a9eff
+skinparam ActivityBackgroundColor #2d2d44
+skinparam ActivityBorderColor #4a9eff
+
+title Machine Learning Workflow
+
+|Data Collection|
+start
+:Gather raw data;
+:Define problem scope;
+
+|Data Preparation|
+:Clean and preprocess;
+:Feature engineering;
+:Train/test split;
+note right: Use stratification\nfor classification
+
+|Model Training|
+:Select algorithm;
+:Fit model on training data;
+:Tune hyperparameters;
+note right: Use cross-validation
+
+|Evaluation|
+:Predict on test data;
+:Calculate metrics;
+if (Performance acceptable?) then (yes)
+  :Deploy model;
+else (no)
+  :Analyse errors;
+  :Refine approach;
+  -> |Data Preparation|
+endif
+
+|Deployment|
+:Monitor performance;
+:Retrain as needed;
+stop
+
+@enduml

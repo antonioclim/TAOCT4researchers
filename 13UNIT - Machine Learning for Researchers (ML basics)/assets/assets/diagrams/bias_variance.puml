@@ -1,0 +1,29 @@
+@startuml bias_variance
+!theme plain
+skinparam backgroundColor #1a1a2e
+skinparam defaultFontColor #eaeaea
+
+title Bias-Variance Trade-off
+
+rectangle "High Bias\n(Underfitting)" as HB #ff6b6b {
+    note "Simple model\nPoor train & test\nMisses patterns" as N1
+}
+
+rectangle "Optimal\nComplexity" as OC #4ecdc4 {
+    note "Balanced model\nGood generalisation\nCaptures signal" as N2
+}
+
+rectangle "High Variance\n(Overfitting)" as HV #ff6b6b {
+    note "Complex model\nGood train, poor test\nLearns noise" as N3
+}
+
+HB -right-> OC : Increase\ncomplexity
+OC -right-> HV : Increase\ncomplexity
+
+note bottom
+  Goal: Find the sweet spot
+  where bias and variance
+  are both acceptably low
+end note
+
+@enduml

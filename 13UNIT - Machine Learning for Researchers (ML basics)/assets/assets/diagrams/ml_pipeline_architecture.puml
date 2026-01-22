@@ -1,0 +1,8 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+rectangle "Dataset" as D
+rectangle "Preprocessing" as P
+rectangle "Model" as M
+rectangle "Evaluation" as E
+D --> P --> M --> E
+@enduml
