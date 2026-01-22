@@ -1,0 +1,8 @@
+@startuml
+title Flask wrapper
+component Flask
+component "/links" as links
+component "/health" as health
+Flask --> links
+Flask --> health
+@enduml

@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="180">
+  <rect x="10" y="10" width="620" height="160" fill="white" stroke="black"/>
+  <text x="320" y="95" font-size="24" text-anchor="middle">Pagination</text>
+</svg>

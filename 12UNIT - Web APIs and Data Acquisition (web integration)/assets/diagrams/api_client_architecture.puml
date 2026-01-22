@@ -1,0 +1,12 @@
+@startuml
+title 12UNIT API Client Architecture
+package "Client" {
+  class ApiClient
+  class RateLimiter
+}
+package "HTTP" {
+  interface Session
+}
+ApiClient --> Session : uses
+ApiClient --> RateLimiter : optional
+@enduml

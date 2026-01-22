@@ -1,0 +1,10 @@
+@startuml
+title Scraping pipeline
+actor Researcher
+component "HTTP GET" as http
+component "HTML Parser (BeautifulSoup)" as bs
+component "Extractor" as ex
+Researcher --> http
+http --> bs
+bs --> ex
+@enduml

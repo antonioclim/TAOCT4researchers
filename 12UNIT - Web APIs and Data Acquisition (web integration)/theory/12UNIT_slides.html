@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>12UNIT Slides — Web APIs and Data Acquisition</title>
+<style>
+body{font-family:system-ui,sans-serif;margin:0}
+.slide{padding:4rem; border-bottom:1px solid #ddd;}
+h1,h2{margin:0 0 1rem 0}
+code{background:#f6f6f6;padding:0.1rem 0.3rem}
+</style>
+</head>
+<body>
+<section class="slide">
+<h1>12UNIT — Web APIs and Data Acquisition</h1>
+<p>Protocol semantics, data contracts and ethical collection pipelines.</p>
+</section>
+<section class="slide"><h2>HTTP as an interface contract</h2><p>Method, resource identifier, representation and status code form a contract.</p></section>
+<section class="slide"><h2>Pagination</h2><p>Pagination is a state machine over <code>next</code> links.</p></section>
+<section class="slide"><h2>Authentication</h2><p>Separate token retrieval from request logic so tests can assert header semantics.</p></section>
+<section class="slide"><h2>Rate limiting</h2><p>Rate limits are part of the interface. Model them explicitly and record waits.</p></section>
+<section class="slide"><h2>Scraping</h2><p>Scraping is parsing under uncertainty. Prefer selectors that encode meaning.</p></section>
+<section class="slide"><h2>Testing</h2><p>Use response mocking for determinism and coverage.</p></section>
+</body>
+</html>

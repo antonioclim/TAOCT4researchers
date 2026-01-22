@@ -1,0 +1,44 @@
+@startuml http_request_response
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam sequenceMessageAlign center
+
+title HTTP Request-Response Cycle
+
+actor Client as C
+participant "DNS\nServer" as DNS
+participant "Web\nServer" as WS
+database "Data\nStore" as DB
+
+C -> DNS : Resolve api.example.com
+DNS --> C : IP: 203.0.113.42
+
+C -> WS : **HTTP Request**\nGET /api/works/123\nHost: api.example.com\nAccept: application/json\nAuthorization: Bearer token
+
+activate WS
+WS -> WS : Authenticate request
+WS -> WS : Validate parameters
+WS -> DB : Query data
+activate DB
+DB --> WS : Result set
+deactivate DB
+WS -> WS : Serialize to JSON
+WS --> C : **HTTP Response**\n200 OK\nContent-Type: application/json\n\n{"id": 123, "title": "..."}
+deactivate WS
+
+note right of C
+  **Request Components**
+  • Method (GET, POST, etc.)
+  • Path (/api/works/123)
+  • Headers (Auth, Accept)
+  • Body (for POST/PUT)
+end note
+
+note left of WS
+  **Response Components**
+  • Status Code (200, 404, etc.)
+  • Headers (Content-Type)
+  • Body (JSON data)
+end note
+
+@enduml
