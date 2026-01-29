@@ -1718,7 +1718,7 @@ This curriculum draws upon the foundational contributions of numerous scholars w
 
 ### 35.2 Institutional Support
 
-The development of these materials was supported by:
+The development of these materials was (not yet) supported by:
 
 - Academy of Economic Studies, Bucharest (ASE)
 - Faculty of Cybernetics, Statistics and Economic Informatics (CSIE)
@@ -1765,7 +1765,7 @@ The repository benefits from:
 ### 37.1 Author
 
 **Antonio Clim**  
-Assistant Lecturer  
+not yet Assistant, still engineer & PhD  
 Faculty of Cybernetics, Statistics and Economic Informatics  
 Academy of Economic Studies, Bucharest
 
